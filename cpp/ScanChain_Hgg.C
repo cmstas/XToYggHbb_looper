@@ -419,6 +419,67 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       if (dijets[0].p4.M()<50) continue;
 
+      if (isMC){
+        LeadPhoton_genPartFlav = selectedDiPhoton.leadPho.genPartFlav();
+        SubleadPhoton_genPartFlav = selectedDiPhoton.subleadPho.genPartFlav();
+        TLorentzVector GenHiggs, GenX, GenY;
+        GenParts genparts = getGenParts();
+        vector<TLorentzVector> gen_child_xyh, gen_child_ygg, gen_child_hbb;
+        for (int igenpart=0; igenpart<genparts.size(); igenpart++)
+          {
+            if (genparts[igenpart].isxyh()) {
+              GenX = genparts[igenpart].mother_p4(); 
+              gen_child_xyh.push_back(genparts[igenpart].p4());
+              GenX_pt = GenX.Pt();
+              GenX_eta = GenX.Eta();
+              GenX_phi = GenX.Phi();
+              GenX_mass = GenX.M();
+            }
+            if (genparts[igenpart].isygg()) {
+              GenY = genparts[igenpart].mother_p4(); 
+              gen_child_ygg.push_back(genparts[igenpart].p4());
+              GenY_pt = GenY.Pt();
+              GenY_eta = GenY.Eta();
+              GenY_phi = GenY.Phi();
+              GenY_mass = GenY.M();
+            }
+            if (genparts[igenpart].ishbb()) {
+              GenHiggs = genparts[igenpart].mother_p4();
+              gen_child_hbb.push_back(genparts[igenpart].p4()); cout<<1<<endl;
+              GenHiggs_pt = GenHiggs.Pt();
+              GenHiggs_eta = GenHiggs.Eta();
+              GenHiggs_phi = GenHiggs.Phi();
+              GenHiggs_mass = GenHiggs.M();
+            }
+          }
+        TLorentzVector sort_GenPart;
+//          if (gen_child_xyh[0].Pt()<gen_child_xyh[1].Pt()) {sort_GenPart = gen_child_xyh[0]; gen_child_xyh[0]= gen_child_xyh[1]; gen_child_xyh[1] = sort_GenPart;}
+//          if (gen_child_ygg[0].Pt()<gen_child_ygg[1].Pt()) {sort_GenPart = gen_child_ygg[0]; gen_child_ygg[0]= gen_child_ygg[1]; gen_child_ygg[1] = sort_GenPart;}
+        if (!abs(GenX_pt+999)<0.0001){
+          GenX_dR = gen_child_xyh[0].DeltaR(gen_child_xyh[1]);
+        }
+        if (!abs(GenY_pt+999)<0.0001){
+          GenY_dR = gen_child_ygg[0].DeltaR(gen_child_ygg[1]);
+        }
+        if (!abs(GenHiggs_pt+999)<0.0001){
+          cout<<2<<endl;
+          GenHiggs_dR = gen_child_hbb[0].DeltaR(gen_child_hbb[1]);
+          if (gen_child_hbb[0].Pt()<gen_child_hbb[1].Pt()) {sort_GenPart = gen_child_hbb[0]; gen_child_hbb[0]= gen_child_hbb[1]; gen_child_hbb[1] = sort_GenPart;}
+          GenBFromHiggs_1_pt = gen_child_hbb[0].Pt();
+          GenBFromHiggs_1_eta = gen_child_hbb[0].Eta();
+          GenBFromHiggs_1_phi = gen_child_hbb[0].Phi();
+          GenBFromHiggs_1_mass = gen_child_hbb[0].M();
+          GenBFromHiggs_2_pt = gen_child_hbb[1].Pt();
+          GenBFromHiggs_2_eta = gen_child_hbb[1].Eta();
+          GenBFromHiggs_2_phi = gen_child_hbb[1].Phi();
+          GenBFromHiggs_2_mass = gen_child_hbb[1].M();
+          if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
+          if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
+          for (int ijet=0; ijet<jets.size(); ijet++)
+            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
+              n_gen_matched_jets++;
+        }
+      }
 
       // Setting output variables
       TLorentzVector x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
@@ -479,61 +540,6 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       eventNum = evtnb;
 
       count_test++;
-
-      // Gen info - FIXME: Doesn't work because all if-statements are trivially false
-      if (isMC) {
-        LeadPhoton_genPartFlav = selectedDiPhoton.leadPho.genPartFlav();
-        SubleadPhoton_genPartFlav = selectedDiPhoton.subleadPho.genPartFlav();
-
-        TLorentzVector GenHiggs, GenX, GenY;
-        GenParts genparts = getGenParts();
-        vector<TLorentzVector> gen_child_xyh, gen_child_ygg, gen_child_hbb;
-        for (int igenpart=0; igenpart<genparts.size(); igenpart++) {
-          if (genparts[igenpart].isxyh()) {GenX = genparts[igenpart].mother_p4(); gen_child_xyh.push_back(genparts[igenpart].p4());}
-          if (genparts[igenpart].isygg()) {GenY = genparts[igenpart].mother_p4(); gen_child_ygg.push_back(genparts[igenpart].p4());}
-          if (genparts[igenpart].ishbb()) {GenHiggs = genparts[igenpart].mother_p4(); gen_child_hbb.push_back(genparts[igenpart].p4());}
-        }
-        TLorentzVector sort_GenPart;
-        //if (gen_child_xyh[0].Pt()<gen_child_xyh[1].Pt()) {sort_GenPart = gen_child_xyh[0]; gen_child_xyh[0]= gen_child_xyh[1]; gen_child_xyh[1] = sort_GenPart;}
-        //if (gen_child_ygg[0].Pt()<gen_child_ygg[1].Pt()) {sort_GenPart = gen_child_ygg[0]; gen_child_ygg[0]= gen_child_ygg[1]; gen_child_ygg[1] = sort_GenPart;}
-        if (!abs(GenX_pt+999)<0.0001) {
-          GenX_pt = GenX.Pt();
-          GenX_eta = GenX.Eta();
-          GenX_phi = GenX.Phi();
-          GenX_mass = GenX.M();
-          GenX_dR = gen_child_xyh[0].DeltaR(gen_child_xyh[1]);
-        }
-        if (!abs(GenY_pt+999)<0.0001) {
-          GenY_pt = GenY.Pt();
-          GenY_eta = GenY.Eta();
-          GenY_phi = GenY.Phi();
-          GenY_mass = GenY.M();
-          GenY_dR = gen_child_ygg[0].DeltaR(gen_child_ygg[1]);
-        }
-        if (!abs(GenHiggs_pt+999)<0.0001) {
-          GenHiggs_pt = GenHiggs.Pt();
-          GenHiggs_eta = GenHiggs.Eta();
-          GenHiggs_phi = GenHiggs.Phi();
-          GenHiggs_mass = GenHiggs.M();
-          GenHiggs_dR = gen_child_hbb[0].DeltaR(gen_child_hbb[1]);
-          if (gen_child_hbb[0].Pt()<gen_child_hbb[1].Pt()) {sort_GenPart = gen_child_hbb[0]; gen_child_hbb[0]= gen_child_hbb[1]; gen_child_hbb[1] = sort_GenPart;}
-          GenBFromHiggs_1_pt = gen_child_hbb[0].Pt();
-          GenBFromHiggs_1_eta = gen_child_hbb[0].Eta();
-          GenBFromHiggs_1_phi = gen_child_hbb[0].Phi();
-          GenBFromHiggs_1_mass = gen_child_hbb[0].M();
-          GenBFromHiggs_2_pt = gen_child_hbb[1].Pt();
-          GenBFromHiggs_2_eta = gen_child_hbb[1].Eta();
-          GenBFromHiggs_2_phi = gen_child_hbb[1].Phi();
-          GenBFromHiggs_2_mass = gen_child_hbb[1].M();
-          if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
-          if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
-          for (int ijet=0; ijet<jets.size(); ijet++) {
-            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
-              n_gen_matched_jets++;
-          }
-        }
-      }
-
 
       // Histo filling
       h_LeadPhoton_sieie->Fill(LeadPhoton_sieie);
