@@ -327,6 +327,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       float weight = 1.0;
       if ( isMC ) {
         weight = nt.genWeight();
+        n_gen_matched_jets = 0;
+        n_gen_matched_in_dijet = 0;
+
         //if(removeSpikes && weight*factor>1e2) continue; //comment out for synchronizing
 
         // Apply PU reweight // FIXME to be enabled later?
