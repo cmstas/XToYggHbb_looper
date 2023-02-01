@@ -339,7 +339,35 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         weight = nt.genWeight();
         n_gen_matched_jets = 0;
         n_gen_matched_in_dijet = 0;
-
+        LeadPhoton_genPartFlav = 0;
+        SubleadPhoton_genPartFlav = 0;
+        n_gen_matched_jets = 0;
+        n_gen_matched_in_dijet = 0;
+        dijet_lead_gen_match=false;
+        dijet_sublead_gen_match=false;
+        GenHiggs_pt=-999;
+        GenHiggs_eta=-999;
+        GenHiggs_phi=-999;
+        GenHiggs_mass=-999;
+        GenHiggs_dR=-999;
+        GenY_pt=-999;
+        GenY_eta=-999;
+        GenY_phi=-999;
+        GenY_mass=-999;
+        GenY_dR=-999;
+        GenX_pt=-999;
+        GenX_eta=-999;
+        GenX_phi=-999;
+        GenX_mass=-999;
+        GenX_dR=-999;
+        GenBFromHiggs_1_pt=-999;
+        GenBFromHiggs_1_eta=-999;
+        GenBFromHiggs_1_phi=-999;
+        GenBFromHiggs_1_mass=-999;
+        GenBFromHiggs_2_pt=-999; 
+        GenBFromHiggs_2_eta=-999;
+        GenBFromHiggs_2_phi=-999;
+        GenBFromHiggs_2_mass=-999;
         //if(removeSpikes && weight*factor>1e2) continue; //comment out for synchronizing
 
         // Apply PU reweight // FIXME to be enabled later?
