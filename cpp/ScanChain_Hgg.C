@@ -56,7 +56,7 @@ int count_test=0;
 
 ofstream txtout("evtnb.txt", ofstream::app);
 
-int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int PUWeight=1, int bTagSF=1, int JECUnc=0) {
+int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int PUWeight=1, int bTagSF=1, int triggerSF=1, int electron_veto_SF=1, int JECUnc=0) {
 // Event weights / scale factors:
 //  0: Do not apply
 //  1: Apply central value
@@ -70,7 +70,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   if ( process == "Data" ) {
     isMC = false;
   }
-   
+  if (!isMC) {PUWeight=0; bTagSF=0; triggerSF=0; electron_veto_SF=0;}
   // Processes and cross-sections (in fb):
   // set this in a different file
   else if ( process == "ttbar" )                              { xsec = 87310.0;                         }
@@ -429,10 +429,36 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       SubleadPhoton_mvaID = selectedDiPhoton.subleadPho.mvaID();
       if ( !(SubleadPhoton_mvaID>-0.7 && LeadPhoton_mvaID>-0.7) ) continue;
 
+      //apply photon triggerSF
+//      if (triggerSF!=0)
+
       Electrons electrons = getElectrons(selectedPhotons);
       Muons muons = getMuons(selectedPhotons);
       if (electrons.size() != 0 ) continue; 
       if (muons.size() != 0 ) continue; 
+
+      //apply photon electron_veto_SF, temporarily hard-coded here, but can be put into separate config files to look for it
+      if (electron_veto_SF!=0)
+      {
+        float leadPho_electron_veto_sf=0, leadPho_electron_veto_unc=0, subleadPho_electron_veto_sf=0, subleadPho_electron_veto_unc=0;
+        int eta_bin=0;
+        if (0<abs(selectedDiPhoton.leadPho.eta()) && abs(selectedDiPhoton.leadPho.eta())<1.5) eta_bin=1;
+        if (1.5<abs(selectedDiPhoton.leadPho.eta()) && abs(selectedDiPhoton.leadPho.eta())<6) eta_bin=2;
+        if (eta_bin==1 && selectedDiPhoton.leadPho.r9()<0.85) {leadPho_electron_veto_sf = 0.9819; leadPho_electron_veto_unc = 0.0020;}
+        if (eta_bin==1 && selectedDiPhoton.leadPho.r9()>0.85) {leadPho_electron_veto_sf = 0.9931; leadPho_electron_veto_unc = 0.0005;}
+        if (eta_bin==2 && selectedDiPhoton.leadPho.r9()<0.9) {leadPho_electron_veto_sf = 0.9680; leadPho_electron_veto_unc = 0.0069;}
+        if (eta_bin==2 && selectedDiPhoton.leadPho.r9()>0.9) {leadPho_electron_veto_sf = 0.9785; leadPho_electron_veto_unc = 0.0018;}
+
+        eta_bin=0;
+        if (0<abs(selectedDiPhoton.subleadPho.eta()) && abs(selectedDiPhoton.subleadPho.eta())<1.5) eta_bin=1;
+        if (1.5<abs(selectedDiPhoton.subleadPho.eta()) && abs(selectedDiPhoton.subleadPho.eta())<6) eta_bin=2;
+        if (eta_bin==1 && selectedDiPhoton.subleadPho.r9()<0.85) {subleadPho_electron_veto_sf = 0.9819; subleadPho_electron_veto_unc = 0.0020;}
+        if (eta_bin==1 && selectedDiPhoton.subleadPho.r9()>0.85) {subleadPho_electron_veto_sf = 0.9931; subleadPho_electron_veto_unc = 0.0005;}
+        if (eta_bin==2 && selectedDiPhoton.subleadPho.r9()<0.9) {subleadPho_electron_veto_sf = 0.9680; subleadPho_electron_veto_unc = 0.0069;}
+        if (eta_bin==2 && selectedDiPhoton.subleadPho.r9()>0.9) {subleadPho_electron_veto_sf = 0.9785; subleadPho_electron_veto_unc = 0.0018;}
+        
+        weight = weight*leadPho_electron_veto_sf*subleadPho_electron_veto_sf;
+      }
 
       Jets jets = getJets(selectedPhotons);
       if (jets.size() < 2) continue; 

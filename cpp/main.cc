@@ -32,6 +32,8 @@ int main(int argc, char **argv) {
   
   int PUWeight=1;
   int bTagSF=1;
+  int triggerSF=1;
+  int electron_veto_SF=1;
   int JECUnc=0; // No central value, set to +/-2 to get
   
 
@@ -366,7 +368,7 @@ int main(int argc, char **argv) {
         }
 
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,PUWeight,bTagSF,JECUnc);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,PUWeight,bTagSF,triggerSF,electron_veto_SF,JECUnc);
       }
     }
   }
