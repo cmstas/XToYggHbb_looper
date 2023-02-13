@@ -373,6 +373,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         }
 */        
 
+      //for PU weights, it has already been calculated in the skimming, so just read through a branch here.
+      if (PUWeight!=0)
+        weight = weight*nt.puWeight();
+
       h_weight_full->Fill(0.5, weight*factor);
 
       unsigned int runnb = nt.run();
