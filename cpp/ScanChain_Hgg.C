@@ -293,6 +293,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   H1(cutflow,20,0,20,"");
   H1(weight,1,0,1,"");
   H1(weight_full,1,0,1,"");
+  H1(weight_before_btagsf,1,0,1,"");
 
 
   //if ( PUWeight!=0 ) set_puWeights(); // FIXME to be enabled later?
@@ -414,10 +415,11 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       // Object selection
       Photons photons = getPhotons();
-      if (isMC) {
+/*      if (isMC) {
         for (auto pho : photons)
           pho.setGenPartFlav(pho.idx());
       }
+*/
       DiPhotons diphotons = DiPhotonPreselection(photons);
 
       if (diphotons.size() == 0 ) continue; 
@@ -467,6 +469,13 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       DiJet selectedDiJet = dijets[0];
 
       if (dijets[0].p4.M()<50) continue;
+
+      // Before applying any b-tag selection criteria, expected event yields should be preserved. Number of events before and after applying b-tag weights should be identical
+      if (bTagSF!=0)
+      {
+        h_weight_before_btagsf->Fill(0.5, weight*factor);
+        weight = weight * selectedDiJet.leadJet.btagSF_deepjet_shape() * selectedDiJet.subleadJet.btagSF_deepjet_shape();
+      }
 
       if (isMC){
         LeadPhoton_genPartFlav = int(selectedDiPhoton.leadPho.genPartFlav());
@@ -609,6 +618,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
     
   bar.finish();
   cout << "nTotal: " << h_weight_full->GetBinContent(1) << ", nPass: " << h_weight->GetBinContent(1) << ", eff: " << h_weight->GetBinContent(1)/h_weight_full->GetBinContent(1) << endl;
+  cout << "before: " << h_weight_before_btagsf->GetBinContent(1) << ", after: " << h_weight->GetBinContent(1) << ", eff: " << h_weight_before_btagsf->GetBinContent(1)/h_weight->GetBinContent(1) << endl;
   cout << endl;
 
   if ( removeDataDuplicates )

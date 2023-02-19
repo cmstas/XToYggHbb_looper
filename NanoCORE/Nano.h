@@ -8288,6 +8288,12 @@ protected:
     bool loaded_Jet_jetId_;
     unsigned int counter_cached_Jet_jetId_;
     unsigned int counter_uncached_Jet_jetId_;
+    float Jet_btagSF_deepjet_shape_[NJET_MAX];
+    vector<float> v_Jet_btagSF_deepjet_shape_;
+    TBranch *b_Jet_btagSF_deepjet_shape_;
+    bool loaded_Jet_btagSF_deepjet_shape_;
+    unsigned int counter_cached_Jet_btagSF_deepjet_shape_;
+    unsigned int counter_uncached_Jet_btagSF_deepjet_shape_;
     float Jet_mass_[NJET_MAX];
     vector<float> v_Jet_mass_;
     TBranch *b_Jet_mass_;
@@ -16683,6 +16689,7 @@ public:
     const vector<float> &Jet_hfsigmaEtaEta();
     const vector<float> &Jet_hfsigmaPhiPhi();
     const vector<int> &Jet_jetId();
+    const vector<float> &Jet_btagSF_deepjet_shape();
     const vector<float> &Jet_mass();
     const vector<float> &Jet_mass_jerDown();
     const vector<float> &Jet_mass_jerUp();
@@ -19570,6 +19577,7 @@ namespace tas {
     const vector<float> &Jet_hfsigmaEtaEta(); // sigmaEtaEta for HF jets (noise discriminating variable)
     const vector<float> &Jet_hfsigmaPhiPhi(); // sigmaPhiPhi for HF jets (noise discriminating variable)
     const vector<int> &Jet_jetId(); // Jet ID flags bit1 is loose (always false in 2017 since it does not exist), bit2 is tight, bit3 is tightLepVeto
+    const vector<float> &Jet_btagSF_deepjet_shape(); //correction sf for b taggings
     const vector<float> &Jet_mass(); // mass
     const vector<float> &Jet_mass_jerDown(); // Jet_mass_jerDown[nJet]/F
     const vector<float> &Jet_mass_jerUp(); // Jet_mass_jerUp[nJet]/F

@@ -3158,6 +3158,8 @@ void Nano::Init(TTree *tree) {
     if (b_Jet_hfsigmaPhiPhi_) { b_Jet_hfsigmaPhiPhi_->SetAddress(&Jet_hfsigmaPhiPhi_); }
     b_Jet_jetId_ = tree->GetBranch("Jet_jetId");
     if (b_Jet_jetId_) { b_Jet_jetId_->SetAddress(&Jet_jetId_); }
+    b_Jet_btagSF_deepjet_shape_ = tree->GetBranch("Jet_btagSF_deepjet_shape");
+    if (b_Jet_btagSF_deepjet_shape_) {b_Jet_btagSF_deepjet_shape_->SetAddress(&Jet_btagSF_deepjet_shape_); }
     b_Jet_mass_ = tree->GetBranch("Jet_mass");
     if (b_Jet_mass_) { b_Jet_mass_->SetAddress(&Jet_mass_); }
     b_Jet_mass_jerDown_ = tree->GetBranch("Jet_mass_jerDown");
@@ -7351,6 +7353,7 @@ void Nano::PrintUsage() {
     std::cout << "Jet_hfsigmaEtaEta (uncached/cached calls): " << counter_uncached_Jet_hfsigmaEtaEta_ << " / " << counter_cached_Jet_hfsigmaEtaEta_ << std::endl;;
     std::cout << "Jet_hfsigmaPhiPhi (uncached/cached calls): " << counter_uncached_Jet_hfsigmaPhiPhi_ << " / " << counter_cached_Jet_hfsigmaPhiPhi_ << std::endl;;
     std::cout << "Jet_jetId (uncached/cached calls): " << counter_uncached_Jet_jetId_ << " / " << counter_cached_Jet_jetId_ << std::endl;;
+    std::cout << "Jet_btagSF_deepjet_shape (uncached/cached calls): " << counter_uncached_Jet_btagSF_deepjet_shape_ << " / " << counter_cached_Jet_btagSF_deepjet_shape_ << std::endl;;
     std::cout << "Jet_mass (uncached/cached calls): " << counter_uncached_Jet_mass_ << " / " << counter_cached_Jet_mass_ << std::endl;;
     std::cout << "Jet_mass_jerDown (uncached/cached calls): " << counter_uncached_Jet_mass_jerDown_ << " / " << counter_cached_Jet_mass_jerDown_ << std::endl;;
     std::cout << "Jet_mass_jerUp (uncached/cached calls): " << counter_uncached_Jet_mass_jerUp_ << " / " << counter_cached_Jet_mass_jerUp_ << std::endl;;
@@ -10233,6 +10236,7 @@ void Nano::GetEntry(unsigned int idx) {
     loaded_Jet_hfsigmaEtaEta_ = false;
     loaded_Jet_hfsigmaPhiPhi_ = false;
     loaded_Jet_jetId_ = false;
+    loaded_Jet_btagSF_deepjet_shape_ = false;
     loaded_Jet_mass_ = false;
     loaded_Jet_mass_jerDown_ = false;
     loaded_Jet_mass_jerUp_ = false;
@@ -27733,6 +27737,17 @@ const vector<int> &Nano::Jet_jetId() {
     }
     return v_Jet_jetId_;
 }
+const vector<float> &Nano::Jet_btagSF_deepjet_shape() {
+    if (!loaded_Jet_btagSF_deepjet_shape_) counter_uncached_Jet_btagSF_deepjet_shape_++;
+    else counter_cached_Jet_btagSF_deepjet_shape_++;
+    if (!loaded_Jet_btagSF_deepjet_shape_) {
+        if (!b_Jet_btagSF_deepjet_shape_) throw std::runtime_error("Jet_btagSF_deepjet_shape branch doesn't exist");
+        int bytes = b_Jet_btagSF_deepjet_shape_->GetEntry(index);
+        v_Jet_btagSF_deepjet_shape_ = vector<float>(Jet_btagSF_deepjet_shape_,Jet_btagSF_deepjet_shape_+bytes/sizeof(Jet_btagSF_deepjet_shape_[0]));
+        loaded_Jet_btagSF_deepjet_shape_ = true;
+    }
+    return v_Jet_btagSF_deepjet_shape_;
+}
 const vector<float> &Nano::Jet_mass() {
     if (!loaded_Jet_mass_) counter_uncached_Jet_mass_++;
     else counter_cached_Jet_mass_++;
@@ -42643,6 +42658,7 @@ namespace tas {
     const vector<float> &Jet_hfsigmaEtaEta() { return nt.Jet_hfsigmaEtaEta(); }
     const vector<float> &Jet_hfsigmaPhiPhi() { return nt.Jet_hfsigmaPhiPhi(); }
     const vector<int> &Jet_jetId() { return nt.Jet_jetId(); }
+    const vector<float> &Jet_btagSF_deepjet_shape() { return nt.Jet_btagSF_deepjet_shape(); }
     const vector<float> &Jet_mass() { return nt.Jet_mass(); }
     const vector<float> &Jet_mass_jerDown() { return nt.Jet_mass_jerDown(); }
     const vector<float> &Jet_mass_jerUp() { return nt.Jet_mass_jerUp(); }
@@ -44160,6 +44176,7 @@ namespace tas {
         else if (name == "Jet_eta") return nt.Jet_eta();
         else if (name == "Jet_hfsigmaEtaEta") return nt.Jet_hfsigmaEtaEta();
         else if (name == "Jet_hfsigmaPhiPhi") return nt.Jet_hfsigmaPhiPhi();
+        else if (name == "Jet_btagSF_deepjet_shape") return nt.Jet_btagSF_deepjet_shape();
         else if (name == "Jet_mass") return nt.Jet_mass();
         else if (name == "Jet_mass_jerDown") return nt.Jet_mass_jerDown();
         else if (name == "Jet_mass_jerUp") return nt.Jet_mass_jerUp();

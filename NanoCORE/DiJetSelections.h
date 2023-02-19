@@ -16,13 +16,13 @@ struct Jet {
             pt_ = nt.Jet_pt()[idx_];
         }
         
-//        pt_ = nt.Jet_pt_nom()[idx_] ? nt.Jet_pt_nom()[idx_] : nt.Jet_pt()[idx_];
         mass_ = nt.Jet_mass()[idx_];
         eta_ = nt.Jet_eta()[idx_];
         phi_ = nt.Jet_phi()[idx_];
         jetId_ = nt.Jet_jetId()[idx_];
         p4_.SetPtEtaPhiM(pt_, nt.Jet_eta()[idx_], nt.Jet_phi()[idx_], nt.Jet_mass()[idx_]);
         btagDeepFlavB_ = nt.Jet_btagDeepFlavB()[idx_];
+        try {btagSF_deepjet_shape_ = nt.Jet_btagSF_deepjet_shape()[idx_];} catch(const std::exception& e) {btagSF_deepjet_shape_=1;}
     }
     //void set_idlevel(int idlevel) { idlevel_ = idlevel; }
     int id() { return id_; }
@@ -34,6 +34,7 @@ struct Jet {
     float phi() { return phi_; }
     int jetId() { return jetId_; }
     float btagDeepFlavB() { return btagDeepFlavB_; }
+    float btagSF_deepjet_shape() { return btagSF_deepjet_shape_; }
 
   private:
     int id_;
@@ -45,6 +46,7 @@ struct Jet {
     int jetId_ = 0;
     unsigned int idx_;
     float btagDeepFlavB_ = 0;
+    float btagSF_deepjet_shape_ = 1;
 };
 
 vector<Jet> getJets(Photons photons);
