@@ -233,6 +233,35 @@ int main(int argc, char **argv) {
                                           { "2016nonAPV", { "" } } } });
       }
     }
+
+    if ( sampleArg=="TVX" || sampleArg=="all" ) {
+      TString sampleName = "TTW";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 22});
+      sample_names.insert({sampleName, "TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v1" } },
+                                        { "2017",       { "" } },
+                                        { "2016APV",    { "" } },
+                                        { "2016nonAPV", { "" } } } });
+
+      sampleName = "TTZ";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 23});
+      sample_names.insert({sampleName, "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "" } },
+                                        { "2016APV",    { "" } },
+                                        { "2016nonAPV", { "" } } } });
+
+      sampleName = "tZq";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 24});
+      sample_names.insert({sampleName, "tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "" } },
+                                        { "2016APV",    { "" } },
+                                        { "2016nonAPV", { "" } } } });
+    }
   }
 
   // Sample list: Signal
