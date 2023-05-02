@@ -375,7 +375,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
   unsigned int LeadPhoton_genPartFlav, SubleadPhoton_genPartFlav;
   int n_gen_matched_jets, n_gen_matched_in_dijet;
+  bool GenB1_reco_match, GenB2_reco_match;
   bool dijet_lead_gen_match, dijet_sublead_gen_match;
+  float mindR1, mindR2, mindR1_reco, mindR2_reco;
   float GenHiggs_pt, GenHiggs_eta, GenHiggs_phi, GenHiggs_mass, GenHiggs_dR;
   float GenY_pt, GenY_eta, GenY_phi, GenY_mass, GenY_dR;
   float GenX_pt, GenX_eta, GenX_phi, GenX_mass, GenX_dR;
@@ -458,6 +460,12 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   tout->Branch("SubleadPhoton_genPartFlav",&SubleadPhoton_genPartFlav,"SubleadPhoton_genPartFlav/I");
   tout->Branch("n_gen_matched_jets",&n_gen_matched_jets,"n_gen_matched_jets/I");
   tout->Branch("n_gen_matched_in_dijet",&n_gen_matched_in_dijet,"n_gen_matched_in_dijet/I");
+  tout->Branch("GenB1_reco_match",&GenB1_reco_match,"GenB1_reco_match/B");
+  tout->Branch("GenB2_reco_match",&GenB2_reco_match,"GenB2_reco_match/B");
+  tout->Branch("mindR1", &mindR1, "mindR1/F");
+  tout->Branch("mindR2", &mindR2, "mindR2/F");
+  tout->Branch("mindR1_reco", &mindR1_reco, "mindR1_reco/F");
+  tout->Branch("mindR2_reco", &mindR2_reco, "mindR2_reco/F");
   tout->Branch("dijet_lead_gen_match",&dijet_lead_gen_match,"dijet_lead_gen_match/B");
   tout->Branch("dijet_sublead_gen_match",&dijet_sublead_gen_match,"dijet_sublead_gen_match/B");
   tout->Branch("GenHiggs_pt",&GenHiggs_pt,"GenHiggs_pt/F");
@@ -552,6 +560,8 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       LeadPhoton_genPartFlav=0; SubleadPhoton_genPartFlav=0;
       n_gen_matched_jets=0; n_gen_matched_in_dijet=0;
       dijet_lead_gen_match=false; dijet_sublead_gen_match=false;
+      GenB1_reco_match = false; GenB2_reco_match = false;
+      mindR1 = 999; mindR2 = 999; mindR1_reco = 999; mindR2_reco = 999;
       GenHiggs_pt=-999; GenHiggs_eta=-999; GenHiggs_phi=-999; GenHiggs_mass=-999; GenHiggs_dR=-999;
       GenY_pt=-999; GenY_eta=-999; GenY_phi=-999; GenY_mass=-999; GenY_dR=-999;
       GenX_pt=-999; GenX_eta=-999; GenX_phi=-999; GenX_mass=-999; GenX_dR=-999;
@@ -911,11 +921,76 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
           GenBFromHiggs_2_eta = gen_child_hbb[1].Eta();
           GenBFromHiggs_2_phi = gen_child_hbb[1].Phi();
           GenBFromHiggs_2_mass = gen_child_hbb[1].M();
-          if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
-          if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
+
+          // use gen jet as seed, which reco jet is matched to GenBFromHiggs1 and 2?
+          int reco_match_to_GenB1=-1,reco_match_to_GenB2=-1;
           for (int ijet=0; ijet<jets.size(); ijet++)
-            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
-              n_gen_matched_jets++;
+          {
+            float dR1 = jets[ijet].p4().DeltaR(gen_child_hbb[0]);
+            if (mindR1>dR1)
+            {
+              mindR1 = dR1;
+              if (dR1<0.4)
+              {
+                reco_match_to_GenB1=ijet;
+                GenB1_reco_match = true;
+              }
+            }
+          }
+          for (int ijet=0; ijet<jets.size(); ijet++)
+          {
+            float dR2 = jets[ijet].p4().DeltaR(gen_child_hbb[1]);
+            if (mindR2>dR2 && ijet!=reco_match_to_GenB1)
+            {
+              mindR2 = dR2;
+              if (dR2<0.4)
+              {
+                reco_match_to_GenB2=ijet;
+                GenB2_reco_match = true;
+              }
+            }
+          }          
+
+          // use reco dijet as seed, which gen jet is matched to the reco dijet pair
+          int gen_match_to_reco1=-1,gen_match_to_reco2=-1;
+          float mindR1_reco=999, mindR2_reco=999;
+          for (int igenjet=0; igenjet<2; igenjet++)
+          {
+            float dR_reco=selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[igenjet]);
+            if (mindR1_reco>dR_reco)
+            {
+              mindR1_reco = dR_reco;
+              if (dR_reco<0.4)
+              {
+                gen_match_to_reco1=igenjet;
+                dijet_lead_gen_match=true;
+              }
+            }
+          } 
+          for (int igenjet=0; igenjet<2; igenjet++)
+          {
+            float dR_reco=selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[igenjet]);
+            if (mindR2_reco>dR_reco && igenjet!=gen_match_to_reco1)
+            {
+              mindR2_reco = dR_reco;
+              if (dR_reco<0.4)
+              {
+                gen_match_to_reco2=igenjet;
+                dijet_sublead_gen_match=true;
+              }
+            }
+          } 
+
+          if(dijet_lead_gen_match) n_gen_matched_in_dijet++;
+          if(dijet_sublead_gen_match) n_gen_matched_in_dijet++;
+          if(GenB1_reco_match) n_gen_matched_jets++;
+          if(GenB2_reco_match) n_gen_matched_jets++;
+//          if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
+//          if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
+
+//          for (int ijet=0; ijet<jets.size(); ijet++)
+//            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
+//              n_gen_matched_jets++;
         }
       }
 
