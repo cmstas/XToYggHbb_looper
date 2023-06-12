@@ -256,10 +256,10 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 18});
       sample_names.insert({sampleName, "DiPhotonJetsBox_MGG-40to80_13TeV-sherpa"});
-      sample_prod.insert({sampleName, { { "2018",       { "privateUL18Leonardo" } },
-                                        { "2017",       { "" } },
-                                        { "2016APV",    { "" } },
-                                        { "2016nonAPV", { "" } } } });
+      sample_prod.insert({sampleName, { { "2018",       { "privateUL18" } },
+                                        { "2017",       { "privateUL17" } },
+                                        { "2016APV",    { "privateUL16APV" } },
+                                        { "2016nonAPV", { "privateUL16" } } } });
     }
 
     if ( sampleArg=="VV" || sampleArg=="all" ) {
@@ -277,6 +277,60 @@ int main(int argc, char **argv) {
                                           { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
                                           { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
       }
+    }
+
+    if ( sampleArg=="QCD" || sampleArg=="all" ) {
+      TString sampleName = "QCD_Pt-30to40_MGG-80toInf";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 22});
+      sample_names.insert({sampleName, "QCD_Pt-30to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v1" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "QCD_Pt-30toInf_MGG-40to80";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 23});
+      sample_names.insert({sampleName, "QCD_Pt-30toInf_DoubleEMEnriched_MGG-40to80_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+
+      sampleName = "QCD_Pt-40toInf_MGG-80toInf";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 24});
+      sample_names.insert({sampleName, "QCD_Pt-40ToInf_DoubleEMEnriched_MGG-80ToInf_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+    }
+
+    if ( sampleArg=="DDQCDGJets" || sampleArg=="all" ) {
+      TString sampleName = "DDQCDGJets";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 25});
+      sample_names.insert({sampleName, sampleName});
+      sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018B-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018C-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018D-UL2018_MiniAODv2-v2" } },
+                                        { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
+                                                          "Run2017C-UL2017_MiniAODv2-v2",
+                                                          "Run2017D-UL2017_MiniAODv2-v1",
+                                                          "Run2017E-UL2017_MiniAODv2-v1",
+                                                          "Run2017F-UL2017_MiniAODv2-v2" } },
+                                        { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
+                                                          "Run2016C-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016D-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016E-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
+                                        { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
+                                                          "Run2016G-UL2016_MiniAODv2-v1",
+                                                          "Run2016H-UL2016_MiniAODv2-v1" } } } });
     }
   }
 
@@ -379,7 +433,7 @@ int main(int argc, char **argv) {
   }
   else {
     // Main loops
-    TString baseDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
+    TString baseDir = "/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
     TString version = "v0";
 
     for ( int iyear=0; iyear<years.size(); iyear++ ) {
@@ -393,7 +447,7 @@ int main(int argc, char **argv) {
         TString dataformat = "MINIAODSIM";
         bool isMC = 1;
 
-        if (sample == "Data") {
+        if ( sample == "Data" || sample == "DDQCDGJets" ) {
           sample_names[sample] = ( year=="2018" ? "EGamma" : "DoubleEG" );
           dataformat = "MINIAOD";
           isMC = 0;
@@ -423,7 +477,8 @@ int main(int argc, char **argv) {
         TChain *ch_temp = new TChain("Events");
         TChain *chaux_temp = new TChain("Runs");
         for ( unsigned int d=0; d<sample_prod[sample][year].size(); d++ ) {
-          TString trees = baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root";
+          TString trees = "/ceph/cms"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Local access
+          //TString trees = "davs://redirector.t2.ucsd.edu:1095"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Global access
 
           ch_temp->Add(trees);
           chaux_temp->Add(trees);
