@@ -1,6 +1,7 @@
 #pragma GCC diagnostic ignored "-Wsign-compare"
 #include "TFile.h"
 #include "TH1D.h"
+#include "TF1.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TTreeCache.h"
@@ -53,6 +54,47 @@ int count_test=0;
 
 ofstream txtout("evtnb.txt", ofstream::app);
 
+void imputePhotonID(const float minPhotonID_cut, const float maxPhotonID, TF1* fakePhotonID_shape, float &minPhotonID, float &weight) {
+    minPhotonID = fakePhotonID_shape->GetRandom(minPhotonID_cut, maxPhotonID);
+    weight *= fakePhotonID_shape->Integral(minPhotonID_cut, maxPhotonID) / fakePhotonID_shape->Integral(-0.9, minPhotonID_cut);
+    return;
+}
+
+TF1* get_fakePhotonIDShape() {
+  float lowerBound = -0.9;
+  float upperBound = 1.0;
+  // From skim
+  //TF1* fakePhotonMVAIDShape = new TF1("fakePhotonMVAIDShape", "expo(0)+pol8(2)", lowerBound, upperBound);
+
+  //fakePhotonMVAIDShape->SetParameter(0,  -1.58102e+00);
+  //fakePhotonMVAIDShape->SetParameter(1,  -1.72396e+01);
+  //fakePhotonMVAIDShape->SetParameter(2,   2.54952e+04);
+  //fakePhotonMVAIDShape->SetParameter(3,  -5.81735e+04);
+  //fakePhotonMVAIDShape->SetParameter(4,   7.70510e+04);
+  //fakePhotonMVAIDShape->SetParameter(5,   4.55906e+04);
+  //fakePhotonMVAIDShape->SetParameter(6,   4.98817e+04);
+  //fakePhotonMVAIDShape->SetParameter(7,  -7.66256e+05);
+  //fakePhotonMVAIDShape->SetParameter(8,   5.98123e+05);
+  //fakePhotonMVAIDShape->SetParameter(9,   7.66017e+05);
+  //fakePhotonMVAIDShape->SetParameter(10, -7.37524e+05);
+
+  // From presel
+  TF1* fakePhotonMVAIDShape = new TF1("fakePhotonMVAIDShape", "pol9", lowerBound, upperBound);
+
+  fakePhotonMVAIDShape->SetParameter(0,  448.181);
+  fakePhotonMVAIDShape->SetParameter(1, -615.248);
+  fakePhotonMVAIDShape->SetParameter(2,  198.058);
+  fakePhotonMVAIDShape->SetParameter(3,  3028.78);
+  fakePhotonMVAIDShape->SetParameter(4,  5401.24);
+  fakePhotonMVAIDShape->SetParameter(5, -19215.6);
+  fakePhotonMVAIDShape->SetParameter(6, -12080.9);
+  fakePhotonMVAIDShape->SetParameter(7,  35749.9);
+  fakePhotonMVAIDShape->SetParameter(8,  11641.3);
+  fakePhotonMVAIDShape->SetParameter(9, -24545.6);
+
+  return fakePhotonMVAIDShape;
+}
+
 int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int lowMassHggTriggerSF=1, int lowMassHggPreselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
 // Event weights / scale factors:
 //  0: Do not apply
@@ -64,46 +106,50 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   float lumi = 1.0;
   float xsec = 1.0;
   bool isMC = true;
-  if ( process == "Data" ) {
+  if ( process == "Data" || process == "DDQCDGJets" ) {
     isMC = false;
   }
    
   // Processes and cross-sections (in fb):
   // set this in a different file
-  else if ( process == "ttbar" )                              { xsec = 87310.0;                         }
-  else if ( process == "DY" )                                 { xsec = 5765400.0;                       }
-  else if ( process == "WW" )                                 { xsec = 118700.0;                        }
-  else if ( process == "WZ" )                                 { xsec = 47130.0;                         }
-  else if ( process == "ZZ" )                                 { xsec = 16523.0;                         }
-  else if ( process == "tW" )                                 { xsec = 19550;                           }
-  else if ( process == "tbarW" )                              { xsec = 19550;                           }
-  else if ( process == "tZq" )                                { xsec = 75.8;                            }
-  else if ( process == "TTW" )                                { xsec = 204.3;                           }
-  else if ( process == "TTZ" )                                { xsec = 252.9;                           }
-  else if ( process == "TTHToNonbb" )                         { xsec = 507.5*(1-0.575);                 }
-  else if ( process == "TTHTobb" )                            { xsec = 507.5*0.575;                     }
-  else if ( process == "TTGG" )                               { xsec = 0.01687 * 1000;                  }
-  else if ( process == "TTGJets" )                            { xsec = 4.078 * 1000;                    }
-  else if ( process == "TTJets" )                             { xsec = 831.76 * 1000;                   }
-  else if ( process == "VBFH_M125" )                          { xsec = 0.00858514 *1000;                }
-  else if ( process == "VH_M125" )                            { xsec = 0.00512 *1000;                   }
-  else if ( process == "ggHToDiPhoM125" )                     { xsec = 0.1118429*1000 ;                 }
-  else if ( process == "ttH_M125" )                           { xsec = 0.5071 * 1000 * 0.00227;         }
-  else if ( process == "GJets_HT-40To100" )                   { xsec = 23100*1000;                      }
-  else if ( process == "GJets_HT-100To200" )                  { xsec = 8631.0*1000;                     }
-  else if ( process == "GJets_HT-200To400" )                  { xsec = 2280.0*1000;                     }
-  else if ( process == "GJets_HT-400To600" )                  { xsec = 273*1000;                        }
-  else if ( process == "GJets_HT-600ToInf" )                  { xsec = 1*1000;                          }
-  else if ( process == "DiPhoton" )                           { xsec = 84.4*1000 ;                      }
-  else if ( process == "DiPhotonLow" )                        { xsec = 303.2*1000 ;                     }
-  else if ( process == "HHbbgg" )                             { xsec = 0.03105*1000*0.00262230;         }
-  else if ( process == "WG" )                                 { xsec = 191.4*1000 ;                     }
-  else if ( process == "ZG" )                                 { xsec = 55.6*1000 ;                      }
-  else if ( process == "WW" )                                 { xsec = 75.8*1000 ;                      }
-  else if ( process == "WZ" )                                 { xsec = 27.6*1000 ;                      }
-  else if ( process == "ZZ" )                                 { xsec = 12.14*1000 ;                     }
-  else if ( process == "Data" )                               { xsec = 1 ;                              }
-  else if ( process.Contains("NMSSM_XToYHTo2G2B") )           { xsec = 1 ; process.ReplaceAll("-","_"); }
+  else if ( process == "ttbar" )                      { xsec = 87310.0;                        }
+  else if ( process == "DY" )                         { xsec = 5765400.0;                      }
+  else if ( process == "WW" )                         { xsec = 118700.0;                       }
+  else if ( process == "WZ" )                         { xsec = 47130.0;                        }
+  else if ( process == "ZZ" )                         { xsec = 16523.0;                        }
+  else if ( process == "tW" )                         { xsec = 19550;                          }
+  else if ( process == "tbarW" )                      { xsec = 19550;                          }
+  else if ( process == "tZq" )                        { xsec = 75.8;                           }
+  else if ( process == "TTW" )                        { xsec = 204.3;                          }
+  else if ( process == "TTZ" )                        { xsec = 252.9;                          }
+  else if ( process == "TTHToNonbb" )                 { xsec = 507.5*(1-0.575);                }
+  else if ( process == "TTHTobb" )                    { xsec = 507.5*0.575;                    }
+  else if ( process == "TTGG" )                       { xsec = 0.01687 * 1000;                 }
+  else if ( process == "TTGJets" )                    { xsec = 4.078 * 1000;                   }
+  else if ( process == "TTJets" )                     { xsec = 831.76 * 1000;                  }
+  else if ( process == "VBFH_M125" )                  { xsec = 0.00858514 *1000;               }
+  else if ( process == "VH_M125" )                    { xsec = 0.00512 *1000;                  }
+  else if ( process == "ggHToDiPhoM125" )             { xsec = 0.1118429*1000 ;                }
+  else if ( process == "ttH_M125" )                   { xsec = 0.5071 * 1000 * 0.00227;        }
+  else if ( process == "GJets_HT-40To100" )           { xsec = 23100*1000;                     }
+  else if ( process == "GJets_HT-100To200" )          { xsec = 8631.0*1000;                    }
+  else if ( process == "GJets_HT-200To400" )          { xsec = 2280.0*1000;                    }
+  else if ( process == "GJets_HT-400To600" )          { xsec = 273*1000;                       }
+  else if ( process == "GJets_HT-600ToInf" )          { xsec = 1*1000;                         }
+  else if ( process == "DiPhoton" )                   { xsec = 84.4*1000;                      }
+  else if ( process == "DiPhotonLow" )                { xsec = 303.2*1000;                     }
+  else if ( process == "HHbbgg" )                     { xsec = 0.03105*1000*0.00262230;        }
+  else if ( process == "WG" )                         { xsec = 191.4*1000;                     }
+  else if ( process == "ZG" )                         { xsec = 55.6*1000;                      }
+  else if ( process == "WW" )                         { xsec = 75.8*1000;                      }
+  else if ( process == "WZ" )                         { xsec = 27.6*1000;                      }
+  else if ( process == "ZZ" )                         { xsec = 12.14*1000;                     }
+  else if ( process == "QCD_Pt-30to40_MGG-80toInf" )  { xsec = 24810.0*1000;                   }
+  else if ( process == "QCD_Pt-30toInf_MGG-40to80" )  { xsec = 241400.0*1000;                  }
+  else if ( process == "QCD_Pt-40toInf_MGG-80toInf" ) { xsec = 118100.0*1000;                  }
+  else if ( process == "DDQCDGJets" )                 { xsec = 1;                              }
+  else if ( process == "Data" )                       { xsec = 1;                              }
+  else if ( process.Contains("NMSSM_XToYHTo2G2B") )   { xsec = 1; process.ReplaceAll("-","_"); }
   else {
     cout<<"Non-valid process: Exiting!"<<endl;
     return 1;
@@ -297,6 +343,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   H1(weight_beforeBTagSF,1,0,1,"");
   H1(weight_afterBTagSF,1,0,1,"");
 
+  TF1 *fakePhotonID_shape = get_fakePhotonIDShape();
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
   if ( lowMassHggTriggerSF != 0) lowMassHggTriggerSF::set_lowMassHggTriggerSF();
   if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
@@ -420,6 +467,31 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       DiPhoton selectedDiPhoton = diphotons[0];
       Photons selectedPhotons={selectedDiPhoton.leadPho, selectedDiPhoton.subleadPho};
+
+      // Get DDQCDGJets from data
+      float minPhotonID_cut = -1.0, maxPhotonID_cut = -1.0;
+      float minPhotonID = -1.0, maxPhotonID = 1.0;
+      if ( selectedDiPhoton.leadPho.mvaID() > selectedDiPhoton.subleadPho.mvaID() ) {
+        minPhotonID = selectedDiPhoton.subleadPho.mvaID();
+        minPhotonID_cut = ( fabs(selectedDiPhoton.subleadPho.eta())<1.442 ? -0.02 : -0.26 );
+
+        maxPhotonID = selectedDiPhoton.leadPho.mvaID();
+        maxPhotonID_cut = ( fabs(selectedDiPhoton.leadPho.eta())<1.442 ? -0.02 : -0.26 );
+      }
+      else {
+        minPhotonID = selectedDiPhoton.leadPho.mvaID();
+        minPhotonID_cut = ( fabs(selectedDiPhoton.leadPho.eta())<1.442 ? -0.02 : -0.26 );
+
+        maxPhotonID = selectedDiPhoton.subleadPho.mvaID();
+        maxPhotonID_cut = ( fabs(selectedDiPhoton.subleadPho.eta())<1.442 ? -0.02 : -0.26 );
+      }
+      if ( process == "DDQCDGJets" ) {
+        if ( !(maxPhotonID > maxPhotonID_cut && minPhotonID < minPhotonID_cut) ) continue; // Select events in which only one photon fails the photon MVA selection
+        if ( maxPhotonID <= minPhotonID_cut ) continue; // Incompatible photon ID configuration, where the max and min ID photon would be swapped
+        imputePhotonID(minPhotonID_cut, maxPhotonID, fakePhotonID_shape, minPhotonID, weight);
+        if ( selectedDiPhoton.leadPho.mvaID() > selectedDiPhoton.subleadPho.mvaID() ) selectedDiPhoton.subleadPho.setMvaID(minPhotonID);
+        else selectedDiPhoton.leadPho.setMvaID(minPhotonID);
+      }
 
       // Select photons passing the photon MVA ID WP 90
       if ( !( (fabs(selectedDiPhoton.leadPho.eta())<1.442 ? selectedDiPhoton.leadPho.mvaID()>-0.02 : selectedDiPhoton.leadPho.mvaID()>-0.26) && \
