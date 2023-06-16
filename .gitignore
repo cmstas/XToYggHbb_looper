@@ -6,7 +6,7 @@
 **/__init__*
 **/*.pyc
 **/*~
-**/temp*
+**/temp_*
 **/tmp*
 **/*.temp
 **/*.tmp

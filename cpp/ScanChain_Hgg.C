@@ -81,16 +81,16 @@ TF1* get_fakePhotonIDShape() {
   // From presel
   TF1* fakePhotonMVAIDShape = new TF1("fakePhotonMVAIDShape", "pol9", lowerBound, upperBound);
 
-  fakePhotonMVAIDShape->SetParameter(0,  448.181);
-  fakePhotonMVAIDShape->SetParameter(1, -615.248);
-  fakePhotonMVAIDShape->SetParameter(2,  198.058);
-  fakePhotonMVAIDShape->SetParameter(3,  3028.78);
-  fakePhotonMVAIDShape->SetParameter(4,  5401.24);
-  fakePhotonMVAIDShape->SetParameter(5, -19215.6);
-  fakePhotonMVAIDShape->SetParameter(6, -12080.9);
-  fakePhotonMVAIDShape->SetParameter(7,  35749.9);
-  fakePhotonMVAIDShape->SetParameter(8,  11641.3);
-  fakePhotonMVAIDShape->SetParameter(9, -24545.6);
+  fakePhotonMVAIDShape->SetParameter(0,  642.428);
+  fakePhotonMVAIDShape->SetParameter(1, -977.286);
+  fakePhotonMVAIDShape->SetParameter(2,  247.419);
+  fakePhotonMVAIDShape->SetParameter(3,  3398.33);
+  fakePhotonMVAIDShape->SetParameter(4,  10404.9);
+  fakePhotonMVAIDShape->SetParameter(5, -25623.0);
+  fakePhotonMVAIDShape->SetParameter(6, -24191.2);
+  fakePhotonMVAIDShape->SetParameter(7,  50079.5);
+  fakePhotonMVAIDShape->SetParameter(8,  23225.6);
+  fakePhotonMVAIDShape->SetParameter(9, -37194.3);
 
   return fakePhotonMVAIDShape;
 }

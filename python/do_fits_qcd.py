@@ -7,6 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--inputDir", required=True, help = "input directory containing root files with histograms to fit", type = str)
 parser.add_argument("--jetBin", help = "n_jets bin to do fit in", type = str, default = "2+")
 parser.add_argument("--DD", help = "perform fits on DD estimation", action = 'store_true', default = False)
+parser.add_argument("--sepDiPhotonLow", help = "separate DiPhoton from DiPhotonLowMass contribution in the fit", action = 'store_true', default = False)
 args = parser.parse_args()
 
 def find_jet_bin(jet_bin):
@@ -33,13 +34,17 @@ def combine_hists(hist1, hist2, name, jet_bin, overflow):
   return target_hist
 
 
-latex_dict = { "DiPhoton"   : "$ \\gamma \\gamma $ + jets",
-               "GJets"      : "$ \\gamma $ + jets",
-               "QCD"        : "QCD",
-               "DDQCDGJets" : "QCD, $ \\gamma $ + jets"
+latex_dict = { "DiPhoton"     : "$ \\gamma \\gamma $ + jets",
+               "DiPhotonLow"  : "$ \\gamma \\gamma $ + jets (low mass)",
+               "DiPhotonHigh" : "$ \\gamma \\gamma $ + jets (high mass)",
+               "GJets"        : "$ \\gamma $ + jets",
+               "QCD"          : "QCD",
+               "DDQCDGJets"   : "QCD, $ \\gamma $ + jets"
 }
 
 pp_template = "DiPhoton"
+ppL_template = "DiPhotonLow"
+ppH_template = "DiPhotonHigh"
 fp_template = "GJets"
 ff_template = "QCD"
 fffp_template = "DDQCDGJets"
@@ -48,6 +53,8 @@ file_names = ["n_jets:Diphoton_minMvaID", "n_jets:Diphoton_maxMvaID"]
 
 templates_dict = { "data" : "Data",
 		               "pp"   : "DiPhoton",
+		               "ppL"  : "DiPhotonLow",
+		               "ppH"  : "DiPhotonHigh",
 		               "fp"   : "GJets",
 		               "ff"   : "QCD",
 		               "fffp" : "DDQCDGJets",
@@ -68,6 +75,10 @@ for file_name in file_names:
       if template == "ff" or template == "fp": continue
     else:
       if template == "fffp": continue
+    if args.sepDiPhotonLow:
+      if template == "pp": continue
+    else:
+      if template == "ppL" or template == "ppH": continue
     f_unweighted = ROOT.TFile(args.inputDir+"/"+file_name+"_"+template+"_unweighted.root")
     if "min" in file_name: hists_unweighted_minMVAID[template] = copy.deepcopy(f_unweighted.Get("totalSM"))
     elif "max" in file_name: hists_unweighted_maxMVAID[template] = copy.deepcopy(f_unweighted.Get("totalSM"))
@@ -81,6 +92,10 @@ for template, name in templates_dict.iteritems():
     if template == "ff" or template == "fp": continue
   else:
     if template == "fffp": continue
+  if args.sepDiPhotonLow:
+    if template == "pp": continue
+  else:
+    if template == "ppL" or template == "ppH": continue
   hists_unweighted[template] = combine_hists(hists_unweighted_minMVAID[template], hists_unweighted_maxMVAID[template], template + "unweighted", jet_bin, overflow)
   hists_weighted[template] = combine_hists(hists_weighted_minMVAID[template], hists_weighted_maxMVAID[template], template + "weighted", jet_bin, overflow)
   hists_weights[template] = hists_weighted[template].Clone(template + "weights")
@@ -92,13 +107,26 @@ for template, name in templates_dict.iteritems():
 
 
 hist_unweighted_list = []; hist_weighted_list = []; hist_weights_list = []
-hist_unweighted_list = [hists["ff"][0], hists["fp"][0], hists["pp"][0], hists["bkg"][0]]
-hist_weighted_list = [hists["ff"][1], hists["fp"][1], hists["pp"][1], hists["bkg"][1]]
-hist_weights_list = [hists["ff"][2], hists["fp"][2], hists["pp"][2], hists["bkg"][2]]
 if args.DD:
-  hist_unweighted_list = [hists["fffp"][0], hists["pp"][0], hists["bkg"][0]]
-  hist_weighted_list = [hists["fffp"][1], hists["pp"][1], hists["bkg"][1]]
-  hist_weights_list = [hists["fffp"][2], hists["pp"][2], hists["bkg"][2]]
+  hist_unweighted_list.append(hists["fffp"][0])
+  hist_weighted_list.append(hists["fffp"][1])
+  hist_weights_list.append(hists["fffp"][2])
+else:
+  hist_unweighted_list.append(hists["ff"][0]); hist_unweighted_list.append(hists["fp"][0])
+  hist_weighted_list.append(hists["ff"][1]); hist_weighted_list.append(hists["fp"][1])
+  hist_weights_list.append(hists["ff"][2]); hist_weights_list.append(hists["fp"][2])
+if args.sepDiPhotonLow:
+  hist_unweighted_list.append(hists["ppL"][0]); hist_unweighted_list.append(hists["ppH"][0])
+  hist_weighted_list.append(hists["ppL"][1]); hist_weighted_list.append(hists["ppH"][1])
+  hist_weights_list.append(hists["ppL"][2]); hist_weights_list.append(hists["ppH"][2])
+else:
+  hist_unweighted_list.append(hists["pp"][0])
+  hist_weighted_list.append(hists["pp"][1])
+  hist_weights_list.append(hists["pp"][2])
+hist_unweighted_list.append(hists["bkg"][0])
+hist_weighted_list.append(hists["bkg"][1])
+hist_weights_list.append(hists["bkg"][2])
+
 
 h_data =  hists["data"][1]
 initial_fracs = []
@@ -109,20 +137,24 @@ for hist in hist_weighted_list:
 mc = ROOT.TObjArray(4)
 if args.DD:
   mc.Add(hists["fffp"][0])
-  mc.Add(hists["pp"][0])
-  mc.Add(hists["bkg"][0])
 else:
   mc.Add(hists["ff"][0])
   mc.Add(hists["fp"][0])
+if args.sepDiPhotonLow:
+  mc.Add(hists["ppL"][0])
+  mc.Add(hists["ppH"][0])
+else:
   mc.Add(hists["pp"][0])
-  mc.Add(hists["bkg"][0])
+mc.Add(hists["bkg"][0])
 
 fit = ROOT.TFractionFitter(h_data, mc, "Q")
 i_range = 3 if args.DD else 4
+if args.sepDiPhotonLow: i_range += 1
 for i in range(i_range):
   fit.SetWeight(i, hist_weights_list[i]) # set bin-by-bin weights for raw MC counts 
   # Other bkgs, fixed in fit
   i_bkg = 2 if args.DD else 3
+  if args.sepDiPhotonLow: i_bkg += 1
   if i == i_bkg:
     fit.Constrain(i, initial_fracs[i]-0.000000001, initial_fracs[i]+0.000000001)
   else:
