@@ -2,6 +2,7 @@
 #include "TFile.h"
 #include "TH1D.h"
 #include "TF1.h"
+#include "TH2D.h"
 #include "TTree.h"
 #include "TChain.h"
 #include "TTreeCache.h"
@@ -36,6 +37,7 @@
 #include <fstream>
 
 #define H1(name,nbins,low,high,xtitle) TH1D *h_##name = new TH1D(#name,"",nbins,low,high); h_##name->GetXaxis()->SetTitle(xtitle); h_##name->GetYaxis()->SetTitle("Events");
+#define H2(name,nbinsx,xlow,xhigh,nbinsy,ylow,yhigh,xtitle,ytitle) TH2D *h_##name = new TH2D(#name,"",nbinsx,xlow,xhigh,nbinsy,ylow,yhigh); h_##name->GetXaxis()->SetTitle(xtitle); h_##name->GetYaxis()->SetTitle(ytitle);
 
 #define Zmass 91.1876
 
@@ -365,8 +367,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   float SubleadPhoton_sieie, SubleadPhoton_pfPhoIso03, SubleadPhoton_chargedHadronIso, SubleadPhoton_r9, SubleadPhoton_trkSumPtHollowConeDR03;
   bool LeadPhoton_pixelSeed, SubleadPhoton_pixelSeed;
 
-  int n_jets;
+  int n_jets, n_Genjets;
   float dijet_lead_pt, dijet_lead_eta, dijet_lead_phi, dijet_lead_mass, dijet_lead_btagDeepFlavB;
+  float fatjet_Hbb_score;
   float dijet_sublead_pt, dijet_sublead_eta, dijet_sublead_phi, dijet_sublead_mass, dijet_sublead_btagDeepFlavB;
   float dijet_pt, dijet_eta, dijet_phi, dijet_mass, dijet_dR;
   float pfmet_pt, puppimet_pt;
@@ -374,8 +377,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   float weight_central, weight_central_initial, weight_central_no_lumi, weight_beforeBTagSF, weight_afterBTagSF;
 
   unsigned int LeadPhoton_genPartFlav, SubleadPhoton_genPartFlav;
-  int n_gen_matched_jets, n_gen_matched_in_dijet;
+  int n_gen_matched_jets, n_gen_matched_in_dijet, n_gen_matched_genjets;
+  bool GenB1_Genjet_match, GenB2_Genjet_match;
   bool GenB1_reco_match, GenB2_reco_match;
+  bool GenB1B2_FatJet_match;
   bool dijet_lead_gen_match, dijet_sublead_gen_match;
   float mindR1, mindR2, mindR1_reco, mindR2_reco;
   float GenHiggs_pt, GenHiggs_eta, GenHiggs_phi, GenHiggs_mass, GenHiggs_dR;
@@ -421,11 +426,12 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   tout->Branch("Diphoton_dR",&Diphoton_dR,"Diphoton_dR/F");
 
   tout->Branch("n_jets",&n_jets,"n_jets/I");  
+  tout->Branch("n_Genjets",&n_Genjets,"n_Genjets/I");  
   tout->Branch("dijet_lead_pt",&dijet_lead_pt,"dijet_lead_pt/F");
   tout->Branch("dijet_lead_eta",&dijet_lead_eta,"dijet_lead_eta/F");
   tout->Branch("dijet_lead_phi",&dijet_lead_phi,"dijet_lead_phi/F");
   tout->Branch("dijet_lead_mass",&dijet_lead_mass,"dijet_lead_mass/F");
-  tout->Branch("dijet_lead_btagDeepFlavB",&dijet_lead_btagDeepFlavB,"dijet_lead_btagDeepFlavB/F");
+  tout->Branch("dijet_lead_btagDeepFlavB",&dijet_lead_btagDeepFlavB,"dijet_lead_btagDeepFlavB/F"); 
 
   tout->Branch("dijet_sublead_pt",&dijet_sublead_pt,"dijet_sublead_pt/F");
   tout->Branch("dijet_sublead_eta",&dijet_sublead_eta,"dijet_sublead_eta/F");
@@ -438,6 +444,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   tout->Branch("dijet_phi",&dijet_phi,"dijet_phi/F");  
   tout->Branch("dijet_mass",&dijet_mass,"dijet_mass/F");  
   tout->Branch("dijet_dR",&dijet_dR,"dijet_dR/F"); 
+  tout->Branch("fatjet_Hbb_score",&fatjet_Hbb_score,"fatjet_Hbb_score/F");
 
   tout->Branch("pfmet_pt",&pfmet_pt,"pfmet_pt/F"); 
   tout->Branch("puppimet_pt",&puppimet_pt,"puppimet_pt/F"); 
@@ -458,10 +465,14 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   
   tout->Branch("LeadPhoton_genPartFlav",&LeadPhoton_genPartFlav,"LeadPhoton_genPartFlav/I");
   tout->Branch("SubleadPhoton_genPartFlav",&SubleadPhoton_genPartFlav,"SubleadPhoton_genPartFlav/I");
+  tout->Branch("n_gen_matched_genjets",&n_gen_matched_genjets,"n_gen_matched_genjets/I");
   tout->Branch("n_gen_matched_jets",&n_gen_matched_jets,"n_gen_matched_jets/I");
   tout->Branch("n_gen_matched_in_dijet",&n_gen_matched_in_dijet,"n_gen_matched_in_dijet/I");
+  tout->Branch("GenB1_Genjet_match",&GenB1_Genjet_match,"GenB1_Genjet_match/B");
+  tout->Branch("GenB2_Genjet_match",&GenB2_Genjet_match,"GenB2_Genjet_match/B");
   tout->Branch("GenB1_reco_match",&GenB1_reco_match,"GenB1_reco_match/B");
   tout->Branch("GenB2_reco_match",&GenB2_reco_match,"GenB2_reco_match/B");
+  tout->Branch("GenB1B2_FatJet_match",&GenB1B2_FatJet_match,"GenB1B2_FatJet_match/B");
   tout->Branch("mindR1", &mindR1, "mindR1/F");
   tout->Branch("mindR2", &mindR2, "mindR2/F");
   tout->Branch("mindR1_reco", &mindR1_reco, "mindR1_reco/F");
@@ -500,6 +511,15 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   map<TString, vector<float>> binsx { };
   map<TString, TString> title { };
 
+  map<TString, int> nbinsx { };
+  map<TString, int> nbinsy { };
+  map<TString, float> xlow { };
+  map<TString, float> xhigh { };
+  map<TString, float> ylow { };
+  map<TString, float> yhigh { };
+  map<TString, TString> xtitle { };
+  map<TString, TString> ytitle { };
+
   // Define histos
   H1(cutflow,20,0,20,"");
   H1(weight,1,0,1,"");
@@ -509,6 +529,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
   TF1 *fakePhotonID_shape_barrel = get_fakePhotonIDShape(year,/*isEndcap*/false);
   TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*isEndcap*/true);
+  H2(GenHiggs_pt_vs_GenHiggs_dR,50,0,1000,50,0,3,"GenHiggs_pt","GenHiggs_dR");
+  H2(lead_jet_pt_vs_jet_bscore,50,0,500,50,0,1,"jet_pt","jet_bscore");
+  H2(sublead_jet_pt_vs_jet_bscore,50,0,500,50,0,1,"jet_pt","jet_bscore");
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
   if ( lowMassHggTriggerSF != 0) lowMassHggTriggerSF::set_lowMassHggTriggerSF();
   if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
@@ -550,7 +573,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       LeadPhoton_pixelSeed=true, SubleadPhoton_pixelSeed=true;
 
       n_jets=-1;
+      n_Genjets=-1;
       dijet_lead_pt=-999, dijet_lead_eta=-999, dijet_lead_phi=-999, dijet_lead_mass=-999, dijet_lead_btagDeepFlavB=-999;
+      fatjet_Hbb_score=-999;
       dijet_sublead_pt=-999, dijet_sublead_eta=-999, dijet_sublead_phi=-999, dijet_sublead_mass=-999, dijet_sublead_btagDeepFlavB=-999;
       dijet_pt=-999, dijet_eta=-999, dijet_phi=-999, dijet_mass=-999, dijet_dR=-999;
       pfmet_pt=-999, puppimet_pt=-999;
@@ -558,9 +583,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       weight_central=1.0, weight_central_initial=1.0, weight_central_no_lumi=1.0, weight_beforeBTagSF=1.0, weight_afterBTagSF=1.0;
 
       LeadPhoton_genPartFlav=0; SubleadPhoton_genPartFlav=0;
-      n_gen_matched_jets=0; n_gen_matched_in_dijet=0;
+      n_gen_matched_jets=0; n_gen_matched_in_dijet=0; n_gen_matched_genjets=0;
       dijet_lead_gen_match=false; dijet_sublead_gen_match=false;
-      GenB1_reco_match = false; GenB2_reco_match = false;
+      GenB1_reco_match = false; GenB2_reco_match = false; GenB1B2_FatJet_match=false;
+      GenB1_Genjet_match = false; GenB2_Genjet_match = false;
       mindR1 = 999; mindR2 = 999; mindR1_reco = 999; mindR2_reco = 999;
       GenHiggs_pt=-999; GenHiggs_eta=-999; GenHiggs_phi=-999; GenHiggs_mass=-999; GenHiggs_dR=-999;
       GenY_pt=-999; GenY_eta=-999; GenY_phi=-999; GenY_mass=-999; GenY_dR=-999;
@@ -677,16 +703,36 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       if (electrons.size() != 0 ) continue; 
       if (muons.size() != 0 ) continue; 
 
+      GenJets Genjets;
+      if (isMC) Genjets = getGenJets();
+      FatJets fatjets;
+      bool useAK8=true,useAK4=false;
+      if (nt.nFatJet()==0) 
+      {
+        useAK8=false;
+      }
+      else
+      {
+        fatjets = getFatJets(selectedPhotons);
+        if (fatjets.size()<1) useAK8=false;
+      }
+      
+      TLorentzVector x_cand;
+      if (useAK8== true) x_cand = selectedDiPhoton.p4 + fatjets[0].p4();
+//      Jets jets;
+//      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
+//      else jets = getJets(selectedPhotons, 0, 0);
+//      if (jets.size() < 2) continue; 
+cout<<1<<endl;
+      if (!useAK8)
+      {
       Jets jets;
       if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
       else jets = getJets(selectedPhotons, 0, 0);
       if (jets.size() < 2) continue; 
-
-      DiJets dijets = DiJetPreselection(jets);
-      DiJet selectedDiJet = dijets[0];
-
-      if (dijets[0].p4.M()<50) continue;
-
+        DiJets dijets = DiJetPreselection(jets);
+        DiJet selectedDiJet = dijets[0];
+        if (dijets[0].p4.M()<50) continue;
       if (isMC) {
         // Apply electron veto SF
         if ( electronVetoSF!=0 ) {
@@ -809,7 +855,35 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       }
 
       // Setting output variables
-      TLorentzVector x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
+      x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
+cout<<2<<endl;
+        n_jets = jets.size();
+        dijet_lead_pt = selectedDiJet.leadJet.pt();
+        dijet_lead_eta = selectedDiJet.leadJet.eta();
+        dijet_lead_phi = selectedDiJet.leadJet.phi();
+        dijet_lead_mass = selectedDiJet.leadJet.mass();
+        dijet_lead_btagDeepFlavB = selectedDiJet.leadJet.btagDeepFlavB();
+        dijet_sublead_pt = selectedDiJet.subleadJet.pt();
+        dijet_sublead_eta = selectedDiJet.subleadJet.eta();
+        dijet_sublead_phi = selectedDiJet.subleadJet.phi();
+        dijet_sublead_mass = selectedDiJet.subleadJet.mass();
+        dijet_sublead_btagDeepFlavB = selectedDiJet.subleadJet.btagDeepFlavB();
+        dijet_pt = selectedDiJet.p4.Pt();
+        dijet_eta = selectedDiJet.p4.Eta();
+        dijet_phi = selectedDiJet.p4.Phi();
+        dijet_mass = selectedDiJet.p4.M();
+        dijet_dR = selectedDiJet.dR;
+      }
+      else
+      {
+cout<<3<<endl;
+        dijet_pt = fatjets[0].p4().Pt();
+        dijet_eta = fatjets[0].p4().Eta();
+        dijet_phi = fatjets[0].p4().Phi();
+        dijet_mass = fatjets[0].p4().M();
+        fatjet_Hbb_score = fatjets[0].Hbb_score();
+      }
+
       xcand_pt = x_cand.Pt();
       xcand_eta = x_cand.Eta();
       xcand_phi = x_cand.Phi();
@@ -844,22 +918,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       Diphoton_pt_mgg = Diphoton_pt/Diphoton_mass;
       Diphoton_dR = selectedDiPhoton.dR;
 
-      n_jets = jets.size();
-      dijet_lead_pt = selectedDiJet.leadJet.pt();
-      dijet_lead_eta = selectedDiJet.leadJet.eta();
-      dijet_lead_phi = selectedDiJet.leadJet.phi();
-      dijet_lead_mass = selectedDiJet.leadJet.mass();
-      dijet_lead_btagDeepFlavB = selectedDiJet.leadJet.btagDeepFlavB();
-      dijet_sublead_pt = selectedDiJet.subleadJet.pt();
-      dijet_sublead_eta = selectedDiJet.subleadJet.eta();
-      dijet_sublead_phi = selectedDiJet.subleadJet.phi();
-      dijet_sublead_mass = selectedDiJet.subleadJet.mass();
-      dijet_sublead_btagDeepFlavB = selectedDiJet.subleadJet.btagDeepFlavB();
-      dijet_pt = selectedDiJet.p4.Pt();
-      dijet_eta = selectedDiJet.p4.Eta();
-      dijet_phi = selectedDiJet.p4.Phi();
-      dijet_mass = selectedDiJet.p4.M();
-      dijet_dR = selectedDiJet.dR;
+      n_Genjets = Genjets.size();
       pfmet_pt = isMC ? nt.MET_T1_pt() : nt.MET_pt();
       puppimet_pt = nt.PuppiMET_pt();
 
@@ -921,12 +980,47 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
           GenBFromHiggs_2_eta = gen_child_hbb[1].Eta();
           GenBFromHiggs_2_phi = gen_child_hbb[1].Phi();
           GenBFromHiggs_2_mass = gen_child_hbb[1].M();
-
-          // use gen jet as seed, which reco jet is matched to GenBFromHiggs1 and 2?
-          int reco_match_to_GenB1=-1,reco_match_to_GenB2=-1;
-          for (int ijet=0; ijet<jets.size(); ijet++)
+/*
+        // use gen part as seed, which gen jet is matched to GenBFromHiggs1 and 2?
+          int Genjet_match_to_GenB1=-1,Genjet_match_to_GenB2=-1;
+          for (int iGenjet=0; iGenjet<Genjets.size(); iGenjet++)
           {
-            float dR1 = jets[ijet].p4().DeltaR(gen_child_hbb[0]);
+            float dR1;
+            dR1 = Genjets[iGenjet].p4().DeltaR(gen_child_hbb[0]);
+            if (mindR1>dR1)
+            {
+              mindR1 = dR1;
+              if (dR1<0.4)
+              {
+                Genjet_match_to_GenB1=iGenjet;
+                GenB1_Genjet_match = true;
+              }
+            }
+          }
+          for (int iGenjet=0; iGenjet<Genjets.size(); iGenjet++)
+          {
+            float dR2;
+            dR2 = Genjets[iGenjet].p4().DeltaR(gen_child_hbb[1]);
+            if (mindR2>dR2 && iGenjet!=Genjet_match_to_GenB1)
+            {
+              mindR2 = dR2;
+              if (dR2<0.4)
+              {
+                Genjet_match_to_GenB2=iGenjet;
+                GenB2_Genjet_match = true;
+              }
+            }
+          } 
+*/
+//          if (GenB1_Genjet_match && GenB2_Genjet_match) cout<<mindR2<<Genjet_match_to_GenB1<<Genjet_match_to_GenB2<<endl;
+/*
+          // use gen part as seed, which reco dijet is matched to GenBFromHiggs1 and 2?
+          int reco_match_to_GenB1=-1,reco_match_to_GenB2=-1;
+          for (int ijet=0; ijet<2; ijet++)
+          {
+            float dR1;
+            if(ijet==0) dR1 = selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0]);
+            else if(ijet==1) dR1 = selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0]);
             if (mindR1>dR1)
             {
               mindR1 = dR1;
@@ -937,9 +1031,13 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
               }
             }
           }
-          for (int ijet=0; ijet<jets.size(); ijet++)
+//          for (int ijet=0; ijet<jets.size(); ijet++)
+          for (int ijet=0; ijet<2; ijet++)
           {
-            float dR2 = jets[ijet].p4().DeltaR(gen_child_hbb[1]);
+            float dR2;
+//            dR2 = jets[ijet].p4().DeltaR(gen_child_hbb[1]);
+            if(ijet==0) dR2 = selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1]);
+            else if(ijet==1) dR2 = selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1]);
             if (mindR2>dR2 && ijet!=reco_match_to_GenB1)
             {
               mindR2 = dR2;
@@ -950,6 +1048,16 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
               }
             }
           }          
+*/
+          // use gen part as seed, which FatJet is matched to GenBFromHiggs1 and 2?
+//          if (fatjets[0].p4().DeltaR(gen_child_hbb[0])<0.8 && fatjets[0].p4().DeltaR(gen_child_hbb[1])<0.8) GenB1B2_FatJet_match = true;
+
+/*          if (!GenB1B2_FatJet_match) 
+          {
+            cout<<"fatjet eta:"<<fatjets[0].p4().Eta()<<" fatjet_phi"<<fatjets[0].p4().Phi()<<endl;
+            cout<<"GenB1 eta:"<<gen_child_hbb[0].Eta()<<"GenB1 phi:"<<gen_child_hbb[0].Phi()<<"GenB2 eta:"<<gen_child_hbb[1].Eta()<<"GenB2 phi:"<<gen_child_hbb[1].Phi()<<endl;
+            cout<<"pho1 eta:"<<selectedDiPhoton.leadPho.p4().Eta()<<"reco1 phi:"<<selectedDiPhoton.leadPho.p4().Phi()<<"reco2 eta:"<<selectedDiPhoton.subleadPho.p4().Eta()<<"reco2 phi:"<<selectedDiPhoton.subleadPho.p4().Phi()<<endl;
+          }
 
           // use reco dijet as seed, which gen jet is matched to the reco dijet pair
           int gen_match_to_reco1=-1,gen_match_to_reco2=-1;
@@ -991,8 +1099,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 //          for (int ijet=0; ijet<jets.size(); ijet++)
 //            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
 //              n_gen_matched_jets++;
+*/
         }
       }
+//      if (!GenB1_reco_match || !GenB2_reco_match) {/*cout<<GenB1_reco_match<<GenB2_reco_match<<endl;*/ continue;}
 
       // Histo filling
       h_LeadPhoton_sieie->Fill(LeadPhoton_sieie);
@@ -1004,6 +1114,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       h_SubleadPhoton_chargedHadronIso->Fill(SubleadPhoton_chargedHadronIso);
       h_SubleadPhoton_trkSumPtHollowConeDR03->Fill(SubleadPhoton_trkSumPtHollowConeDR03);
       h_weight->Fill(0.5, weight*factor);
+      h_GenHiggs_pt_vs_GenHiggs_dR->Fill(GenHiggs_pt, GenHiggs_dR, weight*factor);
+//      cout<<selectedDiJet.leadJet.pt()<<" "<<selectedDiJet.leadJet.btagDeepFlavB()<<endl;
+//      h_lead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.leadJet.pt(), selectedDiJet.leadJet.btagDeepFlavB(), weight*factor);
+//      h_sublead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.subleadJet.pt(), selectedDiJet.subleadJet.btagDeepFlavB(), weight*factor);
 
       tout->Fill();
     } // Event loop

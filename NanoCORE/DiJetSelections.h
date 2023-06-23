@@ -132,8 +132,66 @@ struct Jet {
     float btagSF_deepjet_shape_down_cferr2_ = 1.0;
 };
 
+struct GenJet {
+    GenJet(unsigned int idx = 0) : idx_(idx) {
+        pt_ = nt.GenJet_pt()[idx_];
+        mass_ = nt.GenJet_mass()[idx_];
+        eta_ = nt.GenJet_eta()[idx_];
+        phi_ = nt.GenJet_phi()[idx_];
+        p4_.SetPtEtaPhiM(pt_, nt.GenJet_eta()[idx_], nt.GenJet_phi()[idx_], nt.GenJet_mass()[idx_]);
+    }
+    TLorentzVector p4() { return p4_; }
+    unsigned int idx() { return idx_; }
+    float pt() { return pt_; }
+    float mass() { return mass_; }
+    float eta() { return eta_; }
+    float phi() { return phi_; }
+
+  private:
+    float pt_ = 0.;
+    float eta_ = 0.;
+    float mass_ = 0.;
+    float phi_ = 0.;
+    TLorentzVector p4_;
+    unsigned int idx_;
+};
+
+struct FatJet {
+    FatJet(unsigned int idx = 0) : idx_(idx) {
+        pt_ = nt.FatJet_pt()[idx_];
+        mass_ = nt.FatJet_msoftdrop()[idx_];
+        eta_ = nt.FatJet_eta()[idx_];
+        phi_ = nt.FatJet_phi()[idx_];
+        p4_.SetPtEtaPhiM(pt_, nt.FatJet_eta()[idx_], nt.FatJet_phi()[idx_], nt.FatJet_msoftdrop()[idx_]);
+        jetId_ = nt.Jet_jetId()[idx_];
+        Hbb_score_ = nt.FatJet_particleNetMD_Xbb()[idx_]/(nt.FatJet_particleNetMD_Xbb()[idx_]+nt.FatJet_particleNetMD_QCD()[idx_]);
+    }
+    TLorentzVector p4() { return p4_; }
+    unsigned int idx() { return idx_; }
+    float pt() { return pt_; }
+    float mass() { return mass_; }
+    float eta() { return eta_; }
+    float phi() { return phi_; }
+    int jetId() { return jetId_; }
+    float Hbb_score() {return Hbb_score_;}
+
+  private:
+    float pt_ = 0.;
+    float eta_ = 0.;
+    float mass_ = 0.;
+    float phi_ = 0.;
+    TLorentzVector p4_;
+    unsigned int idx_;
+    int jetId_ = 0;
+    float Hbb_score_ = 0;
+};
+
 vector<Jet> getJets(Photons photons, const int JESUnc, const int JERUnc);
 typedef std::vector<Jet> Jets;
+vector<GenJet> getGenJets();
+typedef std::vector<GenJet> GenJets;
+vector<FatJet> getFatJets(Photons photons);
+typedef std::vector<FatJet> FatJets;
 
 struct DiJet{
     Jet leadJet;
@@ -158,11 +216,35 @@ struct DiJet{
 
 typedef std::vector<DiJet> DiJets;
 
+struct GenDiJet{
+    GenJet leadGenJet;
+    GenJet subleadGenJet;
+    TLorentzVector p4;
+    float dR;
+    GenDiJet(GenJet p1, GenJet p2)
+    {
+        if (p1.pt() > p2.pt()) {
+            leadGenJet = p1;
+            subleadGenJet = p2;
+        } else {
+            leadGenJet = p2;
+            subleadGenJet = p1;
+        }
+        TLorentzVector leadGenJetp4 = leadGenJet.p4();
+        TLorentzVector subleadGenJetp4 = subleadGenJet.p4();
+        p4 = leadGenJetp4 + subleadGenJetp4;
+        dR = leadGenJetp4.DeltaR(subleadGenJetp4);
+    }
+};
+
+typedef std::vector<GenDiJet> GenDiJets;
+
 inline bool sortBybscore(Jet &p1, Jet &p2)
 {
         return p1.btagDeepFlavB() > p2.btagDeepFlavB();    
 }
 
 DiJets DiJetPreselection(Jets &jets); 
+GenDiJets GenDiJetPreselection(GenJets &Genjets); 
 
 #endif
