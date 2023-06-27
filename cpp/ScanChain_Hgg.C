@@ -396,14 +396,24 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       }
 
 
-      // HLT selection
+      //// HLT selection
+      //if ( (year=="2016nonAPV" || year=="2016APV") &&
+      //    !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
+      //      || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+      //if ( (year=="2017") &&
+      //    !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+      //if ( (year=="2018") &&
+      //    !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+
+      // HLT selection Ele path (inverted)
       if ( (year=="2016nonAPV" || year=="2016APV") &&
-          !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
-            || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+          !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0)
+            || (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0) ) ) continue;
       if ( (year=="2017") &&
-          !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+          !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0)  )  ) continue;
       if ( (year=="2018") &&
-          !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+          !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0) ) ) continue;
+
 
 
       // Object selection
@@ -427,8 +437,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       Electrons electrons = getElectrons(selectedPhotons);
       Muons muons = getMuons(selectedPhotons);
-      if (electrons.size() != 0 ) continue; 
-      if (muons.size() != 0 ) continue; 
+      //inverted, want events with leptons
+      if ((electrons.size() + muons.size()) == 0) continue;
+      //if (electrons.size() != 0 ) continue; 
+      //if (muons.size() != 0 ) continue; 
 
       Jets jets;
       if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
