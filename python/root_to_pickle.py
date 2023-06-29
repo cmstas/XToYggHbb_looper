@@ -13,7 +13,7 @@ if sys.argv[1].endswith("/"):
 df = pd.DataFrame()
 for file_name in file_names:
   weight_scale = 1.0
-  if "Data" not in file_name:
+  if ("Data" not in file_name) and ("DDQCDGJets" not in file_name):
     fileIn = ROOT.TFile.Open(file_name,"READ")
     h_beforeBTagSF = fileIn.Get("weight_beforeBTagSF")
     beforeBTagSF = h_beforeBTagSF.GetBinContent(1)
