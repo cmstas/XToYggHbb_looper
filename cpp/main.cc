@@ -332,6 +332,35 @@ int main(int argc, char **argv) {
                                                           "Run2016G-UL2016_MiniAODv2-v1",
                                                           "Run2016H-UL2016_MiniAODv2-v1" } } } });
     }
+
+    if ( sampleArg=="TXX" || sampleArg=="all" ) {
+      TString sampleName = "tZq";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 26});
+      sample_names.insert({sampleName, "tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "TTZ";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 27});
+      sample_names.insert({sampleName, "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "TTW";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 28});
+      sample_names.insert({sampleName, "TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v1" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+    }
   }
 
   // Sample list: Signal

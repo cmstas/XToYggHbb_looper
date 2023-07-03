@@ -91,7 +91,7 @@ sampleLegend["QCD"]               = "QCD"
 sampleLegend["DDQCDGJets"]        = "QCD+GJets"
 sampleLegend["GJets"]             = "GJets"
 sampleLegend["Diphoton"]          = "Diphoton"
-sampleLegend["tt+X"]              = "tt+X"
+sampleLegend["tt+X"]              = "tZq,tt+X"
 sampleLegend["DY"]                = "DY"
 sampleLegend["VG"]                = "VG"
 sampleLegend["Diboson"]           = "Diboson"
@@ -220,7 +220,7 @@ def get_plots(samples, year, plotname, cut, plotBin, plotXTitle, plotYTitle):
   tempGroups = OrderedDict()
   tempGroups["QCD"] = ["QCD_Pt-30to40_MGG-80toInf","QCD_Pt-30toInf_MGG-40to80","QCD_Pt-40toInf_MGG-80toInf"]
   tempGroups["Diphoton"] = ["DiPhotonLow","DiPhoton"]
-  tempGroups["tt+X"] = ["TTGG","TTGJets","TTJets"]
+  tempGroups["tt+X"] = ["TTGG","TTGJets","TTJets","tZq","TTW","TTZ"]
   tempGroups["VG"] = ["WG","ZG"]
   tempGroups["Diboson"]   = ["WW","WZ","ZZ"]
   tempGroups["Single H"]   = ["ggHToDiPhoM125","VBFH_M125","VH_M125"]
@@ -835,6 +835,9 @@ if __name__=="__main__":
     samples.append("TTGG")
     samples.append("TTGJets")
     samples.append("TTJets")
+    samples.append("tZq")
+    samples.append("TTW")
+    samples.append("TTZ")
     samples.append("DY")
     samples.append("WG")
     samples.append("ZG")
