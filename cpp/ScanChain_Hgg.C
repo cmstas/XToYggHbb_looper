@@ -723,7 +723,6 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 //      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
 //      else jets = getJets(selectedPhotons, 0, 0);
 //      if (jets.size() < 2) continue; 
-cout<<1<<endl;
       if (!useAK8)
       {
       Jets jets;
@@ -856,7 +855,6 @@ cout<<1<<endl;
 
       // Setting output variables
       x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
-cout<<2<<endl;
         n_jets = jets.size();
         dijet_lead_pt = selectedDiJet.leadJet.pt();
         dijet_lead_eta = selectedDiJet.leadJet.eta();
@@ -876,7 +874,6 @@ cout<<2<<endl;
       }
       else
       {
-cout<<3<<endl;
         dijet_pt = fatjets[0].p4().Pt();
         dijet_eta = fatjets[0].p4().Eta();
         dijet_phi = fatjets[0].p4().Phi();
