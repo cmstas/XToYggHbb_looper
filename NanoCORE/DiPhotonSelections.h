@@ -35,6 +35,7 @@ struct Photon {
         try { genPartFlav_ = nt.Photon_genPartFlav()[idx_]; } catch(const std::exception& e) { genPartFlav_ = 0; }
     }
     void setPt(float pt) { pt_ = pt; }
+    void setMvaID(float mvaID) { mvaID_ = mvaID; }
     //void set_idlevel(int idlevel) { idlevel_ = idlevel; }
     //int id() { return id_; } // Not in newest custom NanoAOD
     unsigned int idx() { return idx_; }
