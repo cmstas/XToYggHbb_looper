@@ -382,6 +382,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   bool GenB1_reco_match, GenB2_reco_match;
   bool GenB1B2_FatJet_match;
   bool dijet_lead_gen_match, dijet_sublead_gen_match;
+  bool useAK8;
   float mindR1, mindR2, mindR1_reco, mindR2_reco;
   float GenHiggs_pt, GenHiggs_eta, GenHiggs_phi, GenHiggs_mass, GenHiggs_dR;
   float GenY_pt, GenY_eta, GenY_phi, GenY_mass, GenY_dR;
@@ -425,6 +426,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   tout->Branch("Diphoton_pt_mgg",&Diphoton_pt_mgg,"Diphoton_pt_mgg/F");
   tout->Branch("Diphoton_dR",&Diphoton_dR,"Diphoton_dR/F");
 
+  tout->Branch("useAK8",&useAK8,"useAK8/B");
   tout->Branch("n_jets",&n_jets,"n_jets/I");  
   tout->Branch("n_Genjets",&n_Genjets,"n_Genjets/I");  
   tout->Branch("dijet_lead_pt",&dijet_lead_pt,"dijet_lead_pt/F");
@@ -572,6 +574,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       SubleadPhoton_sieie=-999, SubleadPhoton_pfPhoIso03=-999, SubleadPhoton_chargedHadronIso=-999, SubleadPhoton_r9=-999, SubleadPhoton_trkSumPtHollowConeDR03=-999;
       LeadPhoton_pixelSeed=true, SubleadPhoton_pixelSeed=true;
 
+      useAK8=1;
       n_jets=-1;
       n_Genjets=-1;
       dijet_lead_pt=-999, dijet_lead_eta=-999, dijet_lead_phi=-999, dijet_lead_mass=-999, dijet_lead_btagDeepFlavB=-999;
@@ -706,7 +709,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       GenJets Genjets;
       if (isMC) Genjets = getGenJets();
       FatJets fatjets;
-      bool useAK8=true,useAK4=false;
+      useAK8=true;
       if (nt.nFatJet()==0) 
       {
         useAK8=false;
@@ -719,10 +722,6 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       
       TLorentzVector x_cand;
       if (useAK8== true) x_cand = selectedDiPhoton.p4 + fatjets[0].p4();
-//      Jets jets;
-//      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
-//      else jets = getJets(selectedPhotons, 0, 0);
-//      if (jets.size() < 2) continue; 
       if (!useAK8)
       {
       Jets jets;
