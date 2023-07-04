@@ -722,16 +722,20 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       
       TLorentzVector x_cand;
       if (useAK8== true) x_cand = selectedDiPhoton.p4 + fatjets[0].p4();
-      if (!useAK8)
+
+      if (!useAK8) // if don't use AK8 and also does not have 2 qualified jets, continue
       {
-      Jets jets;
-      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
-      else jets = getJets(selectedPhotons, 0, 0);
-      if (jets.size() < 2) continue; 
+        Jets jets;
+        if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
+        else jets = getJets(selectedPhotons, 0, 0);
+        if (jets.size() < 2) continue; 
         DiJets dijets = DiJetPreselection(jets);
         DiJet selectedDiJet = dijets[0];
         if (dijets[0].p4.M()<50) continue;
-      if (isMC) {
+      }
+
+      if (isMC) 
+      {
         // Apply electron veto SF
         if ( electronVetoSF!=0 ) {
           if ( electronVetoSF==1  ) weight *= electronVetoSF::get_electronVetoSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "central")*electronVetoSF::get_electronVetoSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "central");
@@ -765,95 +769,100 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
           if ( phoMVAIDWP90SF==-2 ) weight *= phoMVAIDWP90SF::get_phoMVAIDWP90SF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), year, "down")*phoMVAIDWP90SF::get_phoMVAIDWP90SF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), year, "down");
         }
 
-        // Apply bTagSF and get the weights before and after the application to normalize post-preselection
-        if ( bTagSF!=0 ) {
-          float leadJetBTagSF, subleadJetBTagSF;
-          if ( bTagSF==1 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape();
+        if (!useAK8)
+        {
+          // Apply bTagSF and get the weights before and after the application to normalize post-preselection
+          if ( bTagSF!=0 ) {
+            float leadJetBTagSF, subleadJetBTagSF;
+            if ( bTagSF==1 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape();
+            }
+            if ( bTagSF==2 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hf();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hf();
+            }
+            if ( bTagSF==-2 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hf();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hf();
+            }
+            if ( bTagSF==3 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats1();
+            }
+            if ( bTagSF==-3 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats1();
+            }
+            if ( bTagSF==4 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats2();
+            }
+            if ( bTagSF==-4 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats2();
+            }
+            if ( bTagSF==5 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lf();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lf();
+            }
+            if ( bTagSF==-5 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lf();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lf();
+            }
+            if ( bTagSF==6 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats1();
+            }
+            if ( bTagSF==-6 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats1();
+            }
+            if ( bTagSF==7 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats2();
+            }
+            if ( bTagSF==-7 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats2();
+            }
+            if ( bTagSF==8 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_jes();
+            }
+            if ( bTagSF==-8 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_jes();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_jes();
+            }
+            if ( bTagSF==9 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr1();
+            }
+            if ( bTagSF==-9 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr1();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr1();
+            }
+            if ( bTagSF==10 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr2();
+            }
+            if ( bTagSF==-10 ) {
+              leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr2();
+              subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr2();
+            }
+            weight_beforeBTagSF = weight;
+            h_weight_beforeBTagSF->Fill(0.5, weight);
+            weight *= leadJetBTagSF * subleadJetBTagSF;
+            weight_afterBTagSF = weight;
+            h_weight_afterBTagSF->Fill(0.5, weight);
           }
-          if ( bTagSF==2 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hf();
-          }
-          if ( bTagSF==-2 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hf();
-          }
-          if ( bTagSF==3 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats1();
-          }
-          if ( bTagSF==-3 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats1();
-          }
-          if ( bTagSF==4 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats2();
-          }
-          if ( bTagSF==-4 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats2();
-          }
-          if ( bTagSF==5 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lf();
-          }
-          if ( bTagSF==-5 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lf();
-          }
-          if ( bTagSF==6 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats1();
-          }
-          if ( bTagSF==-6 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats1();
-          }
-          if ( bTagSF==7 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats2();
-          }
-          if ( bTagSF==-7 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats2();
-          }
-          if ( bTagSF==8 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_jes();
-          }
-          if ( bTagSF==-8 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_jes();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_jes();
-          }
-          if ( bTagSF==9 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr1();
-          }
-          if ( bTagSF==-9 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr1();
-          }
-          if ( bTagSF==10 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr2();
-          }
-          if ( bTagSF==-10 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr2();
-          }
-          weight_beforeBTagSF = weight;
-          h_weight_beforeBTagSF->Fill(0.5, weight);
-          weight *= leadJetBTagSF * subleadJetBTagSF;
-          weight_afterBTagSF = weight;
-          h_weight_afterBTagSF->Fill(0.5, weight);
         }
       }
 
       // Setting output variables
-      x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
+      if (!useAK8) // if not use AK8, all the variables are built using the 2 jets
+      {
+        x_cand = selectedDiPhoton.p4 + selectedDiJet.p4;
         n_jets = jets.size();
         dijet_lead_pt = selectedDiJet.leadJet.pt();
         dijet_lead_eta = selectedDiJet.leadJet.eta();
