@@ -723,17 +723,21 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       TLorentzVector x_cand;
       if (useAK8== true) x_cand = selectedDiPhoton.p4 + fatjets[0].p4();
 
+      Jet leadJet, subleadJet;
+      Jets jets;
       if (!useAK8) // if don't use AK8 and also does not have 2 qualified jets, continue
       {
-        Jets jets;
         if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
         else jets = getJets(selectedPhotons, 0, 0);
         if (jets.size() < 2) continue; 
         DiJets dijets = DiJetPreselection(jets);
         DiJet selectedDiJet = dijets[0];
         if (dijets[0].p4.M()<50) continue;
+        leadJet = selectedDiJet.leadJet;
+        subleadJet = selectedDiJet.subleadJet;
       }
-
+      DiJet selectedDiJet = DiJet(leadJet, subleadJet);
+      
       if (isMC) 
       {
         // Apply electron veto SF
