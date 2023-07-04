@@ -941,32 +941,32 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         GenParts genparts = getGenParts();
         vector<TLorentzVector> gen_child_xyh, gen_child_ygg, gen_child_hbb;
         for (int igenpart=0; igenpart<genparts.size(); igenpart++)
-          {
-            if (genparts[igenpart].isxyh()) {
-              GenX = genparts[igenpart].mother_p4(); 
-              gen_child_xyh.push_back(genparts[igenpart].p4());
-              GenX_pt = GenX.Pt();
-              GenX_eta = GenX.Eta();
-              GenX_phi = GenX.Phi();
-              GenX_mass = GenX.M();
-            }
-            if (genparts[igenpart].isygg()) {
-              GenY = genparts[igenpart].mother_p4(); 
-              gen_child_ygg.push_back(genparts[igenpart].p4());
-              GenY_pt = GenY.Pt();
-              GenY_eta = GenY.Eta();
-              GenY_phi = GenY.Phi();
-              GenY_mass = GenY.M();
-            }
-            if (genparts[igenpart].ishbb()) {
-              GenHiggs = genparts[igenpart].mother_p4();
-              gen_child_hbb.push_back(genparts[igenpart].p4());
-              GenHiggs_pt = GenHiggs.Pt();
-              GenHiggs_eta = GenHiggs.Eta();
-              GenHiggs_phi = GenHiggs.Phi();
-              GenHiggs_mass = GenHiggs.M();
-            }
+        {
+          if (genparts[igenpart].isxyh()) {
+            GenX = genparts[igenpart].mother_p4(); 
+            gen_child_xyh.push_back(genparts[igenpart].p4());
+            GenX_pt = GenX.Pt();
+            GenX_eta = GenX.Eta();
+            GenX_phi = GenX.Phi();
+            GenX_mass = GenX.M();
           }
+          if (genparts[igenpart].isygg()) {
+            GenY = genparts[igenpart].mother_p4(); 
+            gen_child_ygg.push_back(genparts[igenpart].p4());
+            GenY_pt = GenY.Pt();
+            GenY_eta = GenY.Eta();
+            GenY_phi = GenY.Phi();
+            GenY_mass = GenY.M();
+          }
+          if (genparts[igenpart].ishbb()) {
+            GenHiggs = genparts[igenpart].mother_p4();
+            gen_child_hbb.push_back(genparts[igenpart].p4());
+            GenHiggs_pt = GenHiggs.Pt();
+            GenHiggs_eta = GenHiggs.Eta();
+            GenHiggs_phi = GenHiggs.Phi();
+            GenHiggs_mass = GenHiggs.M();
+          }
+        }
         if (!abs(GenX_pt+999)<0.0001){
           GenX_dR = gen_child_xyh[0].DeltaR(gen_child_xyh[1]);
         }
@@ -985,6 +985,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
           GenBFromHiggs_2_eta = gen_child_hbb[1].Eta();
           GenBFromHiggs_2_phi = gen_child_hbb[1].Phi();
           GenBFromHiggs_2_mass = gen_child_hbb[1].M();
+
+// The following code is for the study of gen jet match to gen particle, which is not needed to run every time in the analysis. 
+// Remove the comment and run these lines when cross check that if the gen_child information is correct w.r.t. the gen_Jet
 /*
         // use gen part as seed, which gen jet is matched to GenBFromHiggs1 and 2?
           int Genjet_match_to_GenB1=-1,Genjet_match_to_GenB2=-1;
@@ -1017,7 +1020,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
             }
           } 
 */
-//          if (GenB1_Genjet_match && GenB2_Genjet_match) cout<<mindR2<<Genjet_match_to_GenB1<<Genjet_match_to_GenB2<<endl;
+
+// The following code is for the study of reco dijet matched to gen particle, which is not needed to run every time in the analysis, commented out to save time. 
+// Remove the comment and run these lines to study if the 2 gen particles can find their reco matches. 
+// This study tells our selected dijet pair is 2 match or 1 match or 0 match w.r.t. gen particle, which means if our output dijets are selecting the correct jets from Higgs
 /*
           // use gen part as seed, which reco dijet is matched to GenBFromHiggs1 and 2?
           int reco_match_to_GenB1=-1,reco_match_to_GenB2=-1;
@@ -1036,11 +1042,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
               }
             }
           }
-//          for (int ijet=0; ijet<jets.size(); ijet++)
           for (int ijet=0; ijet<2; ijet++)
           {
             float dR2;
-//            dR2 = jets[ijet].p4().DeltaR(gen_child_hbb[1]);
             if(ijet==0) dR2 = selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1]);
             else if(ijet==1) dR2 = selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1]);
             if (mindR2>dR2 && ijet!=reco_match_to_GenB1)
@@ -1054,18 +1058,52 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
             }
           }          
 */
-          // use gen part as seed, which FatJet is matched to GenBFromHiggs1 and 2?
+
+// The following is a little bit different from the previous paragraph. 
+// This is studying still in the AK4 category, but before doing selecting the 2 highest b score jets. 
+// If we want to know that how many jets in our jet collections can be matched to the gen particles, not needed to be the selected dijet pair, can use the following code.
+// This number combines with the previous one, tells us if the step from jet collection to dijet pair reduces the gen match correctness.
+/*
+          // use gen part as seed, which jet is matched to GenBFromHiggs1 and 2?
+          int reco_match_to_GenB1=-1,reco_match_to_GenB2=-1;
+          for (int ijet=0; ijet<jets.size(); ijet++)
+          {
+            float dR1;
+            dR1 = jets[ijet].p4().DeltaR(gen_child_hbb[0]); 
+            if (mindR1>dR1)
+            {
+              mindR1 = dR1;
+              if (dR1<0.4)
+              {
+                reco_match_to_GenB1=ijet;
+                GenB1_reco_match = true;
+              }
+            }
+          }
+          for (int ijet=0; ijet<jets.size(); ijet++) //This line is used for selecting matching in all jet collections, without requiring "select 2 leading b tag score jet"
+          {
+            float dR2;
+            dR2 = jets[ijet].p4().DeltaR(gen_child_hbb[1]); 
+            if (mindR2>dR2 && ijet!=reco_match_to_GenB1)
+            {
+              mindR2 = dR2;
+              if (dR2<0.4)
+              {
+                reco_match_to_GenB2=ijet;
+                GenB2_reco_match = true;
+              }
+            }
+          }          
+*/
+
+// use gen part as seed, this line is to study if the FatJet can be matched to both gen particle GenBFromHiggs1 and 2.
 //          if (fatjets[0].p4().DeltaR(gen_child_hbb[0])<0.8 && fatjets[0].p4().DeltaR(gen_child_hbb[1])<0.8) GenB1B2_FatJet_match = true;
 
-/*          if (!GenB1B2_FatJet_match) 
-          {
-            cout<<"fatjet eta:"<<fatjets[0].p4().Eta()<<" fatjet_phi"<<fatjets[0].p4().Phi()<<endl;
-            cout<<"GenB1 eta:"<<gen_child_hbb[0].Eta()<<"GenB1 phi:"<<gen_child_hbb[0].Phi()<<"GenB2 eta:"<<gen_child_hbb[1].Eta()<<"GenB2 phi:"<<gen_child_hbb[1].Phi()<<endl;
-            cout<<"pho1 eta:"<<selectedDiPhoton.leadPho.p4().Eta()<<"reco1 phi:"<<selectedDiPhoton.leadPho.p4().Phi()<<"reco2 eta:"<<selectedDiPhoton.subleadPho.p4().Eta()<<"reco2 phi:"<<selectedDiPhoton.subleadPho.p4().Phi()<<endl;
-          }
 
-          // use reco dijet as seed, which gen jet is matched to the reco dijet pair
-          int gen_match_to_reco1=-1,gen_match_to_reco2=-1;
+// This is matched in a reverted way. To answer can the reco jet find their truth match? Instead of can the gen jet find their reco match?
+// These are in principal the same. If we require the match is an 1 to 1 matching. Which means if the reco jet can only find 1 truth match, and each truth jet can only find 1 reco match.
+// use reco dijet as seed, which gen jet is matched to the reco dijet pair
+/*          int gen_match_to_reco1=-1,gen_match_to_reco2=-1;
           float mindR1_reco=999, mindR2_reco=999;
           for (int igenjet=0; igenjet<2; igenjet++)
           {
@@ -1093,21 +1131,22 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
               }
             }
           } 
-
-          if(dijet_lead_gen_match) n_gen_matched_in_dijet++;
-          if(dijet_sublead_gen_match) n_gen_matched_in_dijet++;
-          if(GenB1_reco_match) n_gen_matched_jets++;
-          if(GenB2_reco_match) n_gen_matched_jets++;
-//          if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
-//          if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
-
-//          for (int ijet=0; ijet<jets.size(); ijet++)
-//            if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
-//              n_gen_matched_jets++;
 */
+
+// don't need to count those variables except doing the gen_match study
+//        if(dijet_lead_gen_match) n_gen_matched_in_dijet++;
+//        if(dijet_sublead_gen_match) n_gen_matched_in_dijet++;
+//        if(GenB1_reco_match) n_gen_matched_jets++;
+//        if(GenB2_reco_match) n_gen_matched_jets++;
+//        if (selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.leadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_lead_gen_match=true; n_gen_matched_in_dijet++;}
+//        if (selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[0])<=0.4 || selectedDiJet.subleadJet.p4().DeltaR(gen_child_hbb[1])<=0.4) {dijet_sublead_gen_match=true; n_gen_matched_in_dijet++;}
+
+//        for (int ijet=0; ijet<jets.size(); ijet++)
+//          if (jets[ijet].p4().DeltaR(gen_child_hbb[0])<=0.4 || jets[ijet].p4().DeltaR(gen_child_hbb[1])<=0.4)
+//            n_gen_matched_jets++;
+
         }
       }
-//      if (!GenB1_reco_match || !GenB2_reco_match) {/*cout<<GenB1_reco_match<<GenB2_reco_match<<endl;*/ continue;}
 
       // Histo filling
       h_LeadPhoton_sieie->Fill(LeadPhoton_sieie);
@@ -1120,10 +1159,11 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       h_SubleadPhoton_trkSumPtHollowConeDR03->Fill(SubleadPhoton_trkSumPtHollowConeDR03);
       h_weight->Fill(0.5, weight*factor);
       h_GenHiggs_pt_vs_GenHiggs_dR->Fill(GenHiggs_pt, GenHiggs_dR, weight*factor);
-//      cout<<selectedDiJet.leadJet.pt()<<" "<<selectedDiJet.leadJet.btagDeepFlavB()<<endl;
-//      h_lead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.leadJet.pt(), selectedDiJet.leadJet.btagDeepFlavB(), weight*factor);
-//      h_sublead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.subleadJet.pt(), selectedDiJet.subleadJet.btagDeepFlavB(), weight*factor);
-
+      if(!useAK8)
+      {
+        h_lead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.leadJet.pt(), selectedDiJet.leadJet.btagDeepFlavB(), weight*factor);
+        h_sublead_jet_pt_vs_jet_bscore->Fill(selectedDiJet.subleadJet.pt(), selectedDiJet.subleadJet.btagDeepFlavB(), weight*factor);
+      }
       tout->Fill();
     } // Event loop
     delete file;
