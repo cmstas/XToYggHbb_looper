@@ -62,8 +62,10 @@ Photons getPhotons(const TString year, const int fnufUnc, const int materialUnc,
         if ( !(pho.hoe()<0.08) ) continue;
         //if ( pho.pixelSeed() > 0.5 ) continue; // Not standard photon selection, but used to suppress electrons on the DY peak
         // inverted 
-        if ( !(pho.pixelSeed() <= 0.5) ) continue;
-        if ( pho.eveto() < 0.5 ) continue;
+        if ( (pho.pixelSeed() <= 0.5) ) continue;
+        //if ( pho.eveto() < 0.5 ) continue;
+        // inverted
+        if ( pho.eveto() >= 0.5 ) continue;
 
         if ( !(pho.r9() > 0.8 || pho.chargedHadIso() < 20 || pho.chargedHadIso()/pho.pt() < 0.3) ) continue;
 

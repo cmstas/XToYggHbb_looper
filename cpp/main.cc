@@ -386,6 +386,7 @@ int main(int argc, char **argv) {
     //TString baseDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
     //inverted
     TString baseDir = "/ceph/cms/store/user/iareed/skim_Jun132023_ggbb_DY_Ele_HLT";
+    //TString baseDir = "/ceph/cms/store/user/iareed/skim_Jun302023_ggbb_no_pho_selection";
     TString version = "v0";
 
     for ( int iyear=0; iyear<years.size(); iyear++ ) {
