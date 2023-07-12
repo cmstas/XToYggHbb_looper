@@ -165,8 +165,30 @@ struct FatJet {
         p4_.SetPtEtaPhiM(pt_, nt.FatJet_eta()[idx_], nt.FatJet_phi()[idx_], nt.FatJet_msoftdrop()[idx_]);
         jetId_ = nt.Jet_jetId()[idx_];
         Hbb_score_ = nt.FatJet_particleNetMD_Xbb()[idx_]/(nt.FatJet_particleNetMD_Xbb()[idx_]+nt.FatJet_particleNetMD_QCD()[idx_]);
+        subJetIdx1_ = nt.FatJet_subJetIdx1()[idx_];
+        subJetIdx2_ = nt.FatJet_subJetIdx2()[idx_];
+        nSubJet_ = nt.nSubJet();
+        if (subJetIdx1_!=-1 && subJetIdx2_!=-1)
+        {
+            if (nt.SubJet_btagDeepB()[subJetIdx1_]>nt.SubJet_btagDeepB()[subJetIdx2_])
+            {
+                SubJet1_p4_.SetPtEtaPhiM(nt.SubJet_pt()[subJetIdx1_], nt.SubJet_eta()[subJetIdx1_], nt.SubJet_phi()[subJetIdx1_], nt.SubJet_mass()[subJetIdx1_]);
+                SubJet2_p4_.SetPtEtaPhiM(nt.SubJet_pt()[subJetIdx2_], nt.SubJet_eta()[subJetIdx2_], nt.SubJet_phi()[subJetIdx2_], nt.SubJet_mass()[subJetIdx2_]);
+                subjet1_bscore_ = nt.SubJet_btagDeepB()[subJetIdx1_];
+                subjet2_bscore_ = nt.SubJet_btagDeepB()[subJetIdx2_];
+            }
+            if (nt.SubJet_btagDeepB()[subJetIdx2_]>nt.SubJet_btagDeepB()[subJetIdx1_])
+            {
+                SubJet2_p4_.SetPtEtaPhiM(nt.SubJet_pt()[subJetIdx1_], nt.SubJet_eta()[subJetIdx1_], nt.SubJet_phi()[subJetIdx1_], nt.SubJet_mass()[subJetIdx1_]);
+                SubJet1_p4_.SetPtEtaPhiM(nt.SubJet_pt()[subJetIdx2_], nt.SubJet_eta()[subJetIdx2_], nt.SubJet_phi()[subJetIdx2_], nt.SubJet_mass()[subJetIdx2_]);
+                subjet1_bscore_ = nt.SubJet_btagDeepB()[subJetIdx2_];
+                subjet2_bscore_ = nt.SubJet_btagDeepB()[subJetIdx1_];
+            }
+        }
     }
     TLorentzVector p4() { return p4_; }
+    TLorentzVector SubJet1_p4() { return SubJet1_p4_; }
+    TLorentzVector SubJet2_p4() { return SubJet2_p4_; }
     unsigned int idx() { return idx_; }
     float pt() { return pt_; }
     float mass() { return mass_; }
@@ -174,6 +196,11 @@ struct FatJet {
     float phi() { return phi_; }
     int jetId() { return jetId_; }
     float Hbb_score() {return Hbb_score_;}
+    float subjet1_bscore() {return subjet1_bscore_;}
+    float subjet2_bscore() {return subjet2_bscore_;}
+    int subJetIdx1() {return subJetIdx1_;}
+    int subJetIdx2() {return subJetIdx2_;}
+    int nSubJet() {return nSubJet_;}
 
   private:
     float pt_ = 0.;
@@ -181,9 +208,16 @@ struct FatJet {
     float mass_ = 0.;
     float phi_ = 0.;
     TLorentzVector p4_;
+    TLorentzVector SubJet1_p4_;
+    TLorentzVector SubJet2_p4_;
     unsigned int idx_;
     int jetId_ = 0;
     float Hbb_score_ = 0;
+    int subJetIdx1_ = 0;
+    int subJetIdx2_ = 0;
+    int nSubJet_ = 0;
+    float subjet1_bscore_ = 0;
+    float subjet2_bscore_ = 0;
 };
 
 vector<Jet> getJets(Photons photons, const int JESUnc, const int JERUnc);

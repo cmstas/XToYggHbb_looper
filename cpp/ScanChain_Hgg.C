@@ -368,7 +368,11 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   bool LeadPhoton_pixelSeed, SubleadPhoton_pixelSeed;
 
   int n_jets, n_Genjets;
+  int n_subjet_in_fatjet;
   float dijet_lead_pt, dijet_lead_eta, dijet_lead_phi, dijet_lead_mass, dijet_lead_btagDeepFlavB;
+  float subjet_lead_pt, subjet_lead_eta, subjet_lead_phi, subjet_lead_mass, subjet1_bscore;
+  float subjet_sublead_pt, subjet_sublead_eta, subjet_sublead_phi, subjet_sublead_mass, subjet2_bscore;
+  float fatjet_pt, fatjet_eta, fatjet_mass, fatjet_phi;
   float fatjet_Hbb_score;
   float dijet_sublead_pt, dijet_sublead_eta, dijet_sublead_phi, dijet_sublead_mass, dijet_sublead_btagDeepFlavB;
   float dijet_pt, dijet_eta, dijet_phi, dijet_mass, dijet_dR;
@@ -428,6 +432,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
   tout->Branch("useAK8",&useAK8,"useAK8/B");
   tout->Branch("n_jets",&n_jets,"n_jets/I");  
+  tout->Branch("n_subjet_in_fatjet",&n_subjet_in_fatjet,"n_subjet_in_fatjet/I");  
   tout->Branch("n_Genjets",&n_Genjets,"n_Genjets/I");  
   tout->Branch("dijet_lead_pt",&dijet_lead_pt,"dijet_lead_pt/F");
   tout->Branch("dijet_lead_eta",&dijet_lead_eta,"dijet_lead_eta/F");
@@ -435,11 +440,28 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   tout->Branch("dijet_lead_mass",&dijet_lead_mass,"dijet_lead_mass/F");
   tout->Branch("dijet_lead_btagDeepFlavB",&dijet_lead_btagDeepFlavB,"dijet_lead_btagDeepFlavB/F"); 
 
+  tout->Branch("subjet_lead_pt",&subjet_lead_pt,"subjet_lead_pt/F");
+  tout->Branch("subjet_lead_eta",&subjet_lead_eta,"subjet_lead_eta/F");
+  tout->Branch("subjet_lead_phi",&subjet_lead_phi,"subjet_lead_phi/F");
+  tout->Branch("subjet_lead_mass",&subjet_lead_mass,"subjet_lead_mass/F");
+  tout->Branch("subjet1_bscore", &subjet1_bscore, "subjet1_bscore/F");
+
+  tout->Branch("fatjet_pt",&fatjet_pt,"fatjet_pt/F");
+  tout->Branch("fatjet_eta",&fatjet_eta,"fatjet_eta/F");
+  tout->Branch("fatjet_phi",&fatjet_phi,"fatjet_phi/F");
+  tout->Branch("fatjet_mass",&fatjet_mass,"fatjet_mass/F");
+
   tout->Branch("dijet_sublead_pt",&dijet_sublead_pt,"dijet_sublead_pt/F");
   tout->Branch("dijet_sublead_eta",&dijet_sublead_eta,"dijet_sublead_eta/F");
   tout->Branch("dijet_sublead_phi",&dijet_sublead_phi,"dijet_sublead_phi/F");
   tout->Branch("dijet_sublead_mass",&dijet_sublead_mass,"dijet_sublead_mass/F");
   tout->Branch("dijet_sublead_btagDeepFlavB",&dijet_sublead_btagDeepFlavB,"dijet_sublead_btagDeepFlavB/F");
+
+  tout->Branch("subjet_sublead_pt",&subjet_sublead_pt,"subjet_sublead_pt/F");
+  tout->Branch("subjet_sublead_eta",&subjet_sublead_eta,"subjet_sublead_eta/F");
+  tout->Branch("subjet_sublead_phi",&subjet_sublead_phi,"subjet_sublead_phi/F");
+  tout->Branch("subjet_sublead_mass",&subjet_sublead_mass,"subjet_sublead_mass/F");
+  tout->Branch("subjet2_bscore", &subjet2_bscore, "subjet2_bscore/F");
 
   tout->Branch("dijet_pt",&dijet_pt,"dijet_pt/F");
   tout->Branch("dijet_eta",&dijet_eta,"dijet_eta/F");  
@@ -575,11 +597,15 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       LeadPhoton_pixelSeed=true, SubleadPhoton_pixelSeed=true;
 
       useAK8=1;
-      n_jets=-1;
-      n_Genjets=-1;
+      n_jets=0;
+      n_subjet_in_fatjet=0;
+      n_Genjets=0;
       dijet_lead_pt=-999, dijet_lead_eta=-999, dijet_lead_phi=-999, dijet_lead_mass=-999, dijet_lead_btagDeepFlavB=-999;
+      subjet_lead_pt=-999, subjet_lead_eta=-999, subjet_lead_phi=-999, subjet_lead_mass=-999, subjet1_bscore=-999;
+      fatjet_pt=-999, fatjet_eta=-999, fatjet_phi=-999, fatjet_mass=-999,
       fatjet_Hbb_score=-999;
       dijet_sublead_pt=-999, dijet_sublead_eta=-999, dijet_sublead_phi=-999, dijet_sublead_mass=-999, dijet_sublead_btagDeepFlavB=-999;
+      subjet_sublead_pt=-999, subjet_sublead_eta=-999, subjet_sublead_phi=-999, subjet_sublead_mass=-999, subjet2_bscore=-999;
       dijet_pt=-999, dijet_eta=-999, dijet_phi=-999, dijet_mass=-999, dijet_dR=-999;
       pfmet_pt=-999, puppimet_pt=-999;
       eventNum=0;
@@ -722,6 +748,8 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       
       TLorentzVector x_cand;
       if (useAK8== true) x_cand = selectedDiPhoton.p4 + fatjets[0].p4();
+
+// if (!useAK8) continue;
 
       Jet leadJet, subleadJet;
       Jets jets;
@@ -886,11 +914,24 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       }
       else
       {
-        dijet_pt = fatjets[0].p4().Pt();
-        dijet_eta = fatjets[0].p4().Eta();
-        dijet_phi = fatjets[0].p4().Phi();
-        dijet_mass = fatjets[0].p4().M();
+        fatjet_pt = fatjets[0].p4().Pt();
+        fatjet_eta = fatjets[0].p4().Eta();
+        fatjet_phi = fatjets[0].p4().Phi();
+        fatjet_mass = fatjets[0].p4().M();
         fatjet_Hbb_score = fatjets[0].Hbb_score();
+
+      if (fatjets[0].subJetIdx1()!=-1) n_subjet_in_fatjet++;
+      if (fatjets[0].subJetIdx2()!=-1) n_subjet_in_fatjet++;
+      subjet_lead_pt = fatjets[0].SubJet1_p4().Pt();
+      subjet_lead_eta = fatjets[0].SubJet1_p4().Eta();
+      subjet_lead_phi = fatjets[0].SubJet1_p4().Phi();
+      subjet_lead_mass = fatjets[0].SubJet1_p4().M();
+      subjet1_bscore = fatjets[0].subjet1_bscore();
+      subjet_sublead_pt = fatjets[0].SubJet2_p4().Pt();
+      subjet_sublead_eta = fatjets[0].SubJet2_p4().Eta();
+      subjet_sublead_phi = fatjets[0].SubJet2_p4().Phi();
+      subjet_sublead_mass = fatjets[0].SubJet2_p4().M();
+      subjet2_bscore = fatjets[0].subjet2_bscore();
       }
 
       xcand_pt = x_cand.Pt();
