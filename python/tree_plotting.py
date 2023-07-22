@@ -206,7 +206,8 @@ def get_plots(samples, year, plotname, cut, plotBin, plotXTitle, plotYTitle):
           htempDict[sample]=[]
         htemp = ROOT.gDirectory.Get("htemp")
         htempDict[sample].append(copy.deepcopy(htemp))
-        htempDict[sample][-1].Scale(BTagSF(tree))
+        if not (sample=="DDQCDGJets" or sample=="Data"):
+          htempDict[sample][-1].Scale(BTagSF(tree))
         # Normalize to event counts (experimental - here for posterity)
         #if sample=="DDQCDGJets": htempDict[sample][-1].Scale(DDQCDGJetsSF(tree))
         # Process scaling based on 2D template fit
