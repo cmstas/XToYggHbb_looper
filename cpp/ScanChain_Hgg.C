@@ -23,6 +23,7 @@
 #include "../NanoCORE/Tools/bTagEff.h"
 #include "../NanoCORE/Tools/electronVetoSF.h"
 #include "../NanoCORE/Tools/lowMassHggTriggerSF.h"
+#include "../NanoCORE/Tools/highMassHggTriggerSF.h"
 #include "../NanoCORE/Tools/lowMassHggPreselSF.h"
 #include "../NanoCORE/Tools/phoMVAIDWP90SF.h"
 #include "../NanoCORE/DiPhotonSelections.h"
@@ -251,7 +252,7 @@ TF1* get_fakePhotonIDShape(TString year, bool isEndcap, bool inclusive=false) {
   return fakePhotonMVAIDShape;
 }
 
-int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int lowMassHggTriggerSF=1, int lowMassHggPreselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
+int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int lowMassHggPreselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
 // Event weights / scale factors:
 //  0: Do not apply
 //  1: Apply central value
@@ -315,11 +316,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   gconf.nanoAOD_ver = 9;
   gconf.GetConfigs(year.Atoi());
   lumi = gconf.lumi;
-  if (year == "2018") lumi = 54.5;
-  if (year == "2017") lumi = 41.5;
-  if (year == "2016APV") lumi = 19.5;
-  if (year == "2016nonAPV") lumi = 16.8;
-  // FIXME: Use high mass triggers for high mass points? => Full luminosity
+  if (year == "2018") lumi = lowMassMode ? 54.5 : 59.8;
+  if (year == "2017") lumi = 41.5; // Same for low mass and high mass triggers
+  if (year == "2016APV") lumi = 19.5; // Same for low mass and high mass triggers
+  if (year == "2016nonAPV") lumi = 16.8; // Same for low mass and high mass triggers
 
   // Golden JSON files
   if ( !isMC ) {
@@ -502,7 +502,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   TF1 *fakePhotonID_shape_barrel = get_fakePhotonIDShape(year,/*isEndcap*/false);
   TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*isEndcap*/true);
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
-  if ( lowMassHggTriggerSF != 0) lowMassHggTriggerSF::set_lowMassHggTriggerSF();
+  if ( triggerSF != 0) (lowMassMode ? lowMassHggTriggerSF::set_lowMassHggTriggerSF() : highMassHggTriggerSF::set_highMassHggTriggerSF() );
   if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::set_phoMVAIDWP90SF();
 
@@ -601,24 +601,34 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
 
       // HLT selection
-      if ( (year=="2016nonAPV" || year=="2016APV") &&
-          !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
-            || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
-      if ( (year=="2017") &&
-          !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
-      if ( (year=="2018") &&
-          !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+      if ( lowMassMode ) {
+        if ( (year=="2016nonAPV" || year=="2016APV") &&
+            !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
+              || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+        if ( (year=="2017") &&
+            !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+        if ( (year=="2018") &&
+            !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+      }
+      else {
+        if ( (year=="2016nonAPV" || year=="2016APV") &&
+            !( (tree->GetBranch("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+        if ( (year=="2017") &&
+            !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+        if ( (year=="2018") &&
+            !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+      }
 
 
       // Object selection
       Photons photons;
       if (isMC) {
-        photons = getPhotons(year, fnufUnc, materialUnc, PhoScaleUnc, PhoSmearUnc);
+        photons = getPhotons(year, lowMassMode, fnufUnc, materialUnc, PhoScaleUnc, PhoSmearUnc);
       }
       else {
-        photons = getPhotons(year, 0, 0, 0, 0);
+        photons = getPhotons(year, lowMassMode, 0, 0, 0, 0);
       }
-      DiPhotons diphotons = DiPhotonPreselection(photons);
+      DiPhotons diphotons = DiPhotonPreselection(photons, lowMassMode);
 
       if (diphotons.size() == 0 ) continue; 
 
@@ -686,15 +696,22 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         }
 
         // Apply low mass trigger SF
-        if ( lowMassHggTriggerSF!=0 ) {
-          bool leadEBHiR9=false, subleadEBHiR9=false;
-          if ( year=="2016nonAPV" || year=="2016APV" ) {
-            leadEBHiR9 = fabs(selectedDiPhoton.leadPho.eta()) < 1.5 && selectedDiPhoton.leadPho.r9() > 0.85 && fabs(selectedDiPhoton.subleadPho.eta()) < 1.5;
-            subleadEBHiR9 = fabs(selectedDiPhoton.subleadPho.eta()) < 1.5 && selectedDiPhoton.subleadPho.r9() > 0.85 && fabs(selectedDiPhoton.leadPho.eta()) < 1.5;
+        if ( triggerSF!=0 ) {
+          if ( lowMassMode ) {
+            bool leadEBHiR9=false, subleadEBHiR9=false;
+            if ( year=="2016nonAPV" || year=="2016APV" ) {
+              leadEBHiR9 = fabs(selectedDiPhoton.leadPho.eta()) < 1.5 && selectedDiPhoton.leadPho.r9() > 0.85 && fabs(selectedDiPhoton.subleadPho.eta()) < 1.5;
+              subleadEBHiR9 = fabs(selectedDiPhoton.subleadPho.eta()) < 1.5 && selectedDiPhoton.subleadPho.r9() > 0.85 && fabs(selectedDiPhoton.leadPho.eta()) < 1.5;
+            }
+            if ( triggerSF==1  ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "central")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "central");
+            if ( triggerSF==2  ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "up")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "up");
+            if ( triggerSF==-2 ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "down")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "down");
           }
-          if ( lowMassHggTriggerSF==1  ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "central")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "central");
-          if ( lowMassHggTriggerSF==2  ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "up")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "up");
-          if ( lowMassHggTriggerSF==-2 ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "down")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "down");
+          else {
+            if ( triggerSF==1  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "central")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "central");
+            if ( triggerSF==2  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "up")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "up");
+            if ( triggerSF==-2 ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "down")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "down");
+          }
         }
 
         // Apply low mass preselection SF
@@ -937,7 +954,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
     
   bar.finish();
   if ( electronVetoSF != 0) electronVetoSF::reset_electronVetoSF();
-  if ( lowMassHggTriggerSF != 0) lowMassHggTriggerSF::reset_lowMassHggTriggerSF();
+  if ( triggerSF != 0) ( lowMassMode ? lowMassHggTriggerSF::reset_lowMassHggTriggerSF() : highMassHggTriggerSF::reset_highMassHggTriggerSF() );
   if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::reset_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::reset_phoMVAIDWP90SF();
   cout << "nTotal: " << h_weight_full->GetBinContent(1) << ", nPass: " << h_weight->GetBinContent(1) << ", eff: " << h_weight->GetBinContent(1)/h_weight_full->GetBinContent(1) << endl;

@@ -93,7 +93,7 @@ struct Photon {
     unsigned char genPartFlav_ = 0;
 };
 
-vector<Photon> getPhotons(const TString year, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc);
+vector<Photon> getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc);
 typedef std::vector<Photon> Photons;
 
 struct DiPhoton{
@@ -122,7 +122,7 @@ inline bool sortByPt(Photon &p1, Photon &p2)
         return p1.pt() > p2.pt();    
 }
 
-DiPhotons DiPhotonPreselection(Photons &photons); 
+DiPhotons DiPhotonPreselection(Photons &photons, const int lowMassMode); 
 bool UseLowR9Photon(Photon pho, bool isEB);
 
 #endif

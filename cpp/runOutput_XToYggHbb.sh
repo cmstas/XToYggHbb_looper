@@ -6,10 +6,11 @@ DATA=$3 # 0, 1
 BKG=$4 # 0, 1
 SIG=$5 # 0, 1
 SAM=$6
-while ! [ -z "$7" ]; do
-    FLAGS="$FLAGS $7"; shift;
+LMM=$7 # 0, 1
+while ! [ -z "$8" ]; do
+    FLAGS="$FLAGS $8"; shift;
 done
-COMMAND="./main.exe $DIR $YEAR $DATA $BKG $SIG $SAM$FLAGS"
+COMMAND="./main.exe $DIR $YEAR $DATA $BKG $SIG $SAM $LMM$FLAGS"
 
 echo ""
 echo "Arguments:"
@@ -20,6 +21,7 @@ echo "Run data = "$DATA
 echo "Run bkg = "$BKG
 echo "Run signal = "$SIG
 echo "Sample = "$SAM
+echo "Low mass mode = "$LMM
 echo "Variation flags = "${FLAGS#", "}
 echo ""
 
