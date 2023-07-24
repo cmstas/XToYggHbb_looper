@@ -46,8 +46,8 @@ int main(int argc, char **argv) {
   int prefireWeight       = ( argc > 8  ? char2int(argv[8])  : 1 );
   int PUWeight            = ( argc > 9  ? char2int(argv[9])  : 1 );
   int electronVetoSF      = ( argc > 10 ? char2int(argv[10]) : 1 );
-  int lowMassHggTriggerSF = ( argc > 11 ? char2int(argv[11]) : 1 );
-  int lowMassHggPreselSF  = ( argc > 12 ? char2int(argv[12]) : 0 );
+  int triggerSF           = ( argc > 11 ? char2int(argv[11]) : 1 );
+  int preselSF            = ( argc > 12 ? char2int(argv[12]) : 0 );
   int phoMVAIDWP90SF      = ( argc > 13 ? char2int(argv[13]) : 1 );
   int bTagSF              = ( argc > 14 ? char2int(argv[14]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
   int fnufUnc             = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
@@ -517,7 +517,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,lowMassHggTriggerSF,lowMassHggPreselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
       }
     }
   }

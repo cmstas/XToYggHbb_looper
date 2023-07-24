@@ -252,7 +252,7 @@ TF1* get_fakePhotonIDShape(TString year, bool isEndcap, bool inclusive=false) {
   return fakePhotonMVAIDShape;
 }
 
-int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int lowMassHggPreselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
+int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int preselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
 // Event weights / scale factors:
 //  0: Do not apply
 //  1: Apply central value
@@ -503,7 +503,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*isEndcap*/true);
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
   if ( triggerSF != 0) (lowMassMode ? lowMassHggTriggerSF::set_lowMassHggTriggerSF() : highMassHggTriggerSF::set_highMassHggTriggerSF() );
-  if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
+  if ( preselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::set_phoMVAIDWP90SF();
 
   int nEventsTotal = 0;
@@ -715,10 +715,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         }
 
         // Apply low mass preselection SF
-        if ( lowMassHggPreselSF!=0 ) {
-          if ( lowMassHggPreselSF==1  ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "central")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "central");
-          if ( lowMassHggPreselSF==2  ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "up")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "up");
-          if ( lowMassHggPreselSF==-2 ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "down")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "down");
+        if ( preselSF!=0 ) {
+          if ( preselSF==1  ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "central")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "central");
+          if ( preselSF==2  ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "up")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "up");
+          if ( preselSF==-2 ) weight *= lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), year, "down")*lowMassHggPreselSF::get_lowMassHggPreselSF(selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), year, "down");
         }
 
         // Apply photon MVA ID WP 90 SF
@@ -955,7 +955,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   bar.finish();
   if ( electronVetoSF != 0) electronVetoSF::reset_electronVetoSF();
   if ( triggerSF != 0) ( lowMassMode ? lowMassHggTriggerSF::reset_lowMassHggTriggerSF() : highMassHggTriggerSF::reset_highMassHggTriggerSF() );
-  if ( lowMassHggPreselSF != 0) lowMassHggPreselSF::reset_lowMassHggPreselSF();
+  if ( preselSF != 0) lowMassHggPreselSF::reset_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::reset_phoMVAIDWP90SF();
   cout << "nTotal: " << h_weight_full->GetBinContent(1) << ", nPass: " << h_weight->GetBinContent(1) << ", eff: " << h_weight->GetBinContent(1)/h_weight_full->GetBinContent(1) << endl;
   cout << endl;
