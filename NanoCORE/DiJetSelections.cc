@@ -22,7 +22,8 @@ Jets getJets(Photons photons, const int JESUnc, const int JERUnc) {
 
         if ( !(abs(cand_jet.eta()) < 2.4) ) continue;
         if ( !(cand_jet.pt() > 25) ) continue;
-        if ( !(cand_jet.jetId()>=1) ) continue;
+        if ( !(cand_jet.jetId()>1) ) continue; // Apply the Jet ID (at least tight WP), as per recommendations (https://twiki.cern.ch/twiki/bin/view/CMS/JetID)
+        if ( cand_jet.pt() < 50 && !(cand_jet.puId()>5) ) continue; // Apply the Jet PU ID (at least medium WP) to jets below 50 GeV, as per recommendations (https://twiki.cern.ch/twiki/bin/view/CMS/PileupJetID)
         bool clean_with_photon = true;
         for (unsigned int iphoton = 0; iphoton < photons.size(); iphoton++){
             if (cand_jet.p4().DeltaR(photons.at(iphoton).p4())<0.4) clean_with_photon = false;

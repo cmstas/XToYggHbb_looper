@@ -5672,20 +5672,18 @@ void Nano::Init(TTree *tree) {
     if (b_btagWeight_DeepCSVB_) { b_btagWeight_DeepCSVB_->SetAddress(&btagWeight_DeepCSVB_); }
     b_event_ = tree->GetBranch("event");
     if (b_event_) { b_event_->SetAddress(&event_); }
-    b_fixedGridRhoAll_ = tree->GetBranch("fixedGridRhoAll");
-    if (b_fixedGridRhoAll_) { b_fixedGridRhoAll_->SetAddress(&fixedGridRhoAll_); }
-    b_fixedGridRhoFastjetAll_ = tree->GetBranch("fixedGridRhoFastjetAll");
-    if (b_fixedGridRhoFastjetAll_) { b_fixedGridRhoFastjetAll_->SetAddress(&fixedGridRhoFastjetAll_); }
+    b_Rho_fixedGridRhoAll_ = tree->GetBranch("Rho_fixedGridRhoAll");
+    if (b_Rho_fixedGridRhoAll_) { b_Rho_fixedGridRhoAll_->SetAddress(&Rho_fixedGridRhoAll_); }
     b_Rho_fixedGridRhoFastjetAll_ = tree->GetBranch("Rho_fixedGridRhoFastjetAll");
     if (b_Rho_fixedGridRhoFastjetAll_) { b_Rho_fixedGridRhoFastjetAll_->SetAddress(&Rho_fixedGridRhoFastjetAll_); }
-    b_fixedGridRhoFastjetCentral_ = tree->GetBranch("fixedGridRhoFastjetCentral");
-    if (b_fixedGridRhoFastjetCentral_) { b_fixedGridRhoFastjetCentral_->SetAddress(&fixedGridRhoFastjetCentral_); }
-    b_fixedGridRhoFastjetCentralCalo_ = tree->GetBranch("fixedGridRhoFastjetCentralCalo");
-    if (b_fixedGridRhoFastjetCentralCalo_) { b_fixedGridRhoFastjetCentralCalo_->SetAddress(&fixedGridRhoFastjetCentralCalo_); }
-    b_fixedGridRhoFastjetCentralChargedPileUp_ = tree->GetBranch("fixedGridRhoFastjetCentralChargedPileUp");
-    if (b_fixedGridRhoFastjetCentralChargedPileUp_) { b_fixedGridRhoFastjetCentralChargedPileUp_->SetAddress(&fixedGridRhoFastjetCentralChargedPileUp_); }
-    b_fixedGridRhoFastjetCentralNeutral_ = tree->GetBranch("fixedGridRhoFastjetCentralNeutral");
-    if (b_fixedGridRhoFastjetCentralNeutral_) { b_fixedGridRhoFastjetCentralNeutral_->SetAddress(&fixedGridRhoFastjetCentralNeutral_); }
+    b_Rho_fixedGridRhoFastjetCentral_ = tree->GetBranch("Rho_fixedGridRhoFastjetCentral");
+    if (b_Rho_fixedGridRhoFastjetCentral_) { b_Rho_fixedGridRhoFastjetCentral_->SetAddress(&Rho_fixedGridRhoFastjetCentral_); }
+    b_Rho_fixedGridRhoFastjetCentralCalo_ = tree->GetBranch("Rho_fixedGridRhoFastjetCentralCalo");
+    if (b_Rho_fixedGridRhoFastjetCentralCalo_) { b_Rho_fixedGridRhoFastjetCentralCalo_->SetAddress(&Rho_fixedGridRhoFastjetCentralCalo_); }
+    b_Rho_fixedGridRhoFastjetCentralChargedPileUp_ = tree->GetBranch("Rho_fixedGridRhoFastjetCentralChargedPileUp");
+    if (b_Rho_fixedGridRhoFastjetCentralChargedPileUp_) { b_Rho_fixedGridRhoFastjetCentralChargedPileUp_->SetAddress(&Rho_fixedGridRhoFastjetCentralChargedPileUp_); }
+    b_Rho_fixedGridRhoFastjetCentralNeutral_ = tree->GetBranch("Rho_fixedGridRhoFastjetCentralNeutral");
+    if (b_Rho_fixedGridRhoFastjetCentralNeutral_) { b_Rho_fixedGridRhoFastjetCentralNeutral_->SetAddress(&Rho_fixedGridRhoFastjetCentralNeutral_); }
     b_genTtbarId_ = tree->GetBranch("genTtbarId");
     if (b_genTtbarId_) { b_genTtbarId_->SetAddress(&genTtbarId_); }
     b_genWeight_ = tree->GetBranch("genWeight");
@@ -8663,13 +8661,12 @@ void Nano::PrintUsage() {
     std::cout << "btagWeight_CSVV2 (uncached/cached calls): " << counter_uncached_btagWeight_CSVV2_ << " / " << counter_cached_btagWeight_CSVV2_ << std::endl;;
     std::cout << "btagWeight_DeepCSVB (uncached/cached calls): " << counter_uncached_btagWeight_DeepCSVB_ << " / " << counter_cached_btagWeight_DeepCSVB_ << std::endl;;
     std::cout << "event (uncached/cached calls): " << counter_uncached_event_ << " / " << counter_cached_event_ << std::endl;;
-    std::cout << "fixedGridRhoAll (uncached/cached calls): " << counter_uncached_fixedGridRhoAll_ << " / " << counter_cached_fixedGridRhoAll_ << std::endl;;
-    std::cout << "fixedGridRhoFastjetAll (uncached/cached calls): " << counter_uncached_fixedGridRhoFastjetAll_ << " / " << counter_cached_fixedGridRhoFastjetAll_ << std::endl;;
+    std::cout << "Rho_fixedGridRhoAll (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoAll_ << " / " << counter_cached_Rho_fixedGridRhoAll_ << std::endl;;
     std::cout << "Rho_fixedGridRhoFastjetAll (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoFastjetAll_ << " / " << counter_cached_Rho_fixedGridRhoFastjetAll_ << std::endl;;
-    std::cout << "fixedGridRhoFastjetCentral (uncached/cached calls): " << counter_uncached_fixedGridRhoFastjetCentral_ << " / " << counter_cached_fixedGridRhoFastjetCentral_ << std::endl;;
-    std::cout << "fixedGridRhoFastjetCentralCalo (uncached/cached calls): " << counter_uncached_fixedGridRhoFastjetCentralCalo_ << " / " << counter_cached_fixedGridRhoFastjetCentralCalo_ << std::endl;;
-    std::cout << "fixedGridRhoFastjetCentralChargedPileUp (uncached/cached calls): " << counter_uncached_fixedGridRhoFastjetCentralChargedPileUp_ << " / " << counter_cached_fixedGridRhoFastjetCentralChargedPileUp_ << std::endl;;
-    std::cout << "fixedGridRhoFastjetCentralNeutral (uncached/cached calls): " << counter_uncached_fixedGridRhoFastjetCentralNeutral_ << " / " << counter_cached_fixedGridRhoFastjetCentralNeutral_ << std::endl;;
+    std::cout << "Rho_fixedGridRhoFastjetCentral (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoFastjetCentral_ << " / " << counter_cached_Rho_fixedGridRhoFastjetCentral_ << std::endl;;
+    std::cout << "Rho_fixedGridRhoFastjetCentralCalo (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoFastjetCentralCalo_ << " / " << counter_cached_Rho_fixedGridRhoFastjetCentralCalo_ << std::endl;;
+    std::cout << "Rho_fixedGridRhoFastjetCentralChargedPileUp (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoFastjetCentralChargedPileUp_ << " / " << counter_cached_Rho_fixedGridRhoFastjetCentralChargedPileUp_ << std::endl;;
+    std::cout << "Rho_fixedGridRhoFastjetCentralNeutral (uncached/cached calls): " << counter_uncached_Rho_fixedGridRhoFastjetCentralNeutral_ << " / " << counter_cached_Rho_fixedGridRhoFastjetCentralNeutral_ << std::endl;;
     std::cout << "genTtbarId (uncached/cached calls): " << counter_uncached_genTtbarId_ << " / " << counter_cached_genTtbarId_ << std::endl;;
     std::cout << "genWeight (uncached/cached calls): " << counter_uncached_genWeight_ << " / " << counter_cached_genWeight_ << std::endl;;
     std::cout << "luminosityBlock (uncached/cached calls): " << counter_uncached_luminosityBlock_ << " / " << counter_cached_luminosityBlock_ << std::endl;;
@@ -11566,13 +11563,12 @@ void Nano::GetEntry(unsigned int idx) {
     loaded_btagWeight_CSVV2_ = false;
     loaded_btagWeight_DeepCSVB_ = false;
     loaded_event_ = false;
-    loaded_fixedGridRhoAll_ = false;
-    loaded_fixedGridRhoFastjetAll_ = false;
+    loaded_Rho_fixedGridRhoAll_ = false;
     loaded_Rho_fixedGridRhoFastjetAll_ = false;
-    loaded_fixedGridRhoFastjetCentral_ = false;
-    loaded_fixedGridRhoFastjetCentralCalo_ = false;
-    loaded_fixedGridRhoFastjetCentralChargedPileUp_ = false;
-    loaded_fixedGridRhoFastjetCentralNeutral_ = false;
+    loaded_Rho_fixedGridRhoFastjetCentral_ = false;
+    loaded_Rho_fixedGridRhoFastjetCentralCalo_ = false;
+    loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_ = false;
+    loaded_Rho_fixedGridRhoFastjetCentralNeutral_ = false;
     loaded_genTtbarId_ = false;
     loaded_genWeight_ = false;
     loaded_luminosityBlock_ = false;
@@ -40913,25 +40909,15 @@ const ULong64_t &Nano::event() {
     }
     return event_;
 }
-const float &Nano::fixedGridRhoAll() {
-    if (!loaded_fixedGridRhoAll_) counter_uncached_fixedGridRhoAll_++;
-    else counter_cached_fixedGridRhoAll_++;
-    if (!loaded_fixedGridRhoAll_) {
-        if (!b_fixedGridRhoAll_) throw std::runtime_error("fixedGridRhoAll branch doesn't exist");
-        b_fixedGridRhoAll_->GetEntry(index);
-        loaded_fixedGridRhoAll_ = true;
+const float &Nano::Rho_fixedGridRhoAll() {
+    if (!loaded_Rho_fixedGridRhoAll_) counter_uncached_Rho_fixedGridRhoAll_++;
+    else counter_cached_Rho_fixedGridRhoAll_++;
+    if (!loaded_Rho_fixedGridRhoAll_) {
+        if (!b_Rho_fixedGridRhoAll_) throw std::runtime_error("Rho_fixedGridRhoAll branch doesn't exist");
+        b_Rho_fixedGridRhoAll_->GetEntry(index);
+        loaded_Rho_fixedGridRhoAll_ = true;
     }
-    return fixedGridRhoAll_;
-}
-const float &Nano::fixedGridRhoFastjetAll() {
-    if (!loaded_fixedGridRhoFastjetAll_) counter_uncached_fixedGridRhoFastjetAll_++;
-    else counter_cached_fixedGridRhoFastjetAll_++;
-    if (!loaded_fixedGridRhoFastjetAll_) {
-        if (!b_fixedGridRhoFastjetAll_) throw std::runtime_error("fixedGridRhoFastjetAll branch doesn't exist");
-        b_fixedGridRhoFastjetAll_->GetEntry(index);
-        loaded_fixedGridRhoFastjetAll_ = true;
-    }
-    return fixedGridRhoFastjetAll_;
+    return Rho_fixedGridRhoAll_;
 }
 const float &Nano::Rho_fixedGridRhoFastjetAll() {
     if (!loaded_Rho_fixedGridRhoFastjetAll_) counter_uncached_Rho_fixedGridRhoFastjetAll_++;
@@ -40943,45 +40929,45 @@ const float &Nano::Rho_fixedGridRhoFastjetAll() {
     }
     return Rho_fixedGridRhoFastjetAll_;
 }
-const float &Nano::fixedGridRhoFastjetCentral() {
-    if (!loaded_fixedGridRhoFastjetCentral_) counter_uncached_fixedGridRhoFastjetCentral_++;
-    else counter_cached_fixedGridRhoFastjetCentral_++;
-    if (!loaded_fixedGridRhoFastjetCentral_) {
-        if (!b_fixedGridRhoFastjetCentral_) throw std::runtime_error("fixedGridRhoFastjetCentral branch doesn't exist");
-        b_fixedGridRhoFastjetCentral_->GetEntry(index);
-        loaded_fixedGridRhoFastjetCentral_ = true;
+const float &Nano::Rho_fixedGridRhoFastjetCentral() {
+    if (!loaded_Rho_fixedGridRhoFastjetCentral_) counter_uncached_Rho_fixedGridRhoFastjetCentral_++;
+    else counter_cached_Rho_fixedGridRhoFastjetCentral_++;
+    if (!loaded_Rho_fixedGridRhoFastjetCentral_) {
+        if (!b_Rho_fixedGridRhoFastjetCentral_) throw std::runtime_error("Rho_fixedGridRhoFastjetCentral branch doesn't exist");
+        b_Rho_fixedGridRhoFastjetCentral_->GetEntry(index);
+        loaded_Rho_fixedGridRhoFastjetCentral_ = true;
     }
-    return fixedGridRhoFastjetCentral_;
+    return Rho_fixedGridRhoFastjetCentral_;
 }
-const float &Nano::fixedGridRhoFastjetCentralCalo() {
-    if (!loaded_fixedGridRhoFastjetCentralCalo_) counter_uncached_fixedGridRhoFastjetCentralCalo_++;
-    else counter_cached_fixedGridRhoFastjetCentralCalo_++;
-    if (!loaded_fixedGridRhoFastjetCentralCalo_) {
-        if (!b_fixedGridRhoFastjetCentralCalo_) throw std::runtime_error("fixedGridRhoFastjetCentralCalo branch doesn't exist");
-        b_fixedGridRhoFastjetCentralCalo_->GetEntry(index);
-        loaded_fixedGridRhoFastjetCentralCalo_ = true;
+const float &Nano::Rho_fixedGridRhoFastjetCentralCalo() {
+    if (!loaded_Rho_fixedGridRhoFastjetCentralCalo_) counter_uncached_Rho_fixedGridRhoFastjetCentralCalo_++;
+    else counter_cached_Rho_fixedGridRhoFastjetCentralCalo_++;
+    if (!loaded_Rho_fixedGridRhoFastjetCentralCalo_) {
+        if (!b_Rho_fixedGridRhoFastjetCentralCalo_) throw std::runtime_error("Rho_fixedGridRhoFastjetCentralCalo branch doesn't exist");
+        b_Rho_fixedGridRhoFastjetCentralCalo_->GetEntry(index);
+        loaded_Rho_fixedGridRhoFastjetCentralCalo_ = true;
     }
-    return fixedGridRhoFastjetCentralCalo_;
+    return Rho_fixedGridRhoFastjetCentralCalo_;
 }
-const float &Nano::fixedGridRhoFastjetCentralChargedPileUp() {
-    if (!loaded_fixedGridRhoFastjetCentralChargedPileUp_) counter_uncached_fixedGridRhoFastjetCentralChargedPileUp_++;
-    else counter_cached_fixedGridRhoFastjetCentralChargedPileUp_++;
-    if (!loaded_fixedGridRhoFastjetCentralChargedPileUp_) {
-        if (!b_fixedGridRhoFastjetCentralChargedPileUp_) throw std::runtime_error("fixedGridRhoFastjetCentralChargedPileUp branch doesn't exist");
-        b_fixedGridRhoFastjetCentralChargedPileUp_->GetEntry(index);
-        loaded_fixedGridRhoFastjetCentralChargedPileUp_ = true;
+const float &Nano::Rho_fixedGridRhoFastjetCentralChargedPileUp() {
+    if (!loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_) counter_uncached_Rho_fixedGridRhoFastjetCentralChargedPileUp_++;
+    else counter_cached_Rho_fixedGridRhoFastjetCentralChargedPileUp_++;
+    if (!loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_) {
+        if (!b_Rho_fixedGridRhoFastjetCentralChargedPileUp_) throw std::runtime_error("Rho_fixedGridRhoFastjetCentralChargedPileUp branch doesn't exist");
+        b_Rho_fixedGridRhoFastjetCentralChargedPileUp_->GetEntry(index);
+        loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_ = true;
     }
-    return fixedGridRhoFastjetCentralChargedPileUp_;
+    return Rho_fixedGridRhoFastjetCentralChargedPileUp_;
 }
-const float &Nano::fixedGridRhoFastjetCentralNeutral() {
-    if (!loaded_fixedGridRhoFastjetCentralNeutral_) counter_uncached_fixedGridRhoFastjetCentralNeutral_++;
-    else counter_cached_fixedGridRhoFastjetCentralNeutral_++;
-    if (!loaded_fixedGridRhoFastjetCentralNeutral_) {
-        if (!b_fixedGridRhoFastjetCentralNeutral_) throw std::runtime_error("fixedGridRhoFastjetCentralNeutral branch doesn't exist");
-        b_fixedGridRhoFastjetCentralNeutral_->GetEntry(index);
-        loaded_fixedGridRhoFastjetCentralNeutral_ = true;
+const float &Nano::Rho_fixedGridRhoFastjetCentralNeutral() {
+    if (!loaded_Rho_fixedGridRhoFastjetCentralNeutral_) counter_uncached_Rho_fixedGridRhoFastjetCentralNeutral_++;
+    else counter_cached_Rho_fixedGridRhoFastjetCentralNeutral_++;
+    if (!loaded_Rho_fixedGridRhoFastjetCentralNeutral_) {
+        if (!b_Rho_fixedGridRhoFastjetCentralNeutral_) throw std::runtime_error("Rho_fixedGridRhoFastjetCentralNeutral branch doesn't exist");
+        b_Rho_fixedGridRhoFastjetCentralNeutral_->GetEntry(index);
+        loaded_Rho_fixedGridRhoFastjetCentralNeutral_ = true;
     }
-    return fixedGridRhoFastjetCentralNeutral_;
+    return Rho_fixedGridRhoFastjetCentralNeutral_;
 }
 const int &Nano::genTtbarId() {
     if (!loaded_genTtbarId_) counter_uncached_genTtbarId_++;
@@ -44228,13 +44214,12 @@ namespace tas {
     const float &btagWeight_CSVV2() { return nt.btagWeight_CSVV2(); }
     const float &btagWeight_DeepCSVB() { return nt.btagWeight_DeepCSVB(); }
     const ULong64_t &event() { return nt.event(); }
-    const float &fixedGridRhoAll() { return nt.fixedGridRhoAll(); }
-    const float &fixedGridRhoFastjetAll() { return nt.fixedGridRhoFastjetAll(); }
+    const float &Rho_fixedGridRhoAll() { return nt.Rho_fixedGridRhoAll(); }
     const float &Rho_fixedGridRhoFastjetAll() { return nt.Rho_fixedGridRhoFastjetAll(); }
-    const float &fixedGridRhoFastjetCentral() { return nt.fixedGridRhoFastjetCentral(); }
-    const float &fixedGridRhoFastjetCentralCalo() { return nt.fixedGridRhoFastjetCentralCalo(); }
-    const float &fixedGridRhoFastjetCentralChargedPileUp() { return nt.fixedGridRhoFastjetCentralChargedPileUp(); }
-    const float &fixedGridRhoFastjetCentralNeutral() { return nt.fixedGridRhoFastjetCentralNeutral(); }
+    const float &Rho_fixedGridRhoFastjetCentral() { return nt.Rho_fixedGridRhoFastjetCentral(); }
+    const float &Rho_fixedGridRhoFastjetCentralCalo() { return nt.Rho_fixedGridRhoFastjetCentralCalo(); }
+    const float &Rho_fixedGridRhoFastjetCentralChargedPileUp() { return nt.Rho_fixedGridRhoFastjetCentralChargedPileUp(); }
+    const float &Rho_fixedGridRhoFastjetCentralNeutral() { return nt.Rho_fixedGridRhoFastjetCentralNeutral(); }
     const int &genTtbarId() { return nt.genTtbarId(); }
     const float &genWeight() { return nt.genWeight(); }
     const UInt_t &luminosityBlock() { return nt.luminosityBlock(); }
@@ -44919,13 +44904,12 @@ namespace tas {
         else if (name == "btagWeight_CMVA") return nt.btagWeight_CMVA();
         else if (name == "btagWeight_CSVV2") return nt.btagWeight_CSVV2();
         else if (name == "btagWeight_DeepCSVB") return nt.btagWeight_DeepCSVB();
-        else if (name == "fixedGridRhoAll") return nt.fixedGridRhoAll();
-        else if (name == "fixedGridRhoFastjetAll") return nt.fixedGridRhoFastjetAll();
+        else if (name == "Rho_fixedGridRhoAll") return nt.Rho_fixedGridRhoAll();
         else if (name == "Rho_fixedGridRhoFastjetAll") return nt.Rho_fixedGridRhoFastjetAll();
-        else if (name == "fixedGridRhoFastjetCentral") return nt.fixedGridRhoFastjetCentral();
-        else if (name == "fixedGridRhoFastjetCentralCalo") return nt.fixedGridRhoFastjetCentralCalo();
-        else if (name == "fixedGridRhoFastjetCentralChargedPileUp") return nt.fixedGridRhoFastjetCentralChargedPileUp();
-        else if (name == "fixedGridRhoFastjetCentralNeutral") return nt.fixedGridRhoFastjetCentralNeutral();
+        else if (name == "Rho_fixedGridRhoFastjetCentral") return nt.Rho_fixedGridRhoFastjetCentral();
+        else if (name == "Rho_fixedGridRhoFastjetCentralCalo") return nt.Rho_fixedGridRhoFastjetCentralCalo();
+        else if (name == "Rho_fixedGridRhoFastjetCentralChargedPileUp") return nt.Rho_fixedGridRhoFastjetCentralChargedPileUp();
+        else if (name == "Rho_fixedGridRhoFastjetCentralNeutral") return nt.Rho_fixedGridRhoFastjetCentralNeutral();
         else if (name == "genWeight") return nt.genWeight();
         else if (name == "puWeight") return nt.puWeight();
         else if (name == "puWeightDown") return nt.puWeightDown();

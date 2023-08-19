@@ -2,6 +2,8 @@
 #include "TChain.h"
 
 int getFakePhotonsFromGJetsFromPresel(TString year="", unsigned int incl_barrel_endcap=0) {
+  TString inDir = "/ceph/cms/store/user/evourlio/XToYggHbbOutput/fullRun2_PR10_weights1111011_lowMassMode_noHLTBitInMC_noMVAIDCut/";
+  TString outDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/preselectedNanoAOD/fakePhotonsFromGJetsFromPresel_weights1111011_lowMassMode_noHLTBitInMC/";
   if (year != "") year = "_"+year;
 
   TString etaLabel, etaCutLead, etaCutSublead;
@@ -25,11 +27,11 @@ int getFakePhotonsFromGJetsFromPresel(TString year="", unsigned int incl_barrel_
     return 1;
   }
 
-  TFile *fout = new TFile("fakePhotonsFromGJetsFromPresel"+year+etaLabel+".root","RECREATE");
+  TFile *fout = new TFile(outDir+"fakePhotonsFromGJetsFromPresel"+year+etaLabel+".root","RECREATE");
   TChain *chain = new TChain("tout");
 
   if (year == "") year = "_*";
-  chain->Add("/ceph/cms/store/group/Hgg/XToYHToggbb/preselectedNanoAOD/fakePhotonsInPresel/output_GJets_HT-*To*"+year+".root");
+  chain->Add(inDir+"output_GJets_HT-*To*"+year+".root");
 
   for ( auto f : *chain->GetListOfFiles() ) std::cout<<f->GetTitle()<<"\n";
   chain->Draw("LeadPhoton_mvaID>>h1","LeadPhoton_genPartFlav!=1 "+etaCutLead,"");

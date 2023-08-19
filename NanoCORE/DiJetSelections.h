@@ -21,6 +21,7 @@ struct Jet {
         eta_ = nt.Jet_eta()[idx_];
         phi_ = nt.Jet_phi()[idx_];
         jetId_ = nt.Jet_jetId()[idx_];
+        puId_ = nt.Jet_puId()[idx_];
         p4_.SetPtEtaPhiM(pt_, nt.Jet_eta()[idx_], nt.Jet_phi()[idx_], nt.Jet_mass()[idx_]);
         btagDeepFlavB_ = nt.Jet_btagDeepFlavB()[idx_];
         try {btagSF_deepjet_shape_ = nt.Jet_btagSF_deepjet_shape()[idx_];}
@@ -76,6 +77,7 @@ struct Jet {
     float eta() { return eta_; }
     float phi() { return phi_; }
     int jetId() { return jetId_; }
+    int puId() { return puId_; }
     float btagDeepFlavB() { return btagDeepFlavB_; }
     float btagSF_deepjet_shape() { return btagSF_deepjet_shape_; }
     float btagSF_deepjet_shape_up_hf() { return btagSF_deepjet_shape_up_hf_; }
@@ -109,6 +111,7 @@ struct Jet {
     TLorentzVector p4_;
     float phi_ = 0.;
     int jetId_ = 0;
+    int puId_ = 0;
     unsigned int idx_;
     float btagDeepFlavB_ = 0.;
     float btagSF_deepjet_shape_ = 1.0;
