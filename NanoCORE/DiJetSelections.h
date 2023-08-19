@@ -23,6 +23,8 @@ struct Jet {
         jetId_ = nt.Jet_jetId()[idx_];
         puId_ = nt.Jet_puId()[idx_];
         p4_.SetPtEtaPhiM(pt_, nt.Jet_eta()[idx_], nt.Jet_phi()[idx_], nt.Jet_mass()[idx_]);
+        try {hadronFlavour_ = nt.Jet_hadronFlavour()[idx_];}
+        catch(const std::exception& e) {hadronFlavour_=-1;}
         btagDeepFlavB_ = nt.Jet_btagDeepFlavB()[idx_];
         try {btagSF_deepjet_shape_ = nt.Jet_btagSF_deepjet_shape()[idx_];}
         catch(const std::exception& e) {btagSF_deepjet_shape_=1;}
@@ -78,6 +80,7 @@ struct Jet {
     float phi() { return phi_; }
     int jetId() { return jetId_; }
     int puId() { return puId_; }
+    int hadronFlavour() { return  hadronFlavour_; }
     float btagDeepFlavB() { return btagDeepFlavB_; }
     float btagSF_deepjet_shape() { return btagSF_deepjet_shape_; }
     float btagSF_deepjet_shape_up_hf() { return btagSF_deepjet_shape_up_hf_; }
@@ -114,6 +117,7 @@ struct Jet {
     int puId_ = 0;
     unsigned int idx_;
     float btagDeepFlavB_ = 0.;
+    int  hadronFlavour_ = -1;
     float btagSF_deepjet_shape_ = 1.0;
     float btagSF_deepjet_shape_up_hf_ = 1.0;
     float btagSF_deepjet_shape_down_hf_ = 1.0;
