@@ -367,16 +367,16 @@ int main(int argc, char **argv) {
 
   // Sample list: Signal
   if (run_signal) {
-    if ( sampleArg.Contains("all" ) ) {
-      map<TString,TString> processId_MX = { {"240","1"},  {"280","2"},  {"300","3"},  {"320","4"},  {"360","5"},
-                                            {"400","6"},  {"450","7"},  {"500","8"},  {"550","9"},  {"600","10"},
-                                            {"650","11"}, {"700","12"}, {"750","13"}, {"800","14"}, {"850","15"},
-                                            {"900","16"}, {"950","17"}, {"1000","18"} };
-      map<TString,TString> processId_MY = { {"70","11"},  {"80","12"},  {"90","13"},  {"100","14"}, {"125","15"},
-                                            {"150","16"}, {"170","17"}, {"190","18"}, {"250","19"}, {"300","20"},
-                                            {"350","21"}, {"400","22"}, {"450","23"}, {"500","24"}, {"550","25"},
-                                            {"600","26"}, {"650","27"}, {"700","28"}, {"800","29"} };
+    map<TString,TString> processId_MX = { {"240","1"},  {"280","2"},  {"300","3"},  {"320","4"},  {"360","5"},
+                                          {"400","6"},  {"450","7"},  {"500","8"},  {"550","9"},  {"600","10"},
+                                          {"650","11"}, {"700","12"}, {"750","13"}, {"800","14"}, {"850","15"},
+                                          {"900","16"}, {"950","17"}, {"1000","18"} };
+    map<TString,TString> processId_MY = { {"70","11"},  {"80","12"},  {"90","13"},  {"100","14"}, {"125","15"},
+                                          {"150","16"}, {"170","17"}, {"190","18"}, {"250","19"}, {"300","20"},
+                                          {"350","21"}, {"400","22"}, {"450","23"}, {"500","24"}, {"550","25"},
+                                          {"600","26"}, {"650","27"}, {"700","28"}, {"800","29"} };
 
+    if ( sampleArg.Contains("all") || sampleArg.Contains("nominal") ) {
       map<TString,vector<TString>> MComb = { { "240",  { "70","80","90","100" } },
                                              { "280",  { "70","80","90","100","125","150" } },
                                              { "300",  { "70","80","90","100","125","150","170" } },
@@ -434,6 +434,27 @@ int main(int argc, char **argv) {
         ++it;
       }
     }
+
+    if ( sampleArg.Contains("all") || sampleArg.Contains("inverted") ) {
+      map<TString,vector<TString>> MComb = { { "650",  { "70","80","90","100","125" } } };
+
+      map<TString,vector<TString>>::iterator it = MComb.begin();
+      while ( it != MComb.end() ) {
+        TString MX = it->first;
+        vector<TString> MYs = it->second;
+        for ( auto MY : MYs ) {
+          TString sampleName = "NMSSM_XToYHTo2B2G_MX-"+MX+"_MY-"+MY;
+          samples.push_back(sampleName);
+          sample_procids.insert({sampleName, ("10"+processId_MX[MX]+processId_MY[MY]).Atoi()});
+          sample_names.insert({sampleName, sampleName+"_TuneCP5_13TeV-madgraph-pythia8"});
+          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                            { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+                                            { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                            { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+        }
+        ++it;
+      }
+    }
   }
 
   if ( samples.size()==0 ) {
@@ -452,7 +473,7 @@ int main(int argc, char **argv) {
     for ( int isample=1; isample<samples.size(); isample++ ) {
       file << "," <<endl;
       TString sample = samples[isample];
-      if ( sample.Contains("NMSSM_XToYHTo2G2B") ) {
+      if ( sample.Contains("NMSSM_XToYHTo") ) {
         sample.ReplaceAll("-","_");
       }
       file << "\t\t\""<<sample<<"\": "<<sample_procids[samples[isample]];

@@ -307,6 +307,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   else if ( process == "DDQCDGJets" )                 { xsec = 1;                              }
   else if ( process == "Data" )                       { xsec = 1;                              }
   else if ( process.Contains("NMSSM_XToYHTo2G2B") )   { xsec = 1; process.ReplaceAll("-","_"); }
+  else if ( process.Contains("NMSSM_XToYHTo2B2G") )   { xsec = 1; process.ReplaceAll("-","_"); }
   else {
     cout<<"Non-valid process: Exiting!"<<endl;
     return 1;
