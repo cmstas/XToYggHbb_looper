@@ -2,7 +2,7 @@
 
 using namespace tas;
 
-Jets getJets(Photons photons, const int JESUnc, const int JERUnc) {
+Jets getJets(Photons photons, const int JESUnc, const int JERUnc, const int HEMCheck) {
     Jets jets;
     for (unsigned int ijet = 0; ijet < nt.nJet(); ijet++) {
         Jet cand_jet = Jet(ijet);
@@ -18,6 +18,13 @@ Jets getJets(Photons photons, const int JESUnc, const int JERUnc) {
           // JERUnc is only an uncertainty => JERUnc==1 does not change the nominal value
           if ( JERUnc==2  ) cand_jet.setPt( cand_jet.pt_jerUp() );
           if ( JERUnc==-2 ) cand_jet.setPt( cand_jet.pt_jerDown() );
+        }
+        // Check HEM issue: https://hypernews.cern.ch/HyperNews/CMS/get/JetMET/2000.html
+        if ( HEMCheck!=0 ) {
+          if ( cand_jet.phi() > -1.57 && cand_jet.phi() < -0.87 ) {
+            if ( cand_jet.eta() >= -2.5 && cand_jet.eta() < -1.3 ) cand_jet.setPt( cand_jet.pt() * 0.80 );
+            if ( cand_jet.eta() >= -3.0 && cand_jet.eta() < -2.5 ) cand_jet.setPt( cand_jet.pt() * 0.65 );
+          }
         }
 
         if ( !(abs(cand_jet.eta()) < 2.4) ) continue;

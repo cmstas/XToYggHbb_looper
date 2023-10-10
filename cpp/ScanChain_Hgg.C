@@ -252,7 +252,7 @@ TF1* get_fakePhotonIDShape(TString year, bool isEndcap, bool inclusive=false) {
   return fakePhotonMVAIDShape;
 }
 
-int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int preselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0) {
+int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int preselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0, int HEMCheck=0) {
 // Event weights / scale factors:
 //  0: Do not apply
 //  1: Apply central value
@@ -622,6 +622,19 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       }
 
 
+      // MET filters
+      if ( !( nt.Flag_goodVertices()>=1 &&
+              nt.Flag_globalSuperTightHalo2016Filter()>=1 &&
+              nt.Flag_HBHENoiseFilter()>=1 &&
+              nt.Flag_HBHENoiseIsoFilter()>=1 &&
+              nt.Flag_EcalDeadCellTriggerPrimitiveFilter()>=1 &&
+              nt.Flag_BadPFMuonFilter()>=1 &&
+              nt.Flag_BadPFMuonDzFilter()>=1 &&
+              nt.Flag_hfNoisyHitsFilter()>=1 &&
+              nt.Flag_eeBadScFilter()>=1 &&
+              ( year.Contains("2016") ? 1 : nt.Flag_ecalBadCalibFilter()>=1 ) ) )
+      continue;
+
       // Object selection
       Photons photons;
       if (isMC) {
@@ -680,8 +693,8 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       if (muons.size() != 0 ) continue; 
 
       Jets jets;
-      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc);
-      else jets = getJets(selectedPhotons, 0, 0);
+      if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc, HEMCheck);
+      else jets = getJets(selectedPhotons, 0, 0, 0);
       if (jets.size() < 2) continue; 
 
       DiJets dijets = DiJetPreselection(jets);

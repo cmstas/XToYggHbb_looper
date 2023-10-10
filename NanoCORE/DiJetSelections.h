@@ -139,7 +139,7 @@ struct Jet {
     float btagSF_deepjet_shape_down_cferr2_ = 1.0;
 };
 
-vector<Jet> getJets(Photons photons, const int JESUnc, const int JERUnc);
+vector<Jet> getJets(Photons photons, const int JESUnc, const int JERUnc, const int HEMCheck);
 typedef std::vector<Jet> Jets;
 
 struct DiJet{

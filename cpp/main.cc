@@ -56,8 +56,9 @@ int main(int argc, char **argv) {
   int PhoSmearUnc         = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
   int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
   int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
+  int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
   // Option to reproduce the summary.json
-  int onlyCreateJSON      = ( argc > 21 ? char2int(argv[21]) : 0 );
+  int onlyCreateJSON      = ( argc > 22 ? char2int(argv[22]) : 0 );
   
 
   // Map definitions
@@ -517,7 +518,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck);
       }
     }
   }
