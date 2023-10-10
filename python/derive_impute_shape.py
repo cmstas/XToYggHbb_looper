@@ -9,6 +9,8 @@ parser.add_argument("--histName", help = "Name of histogram to fit", type=str, d
 parser.add_argument("--twoD", help = "Fit 2D function in min/max photon MVA ID (not really tested)", default = False, action='store_true')
 args = parser.parse_args()
 
+#ROOT.gROOT.SetBatch(1)
+
 fGJets = ROOT.TFile(args.input)
 
 hist_name = args.histName

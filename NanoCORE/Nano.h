@@ -14986,41 +14986,36 @@ protected:
     bool loaded_event_;
     unsigned int counter_cached_event_;
     unsigned int counter_uncached_event_;
-    float fixedGridRhoAll_;
-    TBranch *b_fixedGridRhoAll_;
-    bool loaded_fixedGridRhoAll_;
-    unsigned int counter_cached_fixedGridRhoAll_;
-    unsigned int counter_uncached_fixedGridRhoAll_;
-    float fixedGridRhoFastjetAll_;
-    TBranch *b_fixedGridRhoFastjetAll_;
-    bool loaded_fixedGridRhoFastjetAll_;
-    unsigned int counter_cached_fixedGridRhoFastjetAll_;
-    unsigned int counter_uncached_fixedGridRhoFastjetAll_;
+    float Rho_fixedGridRhoAll_;
+    TBranch *b_Rho_fixedGridRhoAll_;
+    bool loaded_Rho_fixedGridRhoAll_;
+    unsigned int counter_cached_Rho_fixedGridRhoAll_;
+    unsigned int counter_uncached_Rho_fixedGridRhoAll_;
     float Rho_fixedGridRhoFastjetAll_;
     TBranch *b_Rho_fixedGridRhoFastjetAll_;
     bool loaded_Rho_fixedGridRhoFastjetAll_;
     unsigned int counter_cached_Rho_fixedGridRhoFastjetAll_;
     unsigned int counter_uncached_Rho_fixedGridRhoFastjetAll_;
-    float fixedGridRhoFastjetCentral_;
-    TBranch *b_fixedGridRhoFastjetCentral_;
-    bool loaded_fixedGridRhoFastjetCentral_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentral_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentral_;
-    float fixedGridRhoFastjetCentralCalo_;
-    TBranch *b_fixedGridRhoFastjetCentralCalo_;
-    bool loaded_fixedGridRhoFastjetCentralCalo_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralCalo_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralCalo_;
-    float fixedGridRhoFastjetCentralChargedPileUp_;
-    TBranch *b_fixedGridRhoFastjetCentralChargedPileUp_;
-    bool loaded_fixedGridRhoFastjetCentralChargedPileUp_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralChargedPileUp_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralChargedPileUp_;
-    float fixedGridRhoFastjetCentralNeutral_;
-    TBranch *b_fixedGridRhoFastjetCentralNeutral_;
-    bool loaded_fixedGridRhoFastjetCentralNeutral_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralNeutral_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralNeutral_;
+    float Rho_fixedGridRhoFastjetCentral_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentral_;
+    bool loaded_Rho_fixedGridRhoFastjetCentral_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentral_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentral_;
+    float Rho_fixedGridRhoFastjetCentralCalo_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralCalo_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralCalo_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralCalo_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralCalo_;
+    float Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    float Rho_fixedGridRhoFastjetCentralNeutral_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralNeutral_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralNeutral_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralNeutral_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralNeutral_;
     int genTtbarId_;
     TBranch *b_genTtbarId_;
     bool loaded_genTtbarId_;
@@ -18076,13 +18071,12 @@ public:
     const float &btagWeight_CSVV2();
     const float &btagWeight_DeepCSVB();
     const ULong64_t &event();
-    const float &fixedGridRhoAll();
-    const float &fixedGridRhoFastjetAll();
+    const float &Rho_fixedGridRhoAll();
     const float &Rho_fixedGridRhoFastjetAll();
-    const float &fixedGridRhoFastjetCentral();
-    const float &fixedGridRhoFastjetCentralCalo();
-    const float &fixedGridRhoFastjetCentralChargedPileUp();
-    const float &fixedGridRhoFastjetCentralNeutral();
+    const float &Rho_fixedGridRhoFastjetCentral();
+    const float &Rho_fixedGridRhoFastjetCentralCalo();
+    const float &Rho_fixedGridRhoFastjetCentralChargedPileUp();
+    const float &Rho_fixedGridRhoFastjetCentralNeutral();
     const int &genTtbarId();
     const float &genWeight();
     const UInt_t &luminosityBlock();
@@ -20984,13 +20978,12 @@ namespace tas {
     const float &btagWeight_CSVV2(); // b-tag event weight for CSVV2
     const float &btagWeight_DeepCSVB(); // b-tag event weight for DeepCSVB
     const ULong64_t &event(); // event/l
-    const float &fixedGridRhoAll(); // test
-    const float &fixedGridRhoFastjetAll(); // rho from all PF Candidates, used e.g. for JECs
+    const float &Rho_fixedGridRhoAll(); // test
     const float &Rho_fixedGridRhoFastjetAll(); // rho from all PF Candidates, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentral(); // rho from all PF Candidates for central region, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentralCalo(); // rho from calo towers with |eta| < 2.5, used e.g. egamma PFCluster isolation
-    const float &fixedGridRhoFastjetCentralChargedPileUp(); // rho from charged PF Candidates for central region, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentralNeutral(); // rho from neutral PF Candidates with |eta| < 2.5, used e.g. for rho corrections of some lepton isolations
+    const float &Rho_fixedGridRhoFastjetCentral(); // rho from all PF Candidates for central region, used e.g. for JECs
+    const float &Rho_fixedGridRhoFastjetCentralCalo(); // rho from calo towers with |eta| < 2.5, used e.g. egamma PFCluster isolation
+    const float &Rho_fixedGridRhoFastjetCentralChargedPileUp(); // rho from charged PF Candidates for central region, used e.g. for JECs
+    const float &Rho_fixedGridRhoFastjetCentralNeutral(); // rho from neutral PF Candidates with |eta| < 2.5, used e.g. for rho corrections of some lepton isolations
     const int &genTtbarId(); // ttbar categorization
     const float &genWeight(); // generator weight
     const UInt_t &luminosityBlock(); // luminosityBlock/i

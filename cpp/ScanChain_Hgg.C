@@ -564,9 +564,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
         // Apply PreFiring weight
         if ( prefireWeight!=0 ) {
-          if ( prefireWeight==1  ) weight *= nt.L1PreFiringWeight_ECAL_Nom();
-          if ( prefireWeight==2  ) weight *= nt.L1PreFiringWeight_ECAL_Up();
-          if ( prefireWeight==-2 ) weight *= nt.L1PreFiringWeight_ECAL_Dn();
+          if ( prefireWeight==1  ) weight *= nt.L1PreFiringWeight_Nom();
+          if ( prefireWeight==2  ) weight *= nt.L1PreFiringWeight_Up();
+          if ( prefireWeight==-2 ) weight *= nt.L1PreFiringWeight_Dn();
         }
         //if(removeSpikes && weight*factor>1e2) continue; //comment out for synchronizing
 
@@ -601,22 +601,24 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
 
       // HLT selection
-      if ( lowMassMode ) {
-        if ( (year=="2016nonAPV" || year=="2016APV") &&
-            !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
-              || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
-        if ( (year=="2017") &&
-            !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
-        if ( (year=="2018") &&
-            !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
-      }
-      else {
-        if ( (year=="2016nonAPV" || year=="2016APV") &&
-            !( (tree->GetBranch("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
-        if ( (year=="2017") &&
-            !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
-        if ( (year=="2018") &&
-            !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+      if ( !isMC ) {
+        if ( lowMassMode ) {
+          if ( (year=="2016nonAPV" || year=="2016APV") &&
+              !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
+                || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+          if ( (year=="2017") &&
+              !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+          if ( (year=="2018") &&
+              !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+        }
+        else {
+          if ( (year=="2016nonAPV" || year=="2016APV") &&
+              !( (tree->GetBranch("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+          if ( (year=="2017") &&
+              !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+          if ( (year=="2018") &&
+              !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+        }
       }
 
 
@@ -728,84 +730,91 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
           if ( phoMVAIDWP90SF==-2 ) weight *= phoMVAIDWP90SF::get_phoMVAIDWP90SF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), year, "down")*phoMVAIDWP90SF::get_phoMVAIDWP90SF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), year, "down");
         }
 
-        // Apply bTagSF and get the weights before and after the application to normalize post-preselection
+        // Apply bTagSF and get the weights before and after the application to normalize post-preselection. electedDiJet.leadJet. Links:
+        // - https://btv-wiki.docs.cern.ch/PerformanceCalibration/SFUncertaintiesAndCorrelations/#working-point-based-sfs-fixedwp-sfs
+        // - https://twiki.cern.ch/twiki/bin/view/CMS/BTagShapeCalibration#Correlation_across_years_2016_20
+        // Jet_hadronFlavour = 0 for light jets, 4 for c jets, and 5 for b jets
         if ( bTagSF!=0 ) {
           float leadJetBTagSF, subleadJetBTagSF;
-          if ( bTagSF==1 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape();
+          if ( JESUnc!=0 ) { // btag JES correlated with jet JES no matter what.
+            if ( JESUnc==2 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_jes();
+            }
+            if ( JESUnc==-2 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_jes();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_jes();
+            }
           }
-          if ( bTagSF==2 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hf();
-          }
-          if ( bTagSF==-2 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hf();
-          }
-          if ( bTagSF==3 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats1();
-          }
-          if ( bTagSF==-3 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats1();
-          }
-          if ( bTagSF==4 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats2();
-          }
-          if ( bTagSF==-4 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats2();
-          }
-          if ( bTagSF==5 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lf();
-          }
-          if ( bTagSF==-5 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lf();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lf();
-          }
-          if ( bTagSF==6 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats1();
-          }
-          if ( bTagSF==-6 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats1();
-          }
-          if ( bTagSF==7 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats2();
-          }
-          if ( bTagSF==-7 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats2();
-          }
-          if ( bTagSF==8 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_jes();
-          }
-          if ( bTagSF==-8 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_jes();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_jes();
-          }
-          if ( bTagSF==9 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr1();
-          }
-          if ( bTagSF==-9 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr1();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr1();
-          }
-          if ( bTagSF==10 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr2();
-          }
-          if ( bTagSF==-10 ) {
-            leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr2();
-            subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr2();
+          else {
+            if ( bTagSF==1 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape();
+            }
+            if ( bTagSF==2 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hf();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hf();
+            }
+            if ( bTagSF==-2 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hf();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hf();
+            }
+            if ( bTagSF==3 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats1();
+            }
+            if ( bTagSF==-3 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats1();
+            }
+            if ( bTagSF==4 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_hfstats2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_hfstats2();
+            }
+            if ( bTagSF==-4 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_hfstats2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_hfstats2();
+            }
+            if ( bTagSF==5 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lf();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lf();
+            }
+            if ( bTagSF==-5 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lf();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lf();
+            }
+            if ( bTagSF==6 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats1();
+            }
+            if ( bTagSF==-6 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats1();
+            }
+            if ( bTagSF==7 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_lfstats2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_lfstats2();
+            }
+            if ( bTagSF==-7 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_lfstats2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_lfstats2();
+            }
+            if ( bTagSF==8 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==4 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==4 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr1();
+            }
+            if ( bTagSF==-8 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==4 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr1();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==4 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr1();
+            }
+            if ( bTagSF==9 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==4 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_cferr2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==4 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_cferr2();
+            }
+            if ( bTagSF==-9 ) {
+              if ( selectedDiJet.leadJet.hadronFlavour()==4 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_cferr2();
+              if ( selectedDiJet.subleadJet.hadronFlavour()==4 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_cferr2();
+            }
           }
           weight_beforeBTagSF = weight;
           h_weight_beforeBTagSF->Fill(0.5, weight);
