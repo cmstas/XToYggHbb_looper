@@ -334,8 +334,8 @@ def customize_plot(sample, plot, fillColor, lineColor, lineWidth, markerStyle, m
 def get_yields(plotDict, plotname, lumi, year, plotData=False):
   curYields=OrderedDict()
   curErrors=OrderedDict()
-  totalSMYield = None
-  totalSMError = None
+  totalSMYield = 0.0
+  totalSMError = 0.0
 
   for i,sample in enumerate(plotDict.keys()):
     # Signal
@@ -416,8 +416,8 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
       curPlots[sample] = copy.deepcopy(customize_plot(sample,plotDict[sample],sampleFillColor[model],sampleLineColor[model]+i%len(args.signalMass),sampleLineWidth[model],sampleMarkerStyle[model],sampleMarkerSize[model]))
       if args.shape and curPlots[sample].Integral(0,-1)>0.0:
         curPlots[sample].Scale(1.0/curPlots[sample].Integral(0,-1))
-        if args.cumulative:
-          curPlots[sample] = plotUtils.GetCumulative(curPlots[sample],lowToHighBinsCumulative)
+      if args.cumulative:
+        curPlots[sample] = plotUtils.GetCumulative(curPlots[sample],lowToHighBinsCumulative)
     # Data
     elif sample=="Data": 
       if plotData:
@@ -581,17 +581,18 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
     minR=0.0
     maxR=2.0
     ty = numpy.array([])
-    tmax=maxR
-    if args.data:
-      ty = g_ratio.GetY()
-    else:
-      ty = g_ratio_signal.GetY()
-    if len(ty)>0:
-      tmax = numpy.amax(ty)
-    if tmax>maxR:
-      maxR=tmax*1.05
-    if maxR>5.0:
-      minR=0.1
+    if not doSignalMCRatio:
+      tmax=maxR
+      if args.data:
+        ty = g_ratio.GetY()
+      else:
+        ty = g_ratio_signal.GetY()
+      if len(ty)>0:
+        tmax = numpy.amax(ty)
+      if tmax>maxR:
+        maxR=tmax*1.05
+      if maxR>5.0:
+        minR=0.1
     h_axis_ratio.GetYaxis().SetRangeUser(minR,maxR)
     h_axis_ratio.SetMinimum(minR)
     h_axis_ratio.SetMaximum(maxR)
@@ -808,6 +809,8 @@ if __name__=="__main__":
   parser.add_argument("--label", default="", help="Extra label for plots.")
   parser.add_argument("--yields", default=False, action="store_true", help="Print yields instead of plotting")
   parser.add_argument("--DDHistos", default=False, action="store_true", help="Set up plotter for histograms for the DD QCD+GJets estimation")
+  parser.add_argument("--plotsToInclude", default=[], nargs="+", help="List of which plots are to be produced. An empty list prints all of the hardcoded ones. Default: Empty list")
+  parser.add_argument("--plotsToExclude", default=[], nargs="+", help="List of which plots are NOT to be produced. An empty list excludes only the hardcoded ones. Default: Empty list")
   args = parser.parse_args()
 
   args.inDir = args.inDir.rstrip("/")+"/"
@@ -831,6 +834,9 @@ if __name__=="__main__":
 
   if len(args.years)==0:
     args.years = ["all"]
+
+  # Do signal/MC ratio
+  doSignalMCRatio = False
 
 
   # Samples
@@ -1056,6 +1062,8 @@ if __name__=="__main__":
       toinclude = ["Diphoton_maxMvaID", "Diphoton_minMvaID", "n_jets:Diphoton_maxMvaID", "n_jets:Diphoton_minMvaID"]
     else:
       toexclude = ["n_jets:Diphoton_maxMvaID", "n_jets:Diphoton_minMvaID"]
+    if len(args.plotsToInclude) > 0: toinclude = args.plotsToInclude
+    if len(args.plotsToExclude) > 0: toexclude = args.plotsToExclude
 
 
     if args.yields:
