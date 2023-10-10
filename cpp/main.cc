@@ -41,22 +41,23 @@ int main(int argc, char **argv) {
   int run_MCbkg           = ( argc > 4  ? char2int(argv[4])  : 1 );
   int run_signal          = ( argc > 5  ? char2int(argv[5])  : 1 );
   TString sampleArg       = ( argc > 6  ? argv[6]            : "all" );
+  int lowMassMode         = ( argc > 7  ? char2int(argv[7])  : 1 );
   // Set to 0 to disable, set to 1 for central value, set to +/-2 to get uncertainty
-  int prefireWeight       = ( argc > 7  ? char2int(argv[7])  : 1 );
-  int PUWeight            = ( argc > 8  ? char2int(argv[8])  : 1 );
-  int electronVetoSF      = ( argc > 9  ? char2int(argv[9])  : 1 );
-  int lowMassHggTriggerSF = ( argc > 10 ? char2int(argv[10]) : 1 );
-  int lowMassHggPreselSF  = ( argc > 11 ? char2int(argv[11]) : 0 );
-  int phoMVAIDWP90SF      = ( argc > 12 ? char2int(argv[12]) : 1 );
-  int bTagSF              = ( argc > 13 ? char2int(argv[13]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
-  int fnufUnc             = ( argc > 14 ? char2int(argv[14]) : 0 ); // No central value
-  int materialUnc         = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
-  int PhoScaleUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
-  int PhoSmearUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
-  int JESUnc              = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
-  int JERUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
+  int prefireWeight       = ( argc > 8  ? char2int(argv[8])  : 1 );
+  int PUWeight            = ( argc > 9  ? char2int(argv[9])  : 1 );
+  int electronVetoSF      = ( argc > 10 ? char2int(argv[10]) : 1 );
+  int triggerSF           = ( argc > 11 ? char2int(argv[11]) : 1 );
+  int preselSF            = ( argc > 12 ? char2int(argv[12]) : 0 );
+  int phoMVAIDWP90SF      = ( argc > 13 ? char2int(argv[13]) : 1 );
+  int bTagSF              = ( argc > 14 ? char2int(argv[14]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
+  int fnufUnc             = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
+  int materialUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
+  int PhoScaleUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
+  int PhoSmearUnc         = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
+  int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
+  int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
   // Option to reproduce the summary.json
-  int onlyCreateJSON      = ( argc > 20 ? char2int(argv[20]) : 0 );
+  int onlyCreateJSON      = ( argc > 21 ? char2int(argv[21]) : 0 );
   
 
   // Map definitions
@@ -90,7 +91,7 @@ int main(int argc, char **argv) {
       sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
                                                           "Run2018B-UL2018_MiniAODv2_GT36-v1",
                                                           "Run2018C-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018D-UL2018_MiniAODv2-v2" } },
+                                                          "Run2018D-UL2018_MiniAODv2_GT36-v2" } },
                                         { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
                                                           "Run2017C-UL2017_MiniAODv2-v2",
                                                           "Run2017D-UL2017_MiniAODv2-v1",
@@ -516,7 +517,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,prefireWeight,PUWeight,electronVetoSF,lowMassHggTriggerSF,lowMassHggPreselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
       }
     }
   }
