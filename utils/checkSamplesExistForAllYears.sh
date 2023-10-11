@@ -34,6 +34,7 @@ samples=(
   "NMSSM_XToYHTo2G2B_MX_1000_MY_90" # Signal_low
   "NMSSM_XToYHTo2G2B_MX_500_MY_90" # Signal_med
   "NMSSM_XToYHTo2G2B_MX_900_MY_90" # Signal_high
+  "NMSSM_XToYHTo2B2G_MX_650_MY_70" # Inverted signal
 )
 
 for s in "${samples[@]}"; do
