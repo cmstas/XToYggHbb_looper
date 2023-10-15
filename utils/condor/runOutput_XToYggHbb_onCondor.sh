@@ -14,13 +14,19 @@ usage()
 
 if [ -z $1 ]; then usage; fi
 
-export OUTPUTDIR=$1
+export OUTPUTDIR=$1; shift;
 export STARTDIR=$PWD
+
+if [ -z $1 ]; then
+  sh utils/condor/create_package.sh
+elif [ $1 = '--soft' ]; then
+  echo 'Package will not be created due to "--soft" option.'
+else
+  echo "Unknown option!";
+fi
 
 mkdir -p utils/condor/plotting_logs
 mkdir -p /ceph/cms/store/user/$USER/XToYggHbbOutput/$OUTPUTDIR
 cp cpp/summary.json /ceph/cms/store/user/$USER/XToYggHbbOutput/$OUTPUTDIR/.
-
-sh utils/condor/create_package.sh
 
 condor_submit utils/condor/runOutput_XToYggHbb_onCondor.sub
