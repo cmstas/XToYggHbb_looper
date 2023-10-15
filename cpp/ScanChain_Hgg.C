@@ -751,11 +751,11 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         if ( bTagSF!=0 ) {
           float leadJetBTagSF, subleadJetBTagSF;
           if ( JESUnc!=0 ) { // btag JES correlated with jet JES no matter what.
-            if ( JESUnc==2 ) {
+            if ( JESUnc>1 ) {
               if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
               if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_up_jes();
             }
-            if ( JESUnc==-2 ) {
+            if ( JESUnc<-1 ) {
               if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_down_jes();
               if ( selectedDiJet.subleadJet.hadronFlavour()==5 || selectedDiJet.subleadJet.hadronFlavour()==0 ) subleadJetBTagSF = selectedDiJet.subleadJet.btagSF_deepjet_shape_down_jes();
             }

@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
   int materialUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
   int PhoScaleUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
   int PhoSmearUnc         = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
-  int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
+  int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // Set to +/-X to get uncertainty, X in [2,12]
   int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
   int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
   // Option to reproduce the summary.json
