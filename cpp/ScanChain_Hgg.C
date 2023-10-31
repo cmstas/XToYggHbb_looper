@@ -61,192 +61,214 @@ void imputePhotonID(const float minPhotonID_cut, const float maxPhotonID, TF1* f
     return;
 }
 
-TF1* get_fakePhotonIDShape(TString year, bool isEndcap, bool inclusive=false) {
+TF1* get_fakePhotonIDShape(TString year, bool inclusive, bool isEndcap=true) {
   float lowerBound = -0.9;
   float upperBound = 1.0;
-  // From skim
-  //TF1* fakePhotonMVAIDShape = new TF1("fakePhotonMVAIDShape", "expo(0)+pol8(2)", lowerBound, upperBound);
 
-  //fakePhotonMVAIDShape->SetParameter(0,  -1.58102e+00);
-  //fakePhotonMVAIDShape->SetParameter(1,  -1.72396e+01);
-  //fakePhotonMVAIDShape->SetParameter(2,   2.54952e+04);
-  //fakePhotonMVAIDShape->SetParameter(3,  -5.81735e+04);
-  //fakePhotonMVAIDShape->SetParameter(4,   7.70510e+04);
-  //fakePhotonMVAIDShape->SetParameter(5,   4.55906e+04);
-  //fakePhotonMVAIDShape->SetParameter(6,   4.98817e+04);
-  //fakePhotonMVAIDShape->SetParameter(7,  -7.66256e+05);
-  //fakePhotonMVAIDShape->SetParameter(8,   5.98123e+05);
-  //fakePhotonMVAIDShape->SetParameter(9,   7.66017e+05);
-  //fakePhotonMVAIDShape->SetParameter(10, -7.37524e+05);
-
-  // From presel
   TF1* fakePhotonMVAIDShape = new TF1("fakePhotonMVAIDShape", "pol9", lowerBound, upperBound);
-
-  if ( inclusive ) {
-    fakePhotonMVAIDShape->SetParameter(0,  642.428);
-    fakePhotonMVAIDShape->SetParameter(1, -977.286);
-    fakePhotonMVAIDShape->SetParameter(2,  247.419);
-    fakePhotonMVAIDShape->SetParameter(3,  3398.33);
-    fakePhotonMVAIDShape->SetParameter(4,  10404.9);
-    fakePhotonMVAIDShape->SetParameter(5, -25623.0);
-    fakePhotonMVAIDShape->SetParameter(6, -24191.2);
-    fakePhotonMVAIDShape->SetParameter(7,  50079.5);
-    fakePhotonMVAIDShape->SetParameter(8,  23225.6);
-    fakePhotonMVAIDShape->SetParameter(9, -37194.3);
-  }
-  else {
-    if ( year == "2018" ) {
-      if ( isEndcap ) {
-        fakePhotonMVAIDShape->SetParameter(0, 67.0325);
-        fakePhotonMVAIDShape->SetParameter(1, -66.963);
-        fakePhotonMVAIDShape->SetParameter(2, 83.4426);
-        fakePhotonMVAIDShape->SetParameter(3, 766.715);
-        fakePhotonMVAIDShape->SetParameter(4, 204.279);
-        fakePhotonMVAIDShape->SetParameter(5,-3903.02);
-        fakePhotonMVAIDShape->SetParameter(6,-436.487);
-        fakePhotonMVAIDShape->SetParameter(7, 6629.09);
-        fakePhotonMVAIDShape->SetParameter(8, 621.602);
-        fakePhotonMVAIDShape->SetParameter(9,-3961.53);
-      }
-      else {
-        fakePhotonMVAIDShape->SetParameter(0, 379.854);
-        fakePhotonMVAIDShape->SetParameter(1,-537.665);
-        fakePhotonMVAIDShape->SetParameter(2, 139.261);
-        fakePhotonMVAIDShape->SetParameter(3, 2063.97);
-        fakePhotonMVAIDShape->SetParameter(4, 4998.73);
-        fakePhotonMVAIDShape->SetParameter(5,-14326.3);
-        fakePhotonMVAIDShape->SetParameter(6,-11166.3);
-        fakePhotonMVAIDShape->SetParameter(7, 27379.4);
-        fakePhotonMVAIDShape->SetParameter(8, 10676.3);
-        fakePhotonMVAIDShape->SetParameter(9,-19590.6);
-      }
-      // Inclusive in eta
-      //fakePhotonMVAIDShape->SetParameter(0, 448.181);
-      //fakePhotonMVAIDShape->SetParameter(1,-615.248);
-      //fakePhotonMVAIDShape->SetParameter(2, 198.058);
-      //fakePhotonMVAIDShape->SetParameter(3, 3028.78);
-      //fakePhotonMVAIDShape->SetParameter(4, 5401.24);
-      //fakePhotonMVAIDShape->SetParameter(5,-19215.6);
-      //fakePhotonMVAIDShape->SetParameter(6,-12080.9);
-      //fakePhotonMVAIDShape->SetParameter(7, 35749.9);
-      //fakePhotonMVAIDShape->SetParameter(8, 11641.3);
-      //fakePhotonMVAIDShape->SetParameter(9,-24545.6);
-    }
-    else if ( year == "2017" ) {
-      if ( isEndcap ) {
-        fakePhotonMVAIDShape->SetParameter(0, 92.6261);
-        fakePhotonMVAIDShape->SetParameter(1,-94.9224);
-        fakePhotonMVAIDShape->SetParameter(2, 4.09773);
-        fakePhotonMVAIDShape->SetParameter(3, 337.271);
-        fakePhotonMVAIDShape->SetParameter(4,  1312.2);
-        fakePhotonMVAIDShape->SetParameter(5,-2675.69);
-        fakePhotonMVAIDShape->SetParameter(6,-2866.58);
-        fakePhotonMVAIDShape->SetParameter(7, 5057.31);
-        fakePhotonMVAIDShape->SetParameter(8, 2999.53);
-        fakePhotonMVAIDShape->SetParameter(9,-4163.53);
-      }
-      else {
-        fakePhotonMVAIDShape->SetParameter(0, 489.973);
-        fakePhotonMVAIDShape->SetParameter(1,-1028.89);
-        fakePhotonMVAIDShape->SetParameter(2, 1056.12);
-        fakePhotonMVAIDShape->SetParameter(3,-1342.97);
-        fakePhotonMVAIDShape->SetParameter(4, 10030.2);
-        fakePhotonMVAIDShape->SetParameter(5,-8522.85);
-        fakePhotonMVAIDShape->SetParameter(6,-26820.3);
-        fakePhotonMVAIDShape->SetParameter(7, 25669.3);
-        fakePhotonMVAIDShape->SetParameter(8, 28284.6);
-        fakePhotonMVAIDShape->SetParameter(9,-27805.2);
-      }
-      // Inclusive in eta
-      //fakePhotonMVAIDShape->SetParameter(0,  583.44);
-      //fakePhotonMVAIDShape->SetParameter(1,-1121.58);
-      //fakePhotonMVAIDShape->SetParameter(2, 1068.63);
-      //fakePhotonMVAIDShape->SetParameter(3,-1030.92);
-      //fakePhotonMVAIDShape->SetParameter(4, 11260.5);
-      //fakePhotonMVAIDShape->SetParameter(5,  -11105);
-      //fakePhotonMVAIDShape->SetParameter(6,-29491.9);
-      //fakePhotonMVAIDShape->SetParameter(7, 30589.5);
-      //fakePhotonMVAIDShape->SetParameter(8, 31151.3);
-      //fakePhotonMVAIDShape->SetParameter(9,-31896.2);
-    }
-    else if ( year == "2016APV" ) {
-      if ( isEndcap ) {
-        fakePhotonMVAIDShape->SetParameter(0, 44.4215);
-        fakePhotonMVAIDShape->SetParameter(1,-20.2507);
-        fakePhotonMVAIDShape->SetParameter(2, 138.328);
-        fakePhotonMVAIDShape->SetParameter(3,-101.421);
-        fakePhotonMVAIDShape->SetParameter(4,-49.1336);
-        fakePhotonMVAIDShape->SetParameter(5,-399.122);
-        fakePhotonMVAIDShape->SetParameter(6,-349.556);
-        fakePhotonMVAIDShape->SetParameter(7, 1271.16);
-        fakePhotonMVAIDShape->SetParameter(8, 1007.93);
-        fakePhotonMVAIDShape->SetParameter(9,-1526.65);
-      }
-      else {
-        fakePhotonMVAIDShape->SetParameter(0, 149.644);
-        fakePhotonMVAIDShape->SetParameter(1,-331.224);
-        fakePhotonMVAIDShape->SetParameter(2, 175.043);
-        fakePhotonMVAIDShape->SetParameter(3, 168.151);
-        fakePhotonMVAIDShape->SetParameter(4, 3239.79);
-        fakePhotonMVAIDShape->SetParameter(5,-4359.92);
-        fakePhotonMVAIDShape->SetParameter(6,-7825.68);
-        fakePhotonMVAIDShape->SetParameter(7, 9719.76);
-        fakePhotonMVAIDShape->SetParameter(8,  8126.7);
-        fakePhotonMVAIDShape->SetParameter(9,-9069.47);
-      }
-      // Inclusive in eta
-      //fakePhotonMVAIDShape->SetParameter(0, 195.021);
-      //fakePhotonMVAIDShape->SetParameter(1,-354.183);
-      //fakePhotonMVAIDShape->SetParameter(2,  305.27);
-      //fakePhotonMVAIDShape->SetParameter(3, 99.8489);
-      //fakePhotonMVAIDShape->SetParameter(4, 3275.56);
-      //fakePhotonMVAIDShape->SetParameter(5,-4934.66);
-      //fakePhotonMVAIDShape->SetParameter(6,-8382.28);
-      //fakePhotonMVAIDShape->SetParameter(7, 11329.7);
-      //fakePhotonMVAIDShape->SetParameter(8, 9277.66);
-      //fakePhotonMVAIDShape->SetParameter(9,-10804.9);
-    }
-    else if ( year == "2016nonAPV" ) {
-      if ( isEndcap ) {
-        fakePhotonMVAIDShape->SetParameter(0, 47.0326);
-        fakePhotonMVAIDShape->SetParameter(1,-60.4932);
-        fakePhotonMVAIDShape->SetParameter(2,-62.6931);
-        fakePhotonMVAIDShape->SetParameter(3, 364.752);
-        fakePhotonMVAIDShape->SetParameter(4, 971.226);
-        fakePhotonMVAIDShape->SetParameter(5,-2066.89);
-        fakePhotonMVAIDShape->SetParameter(6,-2174.16);
-        fakePhotonMVAIDShape->SetParameter(7, 3805.84);
-        fakePhotonMVAIDShape->SetParameter(8, 2029.69);
-        fakePhotonMVAIDShape->SetParameter(9,-2862.74);
-      }
-      else {
-        fakePhotonMVAIDShape->SetParameter(0, 143.149);
-        fakePhotonMVAIDShape->SetParameter(1,-289.116);
-        fakePhotonMVAIDShape->SetParameter(2, 213.963);
-        fakePhotonMVAIDShape->SetParameter(3,-238.454);
-        fakePhotonMVAIDShape->SetParameter(4, 3309.12);
-        fakePhotonMVAIDShape->SetParameter(5,-3066.61);
-        fakePhotonMVAIDShape->SetParameter(6,-8341.78);
-        fakePhotonMVAIDShape->SetParameter(7, 8122.98);
-        fakePhotonMVAIDShape->SetParameter(8, 8481.39);
-        fakePhotonMVAIDShape->SetParameter(9,-8318.37);
-      }
-      // Inclusive in eta
-      //fakePhotonMVAIDShape->SetParameter(0, 190.683);
-      //fakePhotonMVAIDShape->SetParameter(1,-349.971);
-      //fakePhotonMVAIDShape->SetParameter(2, 155.202);
-      //fakePhotonMVAIDShape->SetParameter(3, 115.678);
-      //fakePhotonMVAIDShape->SetParameter(4, 4248.22);
-      //fakePhotonMVAIDShape->SetParameter(5,-5068.76);
-      //fakePhotonMVAIDShape->SetParameter(6,-10432.4);
-      //fakePhotonMVAIDShape->SetParameter(7, 11815.7);
-      //fakePhotonMVAIDShape->SetParameter(8, 10449.8);
-      //fakePhotonMVAIDShape->SetParameter(9,-11117.4);
+  if ( year == "" ) {
+    if ( inclusive ) {
+      fakePhotonMVAIDShape->SetParameter(0, 1316.87);
+      fakePhotonMVAIDShape->SetParameter(1,-2282.82);
+      fakePhotonMVAIDShape->SetParameter(2,  1426.4);
+      fakePhotonMVAIDShape->SetParameter(3, 2367.66);
+      fakePhotonMVAIDShape->SetParameter(4, 23557.3);
+      fakePhotonMVAIDShape->SetParameter(5,-38991.9);
+      fakePhotonMVAIDShape->SetParameter(6,-58465.1);
+      fakePhotonMVAIDShape->SetParameter(7, 85949.8);
+      fakePhotonMVAIDShape->SetParameter(8, 59732.7);
+      fakePhotonMVAIDShape->SetParameter(9,-74589.9);
     }
     else {
-      cout<<"Non-valid process: No fakePhotonMVAIDShape!"<<endl;
-      return nullptr;
+      if ( isEndcap ) {
+        fakePhotonMVAIDShape->SetParameter(0, 232.801);
+        fakePhotonMVAIDShape->SetParameter(1,-209.519);
+        fakePhotonMVAIDShape->SetParameter(2, 121.689);
+        fakePhotonMVAIDShape->SetParameter(3, 1152.68);
+        fakePhotonMVAIDShape->SetParameter(4, 2567.51);
+        fakePhotonMVAIDShape->SetParameter(5,-8273.67);
+        fakePhotonMVAIDShape->SetParameter(6,-6191.54);
+        fakePhotonMVAIDShape->SetParameter(7, 15893.3);
+        fakePhotonMVAIDShape->SetParameter(8, 6767.25);
+        fakePhotonMVAIDShape->SetParameter(9,-12053.2);
+      }
+      else {
+        fakePhotonMVAIDShape->SetParameter(0, 1081.74);
+        fakePhotonMVAIDShape->SetParameter(1,-2061.18);
+        fakePhotonMVAIDShape->SetParameter(2, 1352.68);
+        fakePhotonMVAIDShape->SetParameter(3, 1004.92);
+        fakePhotonMVAIDShape->SetParameter(4, 20678.1);
+        fakePhotonMVAIDShape->SetParameter(5,-29726.8);
+        fakePhotonMVAIDShape->SetParameter(6,-51609.3);
+        fakePhotonMVAIDShape->SetParameter(7, 68346.1);
+        fakePhotonMVAIDShape->SetParameter(8, 52524.9);
+        fakePhotonMVAIDShape->SetParameter(9,-61567.5);
+      }
     }
+  }
+  else if ( year == "2018" ) {
+    if ( inclusive ) {
+      fakePhotonMVAIDShape->SetParameter(0, 417.324);
+      fakePhotonMVAIDShape->SetParameter(1,-558.751);
+      fakePhotonMVAIDShape->SetParameter(2, 228.889);
+      fakePhotonMVAIDShape->SetParameter(3,  2616.9);
+      fakePhotonMVAIDShape->SetParameter(4, 4602.03);
+      fakePhotonMVAIDShape->SetParameter(5,  -16952);
+      fakePhotonMVAIDShape->SetParameter(6,-10282.8);
+      fakePhotonMVAIDShape->SetParameter(7, 31664.8);
+      fakePhotonMVAIDShape->SetParameter(8, 10209.6);
+      fakePhotonMVAIDShape->SetParameter(9,-21936.5);
+    }
+    else {
+      if ( isEndcap ) {
+        fakePhotonMVAIDShape->SetParameter(0, 62.5195);
+        fakePhotonMVAIDShape->SetParameter(1,-53.1982);
+        fakePhotonMVAIDShape->SetParameter(2,  85.929);
+        fakePhotonMVAIDShape->SetParameter(3,  609.37);
+        fakePhotonMVAIDShape->SetParameter(4, 138.294);
+        fakePhotonMVAIDShape->SetParameter(5,-3274.68);
+        fakePhotonMVAIDShape->SetParameter(6,-300.989);
+        fakePhotonMVAIDShape->SetParameter(7, 5694.07);
+        fakePhotonMVAIDShape->SetParameter(8, 514.687);
+        fakePhotonMVAIDShape->SetParameter(9,-3471.98);
+      }
+      else {
+        fakePhotonMVAIDShape->SetParameter(0,   353.3);
+        fakePhotonMVAIDShape->SetParameter(1,-491.686);
+        fakePhotonMVAIDShape->SetParameter(2, 169.783);
+        fakePhotonMVAIDShape->SetParameter(3, 1752.05);
+        fakePhotonMVAIDShape->SetParameter(4, 4265.64);
+        fakePhotonMVAIDShape->SetParameter(5,-12428.9);
+        fakePhotonMVAIDShape->SetParameter(6,-9515.45);
+        fakePhotonMVAIDShape->SetParameter(7, 23796.1);
+        fakePhotonMVAIDShape->SetParameter(8, 9360.25);
+        fakePhotonMVAIDShape->SetParameter(9,-17236.2);
+      }
+    }
+  }
+  else if ( year == "2017" ) {
+    if ( inclusive ) {
+      fakePhotonMVAIDShape->SetParameter(0, 544.888);
+      fakePhotonMVAIDShape->SetParameter(1,-1055.37);
+      fakePhotonMVAIDShape->SetParameter(2, 999.277);
+      fakePhotonMVAIDShape->SetParameter(3,-990.145);
+      fakePhotonMVAIDShape->SetParameter(4, 10466.5);
+      fakePhotonMVAIDShape->SetParameter(5,-10142.1);
+      fakePhotonMVAIDShape->SetParameter(6,-27407.7);
+      fakePhotonMVAIDShape->SetParameter(7, 28106.2);
+      fakePhotonMVAIDShape->SetParameter(8, 29077.8);
+      fakePhotonMVAIDShape->SetParameter(9,-29592.1);
+    }
+    else {
+      if ( isEndcap ) {
+        fakePhotonMVAIDShape->SetParameter(0,  85.5531);
+        fakePhotonMVAIDShape->SetParameter(1,  -82.159);
+        fakePhotonMVAIDShape->SetParameter(2,-0.582958);
+        fakePhotonMVAIDShape->SetParameter(3,  269.774);
+        fakePhotonMVAIDShape->SetParameter(4,  1266.19);
+        fakePhotonMVAIDShape->SetParameter(5, -2380.84);
+        fakePhotonMVAIDShape->SetParameter(6, -2755.71);
+        fakePhotonMVAIDShape->SetParameter(7,  4592.77);
+        fakePhotonMVAIDShape->SetParameter(8,  2861.17);
+        fakePhotonMVAIDShape->SetParameter(9, -3853.95);
+      }
+      else {
+        fakePhotonMVAIDShape->SetParameter(0, 457.937);
+        fakePhotonMVAIDShape->SetParameter(1,-972.254);
+        fakePhotonMVAIDShape->SetParameter(2, 1010.73);
+        fakePhotonMVAIDShape->SetParameter(3,-1298.21);
+        fakePhotonMVAIDShape->SetParameter(4, 9155.69);
+        fakePhotonMVAIDShape->SetParameter(5,-7514.89);
+        fakePhotonMVAIDShape->SetParameter(6,-24576.8);
+        fakePhotonMVAIDShape->SetParameter(7, 23014.8);
+        fakePhotonMVAIDShape->SetParameter(8, 26169.4);
+        fakePhotonMVAIDShape->SetParameter(9,-25429.9);
+      }
+    }
+  }
+  else if ( year == "2016APV" ) {
+    if ( inclusive ) {
+      fakePhotonMVAIDShape->SetParameter(0, 175.978);
+      fakePhotonMVAIDShape->SetParameter(1,-330.624);
+      fakePhotonMVAIDShape->SetParameter(2, 230.033);
+      fakePhotonMVAIDShape->SetParameter(3, 239.253);
+      fakePhotonMVAIDShape->SetParameter(4, 3305.56);
+      fakePhotonMVAIDShape->SetParameter(5,-5200.57);
+      fakePhotonMVAIDShape->SetParameter(6,-8306.41);
+      fakePhotonMVAIDShape->SetParameter(7, 11571.7);
+      fakePhotonMVAIDShape->SetParameter(8, 8885.88);
+      fakePhotonMVAIDShape->SetParameter(9,-10579.4);
+    }
+    else {
+      if ( isEndcap ) {
+        fakePhotonMVAIDShape->SetParameter(0,  39.861);
+        fakePhotonMVAIDShape->SetParameter(1,-16.9761);
+        fakePhotonMVAIDShape->SetParameter(2, 125.197);
+        fakePhotonMVAIDShape->SetParameter(3,-109.174);
+        fakePhotonMVAIDShape->SetParameter(4, 12.2005);
+        fakePhotonMVAIDShape->SetParameter(5,-380.418);
+        fakePhotonMVAIDShape->SetParameter(6,-518.982);
+        fakePhotonMVAIDShape->SetParameter(7, 1344.25);
+        fakePhotonMVAIDShape->SetParameter(8, 1087.55);
+        fakePhotonMVAIDShape->SetParameter(9,-1574.44);
+      }
+      else {
+        fakePhotonMVAIDShape->SetParameter(0, 135.327);
+        fakePhotonMVAIDShape->SetParameter(1,-310.684);
+        fakePhotonMVAIDShape->SetParameter(2, 111.795);
+        fakePhotonMVAIDShape->SetParameter(3, 300.753);
+        fakePhotonMVAIDShape->SetParameter(4, 3222.67);
+        fakePhotonMVAIDShape->SetParameter(5,-4593.07);
+        fakePhotonMVAIDShape->SetParameter(6,   -7618);
+        fakePhotonMVAIDShape->SetParameter(7, 9830.08);
+        fakePhotonMVAIDShape->SetParameter(8, 7682.17);
+        fakePhotonMVAIDShape->SetParameter(9,-8776.85);
+      }
+    }
+  }
+  else if ( year == "2016nonAPV" ) {
+    if ( inclusive ) {
+      fakePhotonMVAIDShape->SetParameter(0, 171.478);
+      fakePhotonMVAIDShape->SetParameter(1,-322.973);
+      fakePhotonMVAIDShape->SetParameter(2, 156.348);
+      fakePhotonMVAIDShape->SetParameter(3, 147.162);
+      fakePhotonMVAIDShape->SetParameter(4,  3848.3);
+      fakePhotonMVAIDShape->SetParameter(5,-4779.66);
+      fakePhotonMVAIDShape->SetParameter(6,-9530.07);
+      fakePhotonMVAIDShape->SetParameter(7, 10969.1);
+      fakePhotonMVAIDShape->SetParameter(8, 9591.86);
+      fakePhotonMVAIDShape->SetParameter(9,-10248.4);
+    }
+    else {
+      if ( isEndcap ) {
+        fakePhotonMVAIDShape->SetParameter(0, 42.0966);
+        fakePhotonMVAIDShape->SetParameter(1,-55.5476);
+        fakePhotonMVAIDShape->SetParameter(2,-71.3172);
+        fakePhotonMVAIDShape->SetParameter(3, 355.575);
+        fakePhotonMVAIDShape->SetParameter(4, 1011.38);
+        fakePhotonMVAIDShape->SetParameter(5,-2024.01);
+        fakePhotonMVAIDShape->SetParameter(6,-2281.21);
+        fakePhotonMVAIDShape->SetParameter(7, 3764.46);
+        fakePhotonMVAIDShape->SetParameter(8, 2064.11);
+        fakePhotonMVAIDShape->SetParameter(9, -2814.4);
+      }
+      else {
+        fakePhotonMVAIDShape->SetParameter(0, 128.576);
+        fakePhotonMVAIDShape->SetParameter(1,-267.889);
+        fakePhotonMVAIDShape->SetParameter(2, 217.171);
+        fakePhotonMVAIDShape->SetParameter(3,-177.811);
+        fakePhotonMVAIDShape->SetParameter(4, 2922.14);
+        fakePhotonMVAIDShape->SetParameter(5,-2913.87);
+        fakePhotonMVAIDShape->SetParameter(6,-7441.72);
+        fakePhotonMVAIDShape->SetParameter(7,  7476.9);
+        fakePhotonMVAIDShape->SetParameter(8, 7656.73);
+        fakePhotonMVAIDShape->SetParameter(9,-7587.61);
+      }
+    }
+  }
+  else {
+    cout<<"Non-valid process: No fakePhotonMVAIDShape!"<<endl;
+    return nullptr;
   }
 
   return fakePhotonMVAIDShape;
@@ -500,8 +522,8 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   H1(weight_beforeBTagSF,1,0,1,"");
   H1(weight_afterBTagSF,1,0,1,"");
 
-  TF1 *fakePhotonID_shape_barrel = get_fakePhotonIDShape(year,/*isEndcap*/false);
-  TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*isEndcap*/true);
+  TF1 *fakePhotonID_shape_barrel = get_fakePhotonIDShape(year,/*inclusive*/false,/*isEndcap*/false);
+  TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*inclusive*/false,/*isEndcap*/true);
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
   if ( triggerSF != 0) (lowMassMode ? lowMassHggTriggerSF::set_lowMassHggTriggerSF() : highMassHggTriggerSF::set_highMassHggTriggerSF() );
   if ( preselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
