@@ -23,11 +23,11 @@ int plotLowMassHggTriggerSF() {
         std::vector<float> r9Vec;
         for ( unsigned int ir9=0;  ir9<nr9bins; ir9++ ) {
           if ( thresholds_r9[ir9]==999.0 ) {
-            r9Vec.push_back(1); // Dummy maximum for R9
             break;
           }
           r9Vec.push_back(thresholds_r9[ir9]);
         }
+        r9Vec.push_back(1); // Dummy maximum for R9
 
         const unsigned int r9Len = r9Vec.size();
         float *r9Arr = &r9Vec[0];
@@ -39,17 +39,17 @@ int plotLowMassHggTriggerSF() {
           std::vector<float> ptVec;
           for ( unsigned int ipt=0; ipt<nptbins; ipt++ ) {
             if ( thresholds_pt[ipt]==999999.0 ) {
-              ptVec.push_back(100); // Dummy maximum for pt
               break;
             }
             ptVec.push_back(thresholds_pt[ipt]);
           }
+          ptVec.push_back(100); // Dummy maximum for pt
 
           const unsigned int ptLen = ptVec.size();
           float *ptArr = &ptVec[0];
 
           if ( EBHiR9 ) year = "2016EBHiR9";
-          TString name = "lowMassTrigSF_"+year+"_"+photon+"_"+(eta < 1.0 ? "barrel" : "endcap")+"_r9"+to_string(r9Arr[ir9-1])+"-"+to_string(r9Arr[ir9]);
+          TString name = "lowMassTrigEff_"+year+"_"+photon+"_"+(eta < 1.0 ? "barrel" : "endcap")+"_r9"+to_string(r9Arr[ir9-1])+"-"+to_string(r9Arr[ir9]);
           TCanvas *c = new TCanvas(name);
           TH1F *h = new TH1F(name, name, ptLen-1, ptArr);
           for ( unsigned int ipt=1; ipt<ptLen; ipt++ ) {
