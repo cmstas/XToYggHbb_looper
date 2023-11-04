@@ -24,6 +24,7 @@ sampleFillColor["Single H"]          = ROOT.kGreen+2
 sampleFillColor["ttH_M125"]          = ROOT.kOrange+7
 sampleFillColor["HHbbgg"]            = ROOT.kBlue-4
 sampleFillColor["NMSSM_XToYHTo2G2B"] = None
+sampleFillColor["NMSSM_XToYHTo2B2G"] = None
 
 sampleLineColor=dict()
 sampleLineColor["Data"]              = ROOT.kBlack
@@ -39,6 +40,7 @@ sampleLineColor["Single H"]          = None
 sampleLineColor["ttH_M125"]          = None
 sampleLineColor["HHbbgg"]            = None
 sampleLineColor["NMSSM_XToYHTo2G2B"] = ROOT.kRed
+sampleLineColor["NMSSM_XToYHTo2B2G"] = ROOT.kRed
 
 sampleLineWidth=dict()
 sampleLineWidth["Data"]              = 1
@@ -54,6 +56,7 @@ sampleLineWidth["Single H"]          = 0
 sampleLineWidth["ttH_M125"]          = 0
 sampleLineWidth["HHbbgg"]            = 0
 sampleLineWidth["NMSSM_XToYHTo2G2B"] = 2
+sampleLineWidth["NMSSM_XToYHTo2B2G"] = 2
 
 sampleMarkerStyle=dict()
 sampleMarkerStyle["Data"]              = 20
@@ -69,6 +72,7 @@ sampleMarkerStyle["Single H"]          = None
 sampleMarkerStyle["ttH_M125"]          = None
 sampleMarkerStyle["HHbbgg"]            = None
 sampleMarkerStyle["NMSSM_XToYHTo2G2B"] = None
+sampleMarkerStyle["NMSSM_XToYHTo2B2G"] = None
 
 sampleMarkerSize=dict()
 sampleMarkerSize["Data"]              = 1.2
@@ -84,6 +88,7 @@ sampleMarkerSize["Single H"]          = None
 sampleMarkerSize["ttH_M125"]          = None
 sampleMarkerSize["HHbbgg"]            = None
 sampleMarkerSize["NMSSM_XToYHTo2G2B"] = None
+sampleMarkerSize["NMSSM_XToYHTo2B2G"] = None
 
 sampleLegend=dict()
 sampleLegend["Data"]              = "Data"
@@ -99,6 +104,7 @@ sampleLegend["Single H"]          = "Single H"
 sampleLegend["ttH_M125"]          = "ttH"
 sampleLegend["HHbbgg"]            = "ggHH"
 sampleLegend["NMSSM_XToYHTo2G2B"] = "XYH"
+sampleLegend["NMSSM_XToYHTo2B2G"] = "XYH (inv)"
 
 epsilon = 1e-6
 # Normalize to event counts (experimental - here for posterity)
@@ -154,7 +160,7 @@ def get_plots(samples, year, plotname, cut, plotBin, plotXTitle, plotYTitle):
     #if tyear=="2016APV":
     #  cut = "weight_central*( dijet_lead_btagDeepFlavB>0.2598 && dijet_sublead_btagDeepFlavB>0.2598 )"
     for i,sample in enumerate(samples):
-      if "NMSSM_XToYHTo2G2B" in sample:
+      if "NMSSM_XToYH" in sample:
         for mass in args.signalMass:
           infile = ROOT.TFile(args.inDir+"output_"+sample+"_"+mass+"_"+tyear+".root")
           tree = infile.Get("tout")
@@ -334,12 +340,12 @@ def customize_plot(sample, plot, fillColor, lineColor, lineWidth, markerStyle, m
 def get_yields(plotDict, plotname, lumi, year, plotData=False):
   curYields=OrderedDict()
   curErrors=OrderedDict()
-  totalSMYield = None
-  totalSMError = None
+  totalSMYield = 0.0
+  totalSMError = 0.0
 
   for i,sample in enumerate(plotDict.keys()):
     # Signal
-    if "NMSSM_XToYHTo2G2B" in sample:
+    if "NMSSM_XToYH" in sample:
       curYields[sample] = plotDict[sample].GetBinContent(1)
       curErrors[sample] = plotDict[sample].GetBinError(1)
       print(sample.replace(" ","_")+":\t%.2f +/- %.2f"%(curYields[sample],curErrors[sample]))
@@ -410,14 +416,14 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
   lowToHighBinsCumulative = True
   for i,sample in enumerate(plotDict.keys()):
     # Signal
-    if "NMSSM_XToYHTo2G2B" in sample:
+    if "NMSSM_XToYH" in sample:
       model = sample.split("_M")[0]
-      mass = sample.split("B_")[1]
+      mass = sample.split("B_")[1] if "B_" in sample else sample.split("G_")[1]
       curPlots[sample] = copy.deepcopy(customize_plot(sample,plotDict[sample],sampleFillColor[model],sampleLineColor[model]+i%len(args.signalMass),sampleLineWidth[model],sampleMarkerStyle[model],sampleMarkerSize[model]))
       if args.shape and curPlots[sample].Integral(0,-1)>0.0:
         curPlots[sample].Scale(1.0/curPlots[sample].Integral(0,-1))
-        if args.cumulative:
-          curPlots[sample] = plotUtils.GetCumulative(curPlots[sample],lowToHighBinsCumulative)
+      if args.cumulative:
+        curPlots[sample] = plotUtils.GetCumulative(curPlots[sample],lowToHighBinsCumulative)
     # Data
     elif sample=="Data": 
       if plotData:
@@ -448,7 +454,7 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
   if not args.dataOnly:
     for i,sample in enumerate(reversed(plotDict.keys())):
       # Bkg
-      if not ("NMSSM_XToYHTo2G2B" in sample or sample=="Data"):
+      if not ("NMSSM_XToYH" in sample or sample=="Data"):
         if args.shape and totalScale>0.0:
           curPlots[sample].Scale(1.0/totalScale)
         if args.cumulative:
@@ -475,9 +481,9 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
   
   for sample in curPlots.keys():
     # Signal
-    if "NMSSM_XToYHTo2G2B" in sample and not args.dataOnly:
+    if "NMSSM_XToYH" in sample and not args.dataOnly:
       model = sample.split("_M")[0]
-      mass = sample.split("B_")[1]
+      mass = sample.split("B_")[1] if "B_" in sample else sample.split("G_")[1]
       massX = mass.split("_")[1]
       massY = mass.split("_")[3]
       legend.AddEntry(curPlots[sample],sampleLegend[model]+" ("+massX+"/"+massY+") GeV","L")
@@ -539,9 +545,9 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
 
       for i,sample in enumerate(plotDict.keys()):
         # Signal
-        if "NMSSM_XToYHTo2G2B" in sample:
+        if "NMSSM_XToYH" in sample:
           model = sample.split("_M")[0] 
-          mass = sample.split("B_")[1]
+          mass = sample.split("B_")[1] if "B_" in sample else sample.split("G_")[1]
           g_signal_temp = ROOT.TGraphAsymmErrors()
           plotUtils.ConvertToPoissonGraph(curPlots[sample], g_signal_temp, drawZeros=False, drawXerr=False, drawYerr=False)
           g_signal_temp.SetMarkerStyle(20)
@@ -581,17 +587,18 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
     minR=0.0
     maxR=2.0
     ty = numpy.array([])
-    tmax=maxR
-    if args.data:
-      ty = g_ratio.GetY()
-    else:
-      ty = g_ratio_signal.GetY()
-    if len(ty)>0:
-      tmax = numpy.amax(ty)
-    if tmax>maxR:
-      maxR=tmax*1.05
-    if maxR>5.0:
-      minR=0.1
+    if not doSignalMCRatio:
+      tmax=maxR
+      if args.data:
+        ty = g_ratio.GetY()
+      else:
+        ty = g_ratio_signal.GetY()
+      if len(ty)>0:
+        tmax = numpy.amax(ty)
+      if tmax>maxR:
+        maxR=tmax*1.05
+      if maxR>5.0:
+        minR=0.1
     h_axis_ratio.GetYaxis().SetRangeUser(minR,maxR)
     h_axis_ratio.SetMinimum(minR)
     h_axis_ratio.SetMaximum(maxR)
@@ -714,7 +721,7 @@ def draw_plot(plotDict, plotname, lumi, year, logY=True, logX=False, plotData=Fa
       curPlots["Data"].GetYaxis().SetTitleOffset(1.45)
       curPlots["Data"].GetZaxis().SetLabelSize(0.03)
   for sample in curPlots.keys():
-    if "NMSSM_XToYHTo2G2B" in sample and not args.dataOnly:
+    if "NMSSM_XToYH" in sample and not args.dataOnly:
       if histMax < curPlots[sample].GetMaximum(): 
         histMax = curPlots[sample].GetMaximum()
       curPlots[sample].Draw("HIST,SAME" if is1Dplot else "COLZ")
@@ -797,6 +804,7 @@ if __name__=="__main__":
   parser.add_argument("--signalOnly", default=False, action="store_true", help="Plot only signal, no MC bkg")
   parser.add_argument("--noSignal", default=False, action="store_true", help="Do not plot signals")
   parser.add_argument("--signalMass", default=[], nargs="+", help="Signal mass points to plot. 'all' plots/prints all of the mass points. Default: 'MX_700_MY_100'")
+  parser.add_argument("--invertedSignal", default=False, action="store_true", help="Plot Y->bb and H->gg, instead of Y->gg and H->bb.")
   parser.add_argument("--samples", default=[], nargs="+", help="Samples to plot. Default: 'all'")
   parser.add_argument("--shape", default=False, action="store_true", help="Shape normalization")
   parser.add_argument("--cumulative", default=False, action="store_true", help="Cumulative distributions")
@@ -804,10 +812,13 @@ if __name__=="__main__":
   parser.add_argument("--noLogY", default=False, action="store_true", help="Don't use logY.")
   parser.add_argument("--logX", default=False, action="store_true", help="Use logX.")
   parser.add_argument("--unweighted", default=False, action="store_true", help="Plot unweighted histograms.")
+  parser.add_argument("--cut", default="1", help="Selection to apply. Default: No selection on top of the preselection")
   parser.add_argument("--outFormat", default="png", choices=["png","pdf","root"], help="Output format: png, pdf or root. Default: png")
   parser.add_argument("--label", default="", help="Extra label for plots.")
   parser.add_argument("--yields", default=False, action="store_true", help="Print yields instead of plotting")
   parser.add_argument("--DDHistos", default=False, action="store_true", help="Set up plotter for histograms for the DD QCD+GJets estimation")
+  parser.add_argument("--plotsToInclude", default=[], nargs="+", help="List of which plots are to be produced. An empty list prints all of the hardcoded ones. Default: Empty list")
+  parser.add_argument("--plotsToExclude", default=[], nargs="+", help="List of which plots are NOT to be produced. An empty list excludes only the hardcoded ones. Default: Empty list")
   args = parser.parse_args()
 
   args.inDir = args.inDir.rstrip("/")+"/"
@@ -820,17 +831,28 @@ if __name__=="__main__":
   if args.dataOnly:
     args.data = True
 
+  # Final state: Y->gg & H->bb -- Default
+  signalSample = "NMSSM_XToYHTo2G2B"
+  signalSampleSplit = "B_"
+  # Final state: Y->bb & H->gg -- For cross-checks
+  if args.invertedSignal:
+    signalSample = "NMSSM_XToYHTo2B2G"
+    signalSampleSplit = "G_"
+
   if len(args.signalMass)==0: 
     args.signalMass = ["MX_700_MY_100"]
   if args.signalMass==["all"]: 
     args.signalMass = []
-    fileNames = glob.glob(args.inDir+"*NMSSM*")
+    fileNames = glob.glob(args.inDir+"*"+signalSample+"*")
     for fileName in fileNames:
-      fileName = fileName.split("/")[-1].split(".")[0].split("B_")[1].split("_201")[0]
+      fileName = fileName.split("/")[-1].split(".")[0].split(signalSampleSplit)[1].split("_201")[0]
       args.signalMass.append(fileName)
 
   if len(args.years)==0:
     args.years = ["all"]
+
+  # Do signal/MC ratio
+  doSignalMCRatio = False
 
 
   # Samples
@@ -870,7 +892,7 @@ if __name__=="__main__":
     samples.remove("GJets")
   # Signal MC
   if not args.noSignal:
-    samples.append("NMSSM_XToYHTo2G2B")
+    samples.append(signalSample)
   if len(args.samples) > 0:
     samples = args.samples
 
@@ -893,31 +915,32 @@ if __name__=="__main__":
 
     # Cuts
     weight = "1" if args.unweighted else "weight_central"
-    cut = "1" # Default value if no cut is to be applied
+    cut = args.cut # Default value if no cut is to be applied
 
-    # Separate BB. EB, EE photons
+    # Hardcoded selection of cuts commonly applied
+    ## Separate BB. EB, EE photons
     #cut = "fabs(LeadPhoton_eta) < 1.442 && fabs(SubleadPhoton_eta) < 1.442"
     #cut = "( fabs(LeadPhoton_eta) < 1.442 && fabs(SubleadPhoton_eta) > 1.566 ) || ( fabs(LeadPhoton_eta) > 1.566 && fabs(SubleadPhoton_eta) < 1.442 )"
     #cut = "fabs(LeadPhoton_eta) > 1.566 && fabs(SubleadPhoton_eta) > 1.566"
 
-    # Proper DeepFlavor Loose WP cut
+    ## Proper DeepFlavor Loose WP cut
     #cut = "( year==2018 && dijet_lead_btagDeepFlavB>0.0490 && dijet_sublead_btagDeepFlavB>0.0490 ) || ( year==2017 && dijet_lead_btagDeepFlavB>0.0532 && dijet_sublead_btagDeepFlavB>0.0532 ) || ( year==2016nonAPV && dijet_lead_btagDeepFlavB>0.0480 && dijet_sublead_btagDeepFlavB>0.0480 ) || ( year==2016APV && dijet_lead_btagDeepFlavB>0.0508 && dijet_sublead_btagDeepFlavB>0.0508 )"
-    # Proper DeepFlavor Medium WP cut
+    ## Proper DeepFlavor Medium WP cut
     #cut = "( year==2018 && dijet_lead_btagDeepFlavB>0.2783 && dijet_sublead_btagDeepFlavB>0.2783 ) || ( year==2017 && dijet_lead_btagDeepFlavB>0.3040 && dijet_sublead_btagDeepFlavB>0.3040 ) || ( year==2016nonAPV && dijet_lead_btagDeepFlavB>0.2489 && dijet_sublead_btagDeepFlavB>0.2489 ) || ( year==2016APV && dijet_lead_btagDeepFlavB>0.2598 && dijet_sublead_btagDeepFlavB>0.2598 )"
 
-    # Diphoton mass cut
+    ## Diphoton mass cut
     #cut = "Diphoton_mass > 95"
 
-    # Photon pT / Mgg cuts
+    ## Photon pT / Mgg cuts
     #cut = "LeadPhoton_pt/Diphoton_mass > 0.33"
     #cut = "SubleadPhoton_pt/Diphoton_mass > 0.25"
     #cut = "LeadPhoton_pt/Diphoton_mass > 0.33 && SubleadPhoton_pt/Diphoton_mass > 0.25"
 
-    # Low MVA ID sideband
+    ## Low MVA ID sideband
     #cut = "( ( LeadPhoton_mvaID >= SubleadPhoton_mvaID )*( SubleadPhoton_mvaID < (fabs(SubleadPhoton_eta)<1.442 ? -0.02 : -0.26) ) + ( SubleadPhoton_mvaID > LeadPhoton_mvaID )*( LeadPhoton_mvaID < (fabs(LeadPhoton_eta)<1.442 ? -0.02 : -0.26) ) )"
-    # Fake photons in low MVA ID sideband
+    ## Fake photons in low MVA ID sideband
     #cut = "( ( LeadPhoton_mvaID >= SubleadPhoton_mvaID )*( SubleadPhoton_mvaID < (fabs(SubleadPhoton_eta)<1.442 ? -0.02 : -0.26) && SubleadPhoton_genPartFlav==0 ) + ( SubleadPhoton_mvaID > LeadPhoton_mvaID )*( LeadPhoton_mvaID < (fabs(LeadPhoton_eta)<1.442 ? -0.02 : -0.26) && LeadPhoton_genPartFlav==0 ) )"
-    # Fake photons
+    ## Fake photons
     #cut = "( LeadPhoton_genPartFlav==0 || SubleadPhoton_genPartFlav==0 )"
     #cut = "( LeadPhoton_mvaID > -0.9 && SubleadPhoton_mvaID > -0.9 ) && LeadPhoton_genPartFlav==0 "
     #cut = "( LeadPhoton_mvaID > -0.9 && SubleadPhoton_mvaID > -0.9 ) && SubleadPhoton_genPartFlav==0 "
@@ -1056,6 +1079,8 @@ if __name__=="__main__":
       toinclude = ["Diphoton_maxMvaID", "Diphoton_minMvaID", "n_jets:Diphoton_maxMvaID", "n_jets:Diphoton_minMvaID"]
     else:
       toexclude = ["n_jets:Diphoton_maxMvaID", "n_jets:Diphoton_minMvaID"]
+    if len(args.plotsToInclude) > 0: toinclude = args.plotsToInclude
+    if len(args.plotsToExclude) > 0: toexclude = args.plotsToExclude
 
 
     if args.yields:

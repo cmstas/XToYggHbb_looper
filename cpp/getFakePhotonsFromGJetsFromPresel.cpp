@@ -2,8 +2,8 @@
 #include "TChain.h"
 
 int getFakePhotonsFromGJetsFromPresel(TString year="", unsigned int incl_barrel_endcap=0) {
-  TString inDir = "/ceph/cms/store/user/evourlio/XToYggHbbOutput/fullRun2_PR10_weights1111011_lowMassMode_noHLTBitInMC_noMVAIDCut/";
-  TString outDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/preselectedNanoAOD/fakePhotonsFromGJetsFromPresel_weights1111011_lowMassMode_noHLTBitInMC/";
+  TString inDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/preselectedNanoAOD/fullRun2_PR24_weights1111111_HLTBitInMC_noMVAIDCut/";
+  TString outDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/preselectedNanoAOD/fakePhotonsFromGJetsFromPresel_PR24_weights1111111_lowMassMode_HLTBitInMC/";
   if (year != "") year = "_"+year;
 
   TString etaLabel, etaCutLead, etaCutSublead;
