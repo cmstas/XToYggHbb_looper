@@ -9,6 +9,7 @@ import numpy
 import os
 import plotUtils
 
+if "/functions_cc.so" not in ROOT.gSystem.GetLibraries(): ROOT.gROOT.ProcessLine(".L %s/cpp/functions.cc+" % os.environ['PWD']);
 
 sampleFillColor=dict()
 sampleFillColor["Data"]              = None
@@ -857,39 +858,40 @@ if __name__=="__main__":
 
   # Samples
   samples=[]
-  if args.data:
-    samples.append("Data")
-  # SM MC
-  if not args.dataOnly:
-    samples.append("QCD_Pt-30to40_MGG-80toInf")
-    samples.append("QCD_Pt-30toInf_MGG-40to80")
-    samples.append("QCD_Pt-40toInf_MGG-80toInf")
-    samples.append("GJets")
-    samples.append("DDQCDGJets")
-    samples.append("DiPhotonLow")
-    samples.append("DiPhoton")
-    samples.append("TTGG")
-    samples.append("TTGJets")
-    samples.append("TTJets")
-    samples.append("tZq")
-    samples.append("TTW")
-    samples.append("TTZ")
-    samples.append("DY")
-    samples.append("WG")
-    samples.append("ZG")
-    samples.append("WW")
-    samples.append("WZ")
-    samples.append("ZZ")
-    samples.append("VBFH_M125")
-    samples.append("VH_M125")
-    samples.append("ggHToDiPhoM125")
-    samples.append("ttH_M125")
-    samples.append("HHbbgg")
-  if not args.DDHistos:
-    samples.remove("QCD_Pt-30to40_MGG-80toInf")
-    samples.remove("QCD_Pt-30toInf_MGG-40to80")
-    samples.remove("QCD_Pt-40toInf_MGG-80toInf")
-    samples.remove("GJets")
+  if not args.signalOnly:
+    if args.data:
+      samples.append("Data")
+    # SM MC
+    if not args.dataOnly:
+      samples.append("QCD_Pt-30to40_MGG-80toInf")
+      samples.append("QCD_Pt-30toInf_MGG-40to80")
+      samples.append("QCD_Pt-40toInf_MGG-80toInf")
+      samples.append("GJets")
+      samples.append("DDQCDGJets")
+      samples.append("DiPhotonLow")
+      samples.append("DiPhoton")
+      samples.append("TTGG")
+      samples.append("TTGJets")
+      samples.append("TTJets")
+      samples.append("tZq")
+      samples.append("TTW")
+      samples.append("TTZ")
+      samples.append("DY")
+      samples.append("WG")
+      samples.append("ZG")
+      samples.append("WW")
+      samples.append("WZ")
+      samples.append("ZZ")
+      samples.append("VBFH_M125")
+      samples.append("VH_M125")
+      samples.append("ggHToDiPhoM125")
+      samples.append("ttH_M125")
+      samples.append("HHbbgg")
+    if not args.DDHistos:
+      samples.remove("QCD_Pt-30to40_MGG-80toInf")
+      samples.remove("QCD_Pt-30toInf_MGG-40to80")
+      samples.remove("QCD_Pt-40toInf_MGG-80toInf")
+      samples.remove("GJets")
   # Signal MC
   if not args.noSignal:
     samples.append(signalSample)
@@ -910,7 +912,7 @@ if __name__=="__main__":
     elif year == "2016":
       lumi = 19.5+16.8
     elif year == "all":
-      lumi = 59.83 + 41.48 + 19.5 + 16.8
+      lumi = 54.5 + 41.48 + 19.5 + 16.8
 
 
     # Cuts
@@ -981,6 +983,7 @@ if __name__=="__main__":
 
     plotNames["Diphoton_pt"] = ""; plotBins["Diphoton_pt"] = [50,0,500]; plotXTitles["Diphoton_pt"] = "p_{T}(#gamma#gamma) [GeV]"
     plotNames["Diphoton_eta"] = ""; plotBins["Diphoton_eta"] = [50,-3,3]; plotXTitles["Diphoton_eta"] = "#eta(#gamma#gamma)"
+    plotNames["Diphoton_deta"] = "LeadPhoton_eta-SubleadPhoton_eta"; plotBins["Diphoton_deta"] = [50,-3,3]; plotXTitles["Diphoton_deta"] = "#Delta#eta(#gamma#gamma)"
     plotNames["Diphoton_phi"] = ""; plotBins["Diphoton_phi"] = [50,-3.2,3.2]; plotXTitles["Diphoton_phi"] = "#phi(#gamma#gamma)"
     plotNames["Diphoton_mass"] = ""; plotBins["Diphoton_mass"] = [50,60,1000]; plotXTitles["Diphoton_mass"] = "M(#gamma#gamma) [GeV]"
     plotNames["Diphoton_mass_lowRange"] = "Diphoton_mass"; plotBins["Diphoton_mass_lowRange"] = [50,0,200]; plotXTitles["Diphoton_mass_lowRange"] = "M(#gamma#gamma) [GeV]"
@@ -1010,10 +1013,46 @@ if __name__=="__main__":
     plotNames["dijet_mass"] = ""; plotBins["dijet_mass"] = [50,60,1000]; plotXTitles["dijet_mass"] = "M(jj) [GeV]"
     plotNames["dijet_dR"] = ""; plotBins["dijet_dR"] = [50,0,6]; plotXTitles["dijet_dR"] = "#DeltaR(jj)"
 
+    plotNames["Diphoton_dijet_dR"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_eta,dijet_phi)"; plotBins["Diphoton_dijet_dR"] = [50,0,6]; plotXTitles["Diphoton_dijet_dR"] = "#DeltaR(#gamma#gamma,jj)"
+    plotNames["Diphoton_dijet_lead_dR"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_lead_eta,dijet_lead_phi)"; plotBins["Diphoton_dijet_lead_dR"] = [50,0,6]; plotXTitles["Diphoton_dijet_lead_dR"] = "#DeltaR(#gamma#gamma,j_{1})"
+    plotNames["Diphoton_dijet_sublead_dR"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_sublead_eta,dijet_sublead_phi)"; plotBins["Diphoton_dijet_sublead_dR"] = [50,0,6]; plotXTitles["Diphoton_dijet_sublead_dR"] = "#DeltaR(#gamma#gamma,j_{2})"
+
+    plotNames["LeadPhoton_dijet_dR"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_eta,dijet_phi)"; plotBins["LeadPhoton_dijet_dR"] = [50,0,6]; plotXTitles["LeadPhoton_dijet_dR"] = "#DeltaR(#gamma_{1},jj)"
+    plotNames["LeadPhoton_dijet_lead_dR"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_lead_eta,dijet_lead_phi)"; plotBins["LeadPhoton_dijet_lead_dR"] = [50,0,6]; plotXTitles["LeadPhoton_dijet_lead_dR"] = "#DeltaR(#gamma_{1},j_{1})"
+    plotNames["LeadPhoton_dijet_sublead_dR"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_sublead_eta,dijet_sublead_phi)"; plotBins["LeadPhoton_dijet_sublead_dR"] = [50,0,6]; plotXTitles["LeadPhoton_dijet_sublead_dR"] = "#DeltaR(#gamma_{1},j_{2})"
+
+    plotNames["SubleadPhoton_dijet_dR"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_eta,dijet_phi)"; plotBins["SubleadPhoton_dijet_dR"] = [50,0,6]; plotXTitles["SubleadPhoton_dijet_dR"] = "#DeltaR(#gamma_{2},jj)"
+    plotNames["SubleadPhoton_dijet_lead_dR"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_lead_eta,dijet_lead_phi)"; plotBins["SubleadPhoton_dijet_lead_dR"] = [50,0,6]; plotXTitles["SubleadPhoton_dijet_lead_dR"] = "#DeltaR(#gamma_{2},j_{1})"
+    plotNames["SubleadPhoton_dijet_sublead_dR"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_sublead_eta,dijet_sublead_phi)"; plotBins["SubleadPhoton_dijet_sublead_dR"] = [50,0,6]; plotXTitles["SubleadPhoton_dijet_sublead_dR"] = "#DeltaR(#gamma_{2},j_{2})"
+
+    plotNames["Diphoton_dijet_deta"] = "Diphoton_eta-dijet_eta"; plotBins["Diphoton_dijet_deta"] = [50,-6,6]; plotXTitles["Diphoton_dijet_deta"] = "#Delta#eta(#gamma#gamma,jj)"
+    plotNames["Diphoton_dijet_lead_deta"] = "Diphoton_eta-dijet_lead_eta"; plotBins["Diphoton_dijet_lead_deta"] = [50,-6,6]; plotXTitles["Diphoton_dijet_lead_deta"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    plotNames["Diphoton_dijet_sublead_deta"] = "Diphoton_eta-dijet_sublead_eta"; plotBins["Diphoton_dijet_sublead_deta"] = [50,-6,6]; plotXTitles["Diphoton_dijet_sublead_deta"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    plotNames["LeadPhoton_dijet_deta"] = "LeadPhoton_eta-dijet_eta"; plotBins["LeadPhoton_dijet_deta"] = [50,-6,6]; plotXTitles["LeadPhoton_dijet_deta"] = "#Delta#eta(#gamma#gamma,jj)"
+    plotNames["LeadPhoton_dijet_lead_deta"] = "LeadPhoton_eta-dijet_lead_eta"; plotBins["LeadPhoton_dijet_lead_deta"] = [50,-6,6]; plotXTitles["LeadPhoton_dijet_lead_deta"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    plotNames["LeadPhoton_dijet_sublead_deta"] = "LeadPhoton_eta-dijet_sublead_eta"; plotBins["LeadPhoton_dijet_sublead_deta"] = [50,-6,6]; plotXTitles["LeadPhoton_dijet_sublead_deta"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    plotNames["SubleadPhoton_dijet_deta"] = "SubleadPhoton_eta-dijet_eta"; plotBins["SubleadPhoton_dijet_deta"] = [50,-6,6]; plotXTitles["SubleadPhoton_dijet_deta"] = "#Delta#eta(#gamma#gamma,jj)"
+    plotNames["SubleadPhoton_dijet_lead_deta"] = "SubleadPhoton_eta-dijet_lead_eta"; plotBins["SubleadPhoton_dijet_lead_deta"] = [50,-6,6]; plotXTitles["SubleadPhoton_dijet_lead_deta"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    plotNames["SubleadPhoton_dijet_sublead_deta"] = "SubleadPhoton_eta-dijet_sublead_eta"; plotBins["SubleadPhoton_dijet_sublead_deta"] = [50,-6,6]; plotXTitles["SubleadPhoton_dijet_sublead_deta"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    plotNames["Diphoton_dijet_dphi"] = "fabs(deltaPhi(Diphoton_phi,dijet_phi))"; plotBins["Diphoton_dijet_dphi"] = [50,0.0,3.2]; plotXTitles["Diphoton_dijet_dphi"] = "|#Delta#phi(#gamma#gamma,jj)|"
+    plotNames["Diphoton_dijet_lead_dphi"] = "fabs(deltaPhi(Diphoton_phi,dijet_lead_phi))"; plotBins["Diphoton_dijet_lead_dphi"] = [50,0.0,3.2]; plotXTitles["Diphoton_dijet_lead_dphi"] = "|#Delta#phi(#gamma#gamma,j_{1})|"
+    plotNames["Diphoton_dijet_sublead_dphi"] = "fabs(deltaPhi(Diphoton_phi,dijet_sublead_phi))"; plotBins["Diphoton_dijet_sublead_dphi"] = [50,0.0,3.2]; plotXTitles["Diphoton_dijet_sublead_dphi"] = "|#Delta#phi(#gamma#gamma,j_{2})|"
+
+    plotNames["LeadPhoton_dijet_dphi"] = "fabs(deltaPhi(LeadPhoton_phi,dijet_phi))"; plotBins["LeadPhoton_dijet_dphi"] = [50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_dphi"] = "|#Delta#phi(#gamma_{1},jj)|"
+    plotNames["LeadPhoton_dijet_lead_dphi"] = "fabs(deltaPhi(LeadPhoton_phi,dijet_lead_phi))"; plotBins["LeadPhoton_dijet_lead_dphi"] = [50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_lead_dphi"] = "|#Delta#phi(#gamma_{1},j_{1})|"
+    plotNames["LeadPhoton_dijet_sublead_dphi"] = "fabs(deltaPhi(LeadPhoton_phi,dijet_sublead_phi))"; plotBins["LeadPhoton_dijet_sublead_dphi"] = [50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_sublead_dphi"] = "|#Delta#phi(#gamma_{1},j_{2})|"
+
+    plotNames["SubleadPhoton_dijet_dphi"] = "fabs(deltaPhi(SubleadPhoton_phi,dijet_phi))"; plotBins["SubleadPhoton_dijet_dphi"] = [50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_dphi"] = "|#Delta#phi(#gamma_{2},jj)|"
+    plotNames["SubleadPhoton_dijet_lead_dphi"] = "fabs(deltaPhi(SubleadPhoton_phi,dijet_lead_phi))"; plotBins["SubleadPhoton_dijet_lead_dphi"] = [50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_lead_dphi"] = "|#Delta#phi(#gamma_{2},j_{1})|"
+    plotNames["SubleadPhoton_dijet_sublead_dphi"] = "fabs(deltaPhi(SubleadPhoton_phi,dijet_sublead_phi))"; plotBins["SubleadPhoton_dijet_sublead_dphi"] = [50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_sublead_dphi"] = "|#Delta#phi(#gamma_{2},j_{2})|"
+
     plotNames["pfmet_pt"] = ""; plotBins["pfmet_pt"] = [50,0,200]; plotXTitles["pfmet_pt"] = "PF MET P_{T} [GeV]"
     plotNames["puppimet_pt"] = ""; plotBins["puppimet_pt"] = [50,0,200]; plotXTitles["puppimet_pt"] = "PUPPI MET P_{T} [GeV]"
 
-    # 2D histos (y:x)
+    ## 2D histos (y:x)
     plotNames["n_jets:Diphoton_maxMvaID"] = "n_jets:max(LeadPhoton_mvaID,SubleadPhoton_mvaID)"; plotBins["n_jets:Diphoton_maxMvaID"] = [200,-1,1,5,0,5]; plotXTitles["n_jets:Diphoton_maxMvaID"] = "max #gamma MVA ID"; plotYTitles["n_jets:Diphoton_maxMvaID"] = "N_{jets}"
     plotNames["n_jets:Diphoton_minMvaID"] = "n_jets:min(LeadPhoton_mvaID,SubleadPhoton_mvaID)"; plotBins["n_jets:Diphoton_minMvaID"] = [200,-1,1,5,0,5]; plotXTitles["n_jets:Diphoton_minMvaID"] = "min #gamma MVA ID"; plotYTitles["n_jets:Diphoton_minMvaID"] = "N_{jets}"
 
@@ -1046,6 +1085,7 @@ if __name__=="__main__":
 
     #plotNames["Diphoton_pt:LeadPhoton_mvaID"] = ""; plotBins["Diphoton_pt:LeadPhoton_mvaID"] = [50,-1,1,50,0,500]; plotXTitles["Diphoton_pt:LeadPhoton_mvaID"] = "p_{T}(#gamma#gamma) [GeV]"
     #plotNames["Diphoton_eta:LeadPhoton_mvaID"] = ""; plotBins["Diphoton_eta:LeadPhoton_mvaID"] = [50,-1,1,50,-3,3]; plotXTitles["Diphoton_eta:LeadPhoton_mvaID"] = "#eta(#gamma#gamma)"
+    #plotNames["Diphoton_deta:LeadPhoton_mvaID"] = "(LeadPhoton_eta-SubleadPhoton_eta):LeadPhoton_mvaID"; plotBins["Diphoton_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-3,3]; plotXTitles["Diphoton_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma)"
     #plotNames["Diphoton_phi:LeadPhoton_mvaID"] = ""; plotBins["Diphoton_phi:LeadPhoton_mvaID"] = [50,-1,1,50,-3.2,3.2]; plotXTitles["Diphoton_phi:LeadPhoton_mvaID"] = "#phi(#gamma#gamma)"
     #plotNames["Diphoton_mass:LeadPhoton_mvaID"] = ""; plotBins["Diphoton_mass:LeadPhoton_mvaID"] = [50,-1,1,50,60,1000]; plotXTitles["Diphoton_mass:LeadPhoton_mvaID"] = "M(#gamma#gamma) [GeV]"
     #plotNames["Diphoton_pt_mgg:LeadPhoton_mvaID"] = ""; plotBins["Diphoton_pt_mgg:LeadPhoton_mvaID"] = [50,-1,1,20,0,3]; plotXTitles["Diphoton_pt_mgg:LeadPhoton_mvaID"] = "p_{T}(#gamma#gamma) / M(#gamma#gamma)"
@@ -1070,6 +1110,42 @@ if __name__=="__main__":
     #plotNames["dijet_phi:LeadPhoton_mvaID"] = ""; plotBins["dijet_phi:LeadPhoton_mvaID"] = [50,-1,1,50,-3.2,3.2]; plotXTitles["dijet_phi:LeadPhoton_mvaID"] = "#phi(jj)"
     #plotNames["dijet_mass:LeadPhoton_mvaID"] = ""; plotBins["dijet_mass:LeadPhoton_mvaID"] = [50,-1,1,50,60,1000]; plotXTitles["dijet_mass:LeadPhoton_mvaID"] = "M(jj) [GeV]"
     #plotNames["dijet_dR:LeadPhoton_mvaID"] = ""; plotBins["dijet_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["dijet_dR:LeadPhoton_mvaID"] = "#DeltaR(jj)"
+
+    #plotNames["Diphoton_dijet_dR:LeadPhoton_mvaID"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_eta,dijet_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["Diphoton_dijet_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma#gamma,jj)"
+    #plotNames["Diphoton_dijet_lead_dR:LeadPhoton_mvaID"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_lead_eta,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_lead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["Diphoton_dijet_lead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma#gamma,j_{1})"
+    #plotNames["Diphoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "deltaR(Diphoton_eta,Diphoton_phi,dijet_sublead_eta,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_sublead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["Diphoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma#gamma,j_{2})"
+
+    #plotNames["LeadPhoton_dijet_dR:LeadPhoton_mvaID"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_eta,dijet_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["LeadPhoton_dijet_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{1},jj)"
+    #plotNames["LeadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_lead_eta,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["LeadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{1},j_{1})"
+    #plotNames["LeadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "deltaR(LeadPhoton_eta,LeadPhoton_phi,dijet_sublead_eta,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["LeadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{1},j_{2})"
+
+    #plotNames["SubleadPhoton_dijet_dR:LeadPhoton_mvaID"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_eta,dijet_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["SubleadPhoton_dijet_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{2},jj)"
+    #plotNames["SubleadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_lead_eta,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["SubleadPhoton_dijet_lead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{2},j_{1})"
+    #plotNames["SubleadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "deltaR(SubleadPhoton_eta,SubleadPhoton_phi,dijet_sublead_eta,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = [50,-1,1,50,0,6]; plotXTitles["SubleadPhoton_dijet_sublead_dR:LeadPhoton_mvaID"] = "#DeltaR(#gamma_{2},j_{2})"
+
+    #plotNames["Diphoton_dijet_deta:LeadPhoton_mvaID"] = "Diphoton_eta-dijet_eta:LeadPhoton_mvaID"; plotBins["Diphoton_dijet_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["Diphoton_dijet_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,jj)"
+    #plotNames["Diphoton_dijet_lead_deta:LeadPhoton_mvaID"] = "Diphoton_eta-dijet_lead_eta:LeadPhoton_mvaID"; plotBins["Diphoton_dijet_lead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["Diphoton_dijet_lead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    #plotNames["Diphoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "Diphoton_eta-dijet_sublead_eta:LeadPhoton_mvaID"; plotBins["Diphoton_dijet_sublead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["Diphoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    #plotNames["LeadPhoton_dijet_deta:LeadPhoton_mvaID"] = "LeadPhoton_eta-dijet_eta:LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["LeadPhoton_dijet_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,jj)"
+    #plotNames["LeadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = "LeadPhoton_eta-dijet_lead_eta:LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["LeadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    #plotNames["LeadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "LeadPhoton_eta-dijet_sublead_eta:LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["LeadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    #plotNames["SubleadPhoton_dijet_deta:LeadPhoton_mvaID"] = "SubleadPhoton_eta-dijet_eta:LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["SubleadPhoton_dijet_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,jj)"
+    #plotNames["SubleadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = "SubleadPhoton_eta-dijet_lead_eta:LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["SubleadPhoton_dijet_lead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{1})"
+    #plotNames["SubleadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "SubleadPhoton_eta-dijet_sublead_eta:LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = [50,-1,1,50,-6,6]; plotXTitles["SubleadPhoton_dijet_sublead_deta:LeadPhoton_mvaID"] = "#Delta#eta(#gamma#gamma,j_{2})"
+
+    #plotNames["Diphoton_dijet_dphi:LeadPhoton_mvaID"] = "deltaPhi(Diphoton_phi,dijet_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["Diphoton_dijet_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma#gamma,jj)|"
+    #plotNames["Diphoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "deltaPhi(Diphoton_phi,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_lead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["Diphoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma#gamma,j_{1})|"
+    #plotNames["Diphoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "deltaPhi(Diphoton_phi,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["Diphoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["Diphoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma#gamma,j_{2})|"
+
+    #plotNames["LeadPhoton_dijet_dphi:LeadPhoton_mvaID"] = "deltaPhi(LeadPhoton_phi,dijet_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{1},jj)|"
+    #plotNames["LeadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "deltaPhi(LeadPhoton_phi,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{1},j_{1})|"
+    #plotNames["LeadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "deltaPhi(LeadPhoton_phi,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["LeadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["LeadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{1},j_{2})|"
+
+    #plotNames["SubleadPhoton_dijet_dphi:LeadPhoton_mvaID"] = "deltaPhi(SubleadPhoton_phi,dijet_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{2},jj)|"
+    #plotNames["SubleadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "deltaPhi(SubleadPhoton_phi,dijet_lead_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_lead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{2},j_{1})|"
+    #plotNames["SubleadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "deltaPhi(SubleadPhoton_phi,dijet_sublead_phi):LeadPhoton_mvaID"; plotBins["SubleadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = [50,-1,1,50,0.0,3.2]; plotXTitles["SubleadPhoton_dijet_sublead_dphi:LeadPhoton_mvaID"] = "|#Delta#phi(#gamma_{2},j_{2})|"
 
     #plotNames["pfmet_pt:LeadPhoton_mvaID"] = ""; plotBins["pfmet_pt:LeadPhoton_mvaID"] = [50,-1,1,50,0,200]; plotXTitles["pfmet_pt:LeadPhoton_mvaID"] = "PF MET P_{T} [GeV]"
     #plotNames["puppimet_pt:LeadPhoton_mvaID"] = ""; plotBins["puppimet_pt:LeadPhoton_mvaID"] = [50,-1,1,50,0,200]; plotXTitles["puppimet_pt:LeadPhoton_mvaID"] = "PUPPI MET P_{T} [GeV]"

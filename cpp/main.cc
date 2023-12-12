@@ -422,12 +422,13 @@ int main(int argc, char **argv) {
         vector<TString> MYs = it->second;
         for ( auto MY : MYs ) {
           TString sampleName = "NMSSM_XToYHTo2G2B_MX-"+MX+"_MY-"+MY;
-          TString v = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-90" ? "v1" : "v2" );
+          TString v2018 = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-90"  ? "v1" : "v2" );
+          TString v2017 = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-100" ? "v1" : "v2" );
           samples.push_back(sampleName);
           sample_procids.insert({sampleName, (processId_MX[MX]+processId_MY[MY]).Atoi()});
           sample_names.insert({sampleName, sampleName+"_TuneCP5_13TeV-madgraph-pythia8"});
-          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-"+v } },
-                                            { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-"+v2018 } },
+                                            { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-"+v2017 } },
                                             { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
                                             { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
         }
@@ -506,25 +507,6 @@ int main(int argc, char **argv) {
         }
         TString sample_name = sample_names[sample];
         int sample_procid = sample_procids[sample];
-        
-        // Skip signal samples still in production
-        if ( year == "2017" ) {
-          if ( sample == "NMSSM_XToYHTo2G2B_MX-360_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-450_MY-90"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-500_MY-70"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-700_MY-500" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-800_MY-80"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-900_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-1000_MY-100" )
-            continue;
-        }
-        else if ( year == "2018" ) {
-          if ( sample == "NMSSM_XToYHTo2G2B_MX-300_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-400_MY-70"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-850_MY-550" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-900_MY-70"   )
-            continue;
-        }
 
         TChain *ch_temp = new TChain("Events");
         TChain *chaux_temp = new TChain("Runs");
