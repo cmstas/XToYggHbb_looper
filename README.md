@@ -57,6 +57,12 @@ cd cpp
 cd -
 ```
 
+To run the script to generate the Drell-Yan enriched data needed for the ABCD method use the command
+```bash
+./main.exe <output_dir> all 1 0 0 enrichDY
+```
+This will run only the "Data", but using the path to the appropriate input files
+
 One should check `cpp/main.cc` for details on the (additional) arguments and their meaning.
 
 This loops and creates a number of output files of the form `output_"process"_"year".root` containing histograms. 

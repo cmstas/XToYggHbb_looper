@@ -57,7 +57,14 @@ int main(int argc, char **argv) {
   int JERUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
   // Option to reproduce the summary.json
   int onlyCreateJSON      = ( argc > 20 ? char2int(argv[20]) : 0 );
-  
+
+  // Sets variables to run the preselection on the DY enriched input datafiles 
+  bool enrich_DY = false;
+  if (sampleArg == "enrichDY") {
+    std::cout << "Running over data with enriched DY\n";
+    enrich_DY = true;
+    sampleArg = "Data";
+  }
 
   // Map definitions
   vector<TString> years = { };
@@ -82,29 +89,36 @@ int main(int argc, char **argv) {
 
   // Sample list: Data
   if (run_data) {
-    if ( sampleArg=="Data" || sampleArg=="all" ) {
+    if (( sampleArg=="Data" || sampleArg=="all" ) && !enrich_DY ) {
       TString sampleName = "Data";
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 0});
       sample_names.insert({sampleName, sampleName});
-      //sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
-      //                                                    "Run2018B-UL2018_MiniAODv2_GT36-v1",
-      //                                                    "Run2018C-UL2018_MiniAODv2_GT36-v1",
-      //                                                    "Run2018D-UL2018_MiniAODv2-v2" } },
-      //                                  { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
-      //                                                    "Run2017C-UL2017_MiniAODv2-v2",
-      //                                                    "Run2017D-UL2017_MiniAODv2-v1",
-      //                                                    "Run2017E-UL2017_MiniAODv2-v1",
-      //                                                    "Run2017F-UL2017_MiniAODv2-v2" } },
-      //                                  { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
-      //                                                    "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
-      //                                                    "Run2016C-HIPM_UL2016_MiniAODv2-v1",
-      //                                                    "Run2016D-HIPM_UL2016_MiniAODv2-v1",
-      //                                                    "Run2016E-HIPM_UL2016_MiniAODv2-v1",
-      //                                                    "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
-      //                                  { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
-      //                                                    "Run2016G-UL2016_MiniAODv2-v1",
-      //                                                    "Run2016H-UL2016_MiniAODv2-v1" } } } });
+      sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018B-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018C-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018D-UL2018_MiniAODv2-v2" } },
+                                        { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
+                                                          "Run2017C-UL2017_MiniAODv2-v2",
+                                                          "Run2017D-UL2017_MiniAODv2-v1",
+                                                          "Run2017E-UL2017_MiniAODv2-v1",
+                                                          "Run2017F-UL2017_MiniAODv2-v2" } },
+                                        { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
+                                                          "Run2016C-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016D-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016E-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
+                                        { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
+                                                          "Run2016G-UL2016_MiniAODv2-v1",
+                                                          "Run2016H-UL2016_MiniAODv2-v1" } } } });
+   }
+
+    if (( sampleArg=="Data" || sampleArg=="all" ) && enrich_DY ) {
+      TString sampleName = "Data";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 0});
+      sample_names.insert({sampleName, sampleName});
       sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1_MINIAOD_v0",
                                                           "Run2018B-UL2018_MiniAODv2_GT36-v1_MINIAOD_v0",
                                                           "Run2018C-UL2018_MiniAODv2_GT36-v1_MINIAOD_v0",
@@ -401,12 +415,9 @@ int main(int argc, char **argv) {
   }
   else {
     // Main loops
-    //TString baseDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
+    TString baseDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
     //inverted
-    //TString baseDir = "/ceph/cms/store/user/iareed/skim_Jun132023_ggbb_DY_Ele_HLT";
-    //TString baseDir = "/ceph/cms/store/user/iareed/skim_Jul132023_ggbb_DY_18_inv_eVeto";
-    TString baseDir = "/ceph/cms/store/user/iareed/skim_Jul202023_ggbb_Data_and_DY_ABCD_mini_jobs";
-    //TString baseDir = "/ceph/cms/store/user/iareed/skim_Jun302023_ggbb_no_pho_selection";
+    TString invDir = "/ceph/cms/store/user/iareed/skim_Jul202023_ggbb_Data_and_DY_ABCD_mini_jobs";
     TString version = "v0";
 
     for ( int iyear=0; iyear<years.size(); iyear++ ) {
@@ -450,10 +461,13 @@ int main(int argc, char **argv) {
         TChain *ch_temp = new TChain("Events");
         TChain *chaux_temp = new TChain("Runs");
         for ( unsigned int d=0; d<sample_prod[sample][year].size(); d++ ) {
-          //TString trees = baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root";
+          TString trees = baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root";
           // inverted 
-          TString trees = baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"/"+"tree_*.root";
-
+          if (enrich_DY){
+            //std::cout << "Running enriched DY data\n";
+            trees = invDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"/"+"tree_*.root";
+          }
+          std::cout << "Collecting files from " << trees << "\n\n";          
           ch_temp->Add(trees);
           chaux_temp->Add(trees);
         }
