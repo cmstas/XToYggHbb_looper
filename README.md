@@ -99,6 +99,27 @@ A full cutflow table is still: :construction: **WIP** :construction:
 
 However, a final yield printer has been incorporated in the plotting script and can be run by enabling the `--yields` flag.
 
+### Data-driven QCD+GJets background estimation
+
+Run the preselection on GJets, disabling the MVA ID cut (comment out and recompile). After the looper has finished, move the output files in the proper directories, as per in the `cpp/getFakePhotonsFromGJetsFromPresel.cpp`. Then, run it with:
+```
+cd cpp
+root -l -b -q getFakePhotonsFromGJetsFromPresel.cpp
+cd -
+```
+
+The fit parameters are extracted by running:
+```
+python python/derive_impute_shape.py --input cpp/fakePhotonsFromGJetsFromPresel.root
+```
+and the numerical values are then inserted in the appropriate function of the looper script. Once this is done, one can run the `DDQCDGJets` sample.
+
+An extra step (not applied in the current analysis) is the fitting of the fake-fake, fake-prompt and prompt-prompt photon background processes to the data yields. This can be done by running:
+```
+ls utils/templateFitMCToData.sh /dir/with/input/trees /dir/for/output/files extraFlags
+```
+where the extra flags are the flags of the `python/do_fits_qcd.py` script.
+
 ### Converting .root files to .parquet files
 
 The output of the preselection code is a list of .root files. These output files are meant to be the input of the analysis pNN, which expects a single .parquet file for the merged output. This can be done by running the `root_to_parquet.sh` script. However, running this script requires setting up a virtual environment with the proper python package to read/write parquet files.

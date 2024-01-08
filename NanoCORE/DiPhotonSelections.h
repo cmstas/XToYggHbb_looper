@@ -31,10 +31,11 @@ struct Photon {
         catch(const std::exception& e) { pt_ScaleDown_ = 1.0; }
         dEsigmaUp_ = nt.Photon_dEsigmaUp()[idx_];
         dEsigmaDown_ = nt.Photon_dEsigmaDown()[idx_];
-        try { fixedGridRhoFastjetAll_ = nt.Rho_fixedGridRhoFastjetAll(); } catch(const std::exception& e) { fixedGridRhoFastjetAll_ = nt.fixedGridRhoFastjetAll(); }
+        fixedGridRhoAll_ = nt.Rho_fixedGridRhoAll();
         try { genPartFlav_ = nt.Photon_genPartFlav()[idx_]; } catch(const std::exception& e) { genPartFlav_ = 0; }
     }
     void setPt(float pt) { pt_ = pt; }
+    void setMvaID(float mvaID) { mvaID_ = mvaID; }
     //void set_idlevel(int idlevel) { idlevel_ = idlevel; }
     //int id() { return id_; } // Not in newest custom NanoAOD
     unsigned int idx() { return idx_; }
@@ -53,7 +54,7 @@ struct Photon {
     bool eveto() { return eveto_; }
     bool pixelSeed() { return pixelSeed_;}
     float mvaID() { return mvaID_; }
-    float perEvtRho() { return fixedGridRhoFastjetAll_; }
+    float perEvtRho() { return fixedGridRhoAll_; }
     float isScEtaEE() { return isScEtaEE_; }
     float isScEtaEB() { return isScEtaEB_; }
     float trkSumPtHollowConeDR03() { return trkSumPtHollowConeDR03_; }
@@ -80,7 +81,7 @@ struct Photon {
     bool eveto_ = 0.;
     bool pixelSeed_ = 0.;
     float mvaID_ = 0.;
-    float fixedGridRhoFastjetAll_ = 0.;
+    float fixedGridRhoAll_ = 0.;
     float isScEtaEB_ = 0;
     float isScEtaEE_ = 0;
     float trkSumPtHollowConeDR03_ = 0;
@@ -92,7 +93,7 @@ struct Photon {
     unsigned char genPartFlav_ = 0;
 };
 
-vector<Photon> getPhotons(const TString year, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc);
+vector<Photon> getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc);
 typedef std::vector<Photon> Photons;
 
 struct DiPhoton{
@@ -121,7 +122,7 @@ inline bool sortByPt(Photon &p1, Photon &p2)
         return p1.pt() > p2.pt();    
 }
 
-DiPhotons DiPhotonPreselection(Photons &photons); 
+DiPhotons DiPhotonPreselection(Photons &photons, const int lowMassMode); 
 bool UseLowR9Photon(Photon pho, bool isEB);
 
 #endif

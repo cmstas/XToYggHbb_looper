@@ -58,7 +58,7 @@ pair<float, float> getT1CHSMET(FactorizedJetCorrector *jet_corrector, JetCorrect
                 continue;
         }
 
-        jet_corrector->setJetPtEtaARho(jetp4_uncorr.pt(), jetp4_uncorr.eta(), area, fixedGridRhoFastjetAll());
+        jet_corrector->setJetPtEtaARho(jetp4_uncorr.pt(), jetp4_uncorr.eta(), area, Rho_fixedGridRhoFastjetAll());
 
         // note the subcorrections are stored with corr_vals(N) = corr(N)*corr(N-1)*...*corr(1)
         vector<float> corr_vals = jet_corrector->getSubCorrections();

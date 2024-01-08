@@ -5,7 +5,7 @@ log             = $ENV(STARTDIR)/utils/condor/plotting_logs/job.$(ClusterId).$(P
 
 getenv = True
 +JobFlavour = "longlunch"
-#+DESIRED_Sites = "T2_US_UCSD"
++DESIRED_Sites = "T2_US_UCSD"
 transfer_input_files = $ENV(STARTDIR)/package.tar.gz
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
@@ -14,66 +14,152 @@ use_x509userproxy = True
 
 # Comment out any of the following configurations
 queue arguments from (
-# outdir year data MCbkg MCsignal sample prefireWeight PUWeight electronVetoSF lowMassHggTriggerSF lowMassHggPreselSF phoMVAIDWP90SF bTagSF fnufUnc materialUnc PhoScaleUnc PhoSmearUnc JESUnc JERUnc
-# 2018
-$ENV(OUTPUTDIR) 2018 1 0 0 all         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 DiPhoton    1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2018 0 1 0 DiPhotonLow 1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 TT          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 H           1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 GJets       1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 DY          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 VG          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 HHbbgg      1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 VV          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 1 0 QCD         1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2018 0 1 0 DDQCDGJets  1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 0 1 all_low     1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 0 1 all_med     1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2018 0 0 1 all_high    1 1 1 1 0 1 1 0 0 0 0 0 0
-# 2017
-$ENV(OUTPUTDIR) 2017 1 0 0 all        1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 DiPhoton   1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 TT         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 H          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 GJets      1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 DY         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 VG         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 HHbbgg     1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 1 0 VV         1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2017 0 1 0 QCD        1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2017 0 1 0 DDQCDGJets 1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 0 1 all_low    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 0 1 all_med    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2017 0 0 1 all_high   1 1 1 1 0 1 1 0 0 0 0 0 0
-# 2016APV
-$ENV(OUTPUTDIR) 2016APV 1 0 0 all        1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 DiPhoton   1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 TT         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 H          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 GJets      1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 DY         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 VG         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 HHbbgg     1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 1 0 VV         1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2016APV 0 1 0 QCD        1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2016APV 0 1 0 DDQCDGJets 1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 0 1 all_low    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 0 1 all_med    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016APV 0 0 1 all_high   1 1 1 1 0 1 1 0 0 0 0 0 0
-# 2016nonAPV
-$ENV(OUTPUTDIR) 2016nonAPV 1 0 0 all        1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DiPhoton   1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 TT         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 H          1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 GJets      1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DY         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VG         1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 HHbbgg     1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VV         1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 QCD        1 1 1 1 0 1 1 0 0 0 0 0 0
-#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DDQCDGJets 1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 all_low    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 all_med    1 1 1 1 0 1 1 0 0 0 0 0 0
-$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 all_high   1 1 1 1 0 1 1 0 0 0 0 0 0
+# outdir year data MCbkg MCsignal sample lowMassMode prefireWeight PUWeight electronVetoSF lowMassHggTriggerSF lowMassHggPreselSF phoMVAIDWP90SF bTagSF fnufUnc materialUnc PhoScaleUnc PhoSmearUnc JESUnc JERUnc checkHEM
+# Low mass mode
+## 2018
+$ENV(OUTPUTDIR) 2018       1 0 0 all          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 DiPhoton     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 DiPhotonLow  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 TT           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 H            1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 GJets        1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 DY           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 VG           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 HHbbgg       1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 VV           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 QCD          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 DDQCDGJets   1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 1 0 TXX          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 0 1 nominal_low  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 0 1 nominal_med  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2018       0 0 1 nominal_high 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 0 1 inverted     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+## 2017
+$ENV(OUTPUTDIR) 2017       1 0 0 all          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 DiPhoton     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 DiPhotonLow  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 TT           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 H            1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 GJets        1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 DY           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 VG           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 HHbbgg       1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 VV           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 QCD          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 DDQCDGJets   1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 1 0 TXX          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 0 1 nominal_low  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 0 1 nominal_med  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2017       0 0 1 nominal_high 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 0 1 inverted     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+## 2016APV
+$ENV(OUTPUTDIR) 2016APV    1 0 0 all          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 DiPhoton     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 DiPhotonLow  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 TT           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 H            1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 GJets        1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 DY           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 VG           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 HHbbgg       1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 VV           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 QCD          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 DDQCDGJets   1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 1 0 TXX          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_low  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_med  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_high 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 0 1 inverted     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+## 2016nonAPV
+$ENV(OUTPUTDIR) 2016nonAPV 1 0 0 all          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DiPhoton     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DiPhotonLow  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 TT           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 H            1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 GJets        1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DY           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VG           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 HHbbgg       1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VV           1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 QCD          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DDQCDGJets   1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 TXX          1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_low  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_med  1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_high 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 inverted     1 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#
+## High mass mode
+### 2018
+#$ENV(OUTPUTDIR) 2018       1 0 0 all          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 DiPhoton     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 DiPhotonLow  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 TT           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 H            0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 GJets        0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 DY           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 VG           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 HHbbgg       0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 VV           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 QCD          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 DDQCDGJets   0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 1 0 TXX          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 0 1 nominal_low  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 0 1 nominal_med  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 0 1 nominal_high 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2018       0 0 1 inverted     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+### 2017
+#$ENV(OUTPUTDIR) 2017       1 0 0 all          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 DiPhoton     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 DiPhotonLow  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 TT           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 H            0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 GJets        0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 DY           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 VG           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 HHbbgg       0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 VV           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 QCD          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 DDQCDGJets   0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 1 0 TXX          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 0 1 nominal_low  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 0 1 nominal_med  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 0 1 nominal_high 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2017       0 0 1 inverted     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+### 2016APV
+#$ENV(OUTPUTDIR) 2016APV    1 0 0 all          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 DiPhoton     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 DiPhotonLow  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 TT           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 H            0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 GJets        0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 DY           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 VG           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 HHbbgg       0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 VV           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 QCD          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 DDQCDGJets   0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 1 0 TXX          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_low  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_med  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 0 1 nominal_high 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016APV    0 0 1 inverted     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+### 2016nonAPV
+#$ENV(OUTPUTDIR) 2016nonAPV 1 0 0 all          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DiPhoton     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DiPhotonLow  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 TT           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 H            0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 GJets        0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DY           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VG           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 HHbbgg       0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 VV           0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 QCD          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 DDQCDGJets   0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 1 0 TXX          0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_low  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_med  0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 nominal_high 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
+#$ENV(OUTPUTDIR) 2016nonAPV 0 0 1 inverted     0 1 1 1 1 1 1 1 0 0 0 0 0 0 0
 )

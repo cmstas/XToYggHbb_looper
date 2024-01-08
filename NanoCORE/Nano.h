@@ -51,7 +51,7 @@ typedef ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<float> > LorentzVector
 #define NGENDRESSEDLEPTON_MAX 15 // for GenDressedLepton_* collection
 #define NGENPART_MAX 402 // for GenPart_* collection
 #define NLHEREWEIGHTINGWEIGHT_MAX 50 // for LHEReweightingWeight_* collection
-#define NPHOTON_MAX 27 // for Photon_* collection
+#define NPHOTON_MAX 150 // for Photon_* collection
 #define NLHEWEIGHT_MAX 256 // for LHEWeight_* collection
 
 using namespace std;
@@ -8569,6 +8569,330 @@ protected:
     bool loaded_Jet_pt_jesTotalUp_;
     unsigned int counter_cached_Jet_pt_jesTotalUp_;
     unsigned int counter_uncached_Jet_pt_jesTotalUp_;
+    float Jet_pt_jesAbsoluteMPFBiasDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteMPFBiasDown_;
+    TBranch *b_Jet_pt_jesAbsoluteMPFBiasDown_;
+    bool loaded_Jet_pt_jesAbsoluteMPFBiasDown_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteMPFBiasDown_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteMPFBiasDown_;
+    float Jet_pt_jesAbsoluteMPFBiasUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteMPFBiasUp_;
+    TBranch *b_Jet_pt_jesAbsoluteMPFBiasUp_;
+    bool loaded_Jet_pt_jesAbsoluteMPFBiasUp_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteMPFBiasUp_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteMPFBiasUp_;
+    float Jet_pt_jesAbsoluteScaleDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteScaleDown_;
+    TBranch *b_Jet_pt_jesAbsoluteScaleDown_;
+    bool loaded_Jet_pt_jesAbsoluteScaleDown_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteScaleDown_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteScaleDown_;
+    float Jet_pt_jesAbsoluteScaleUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteScaleUp_;
+    TBranch *b_Jet_pt_jesAbsoluteScaleUp_;
+    bool loaded_Jet_pt_jesAbsoluteScaleUp_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteScaleUp_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteScaleUp_;
+    float Jet_pt_jesAbsoluteStatDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteStatDown_;
+    TBranch *b_Jet_pt_jesAbsoluteStatDown_;
+    bool loaded_Jet_pt_jesAbsoluteStatDown_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteStatDown_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteStatDown_;
+    float Jet_pt_jesAbsoluteStatUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesAbsoluteStatUp_;
+    TBranch *b_Jet_pt_jesAbsoluteStatUp_;
+    bool loaded_Jet_pt_jesAbsoluteStatUp_;
+    unsigned int counter_cached_Jet_pt_jesAbsoluteStatUp_;
+    unsigned int counter_uncached_Jet_pt_jesAbsoluteStatUp_;
+    float Jet_pt_jesFlavorQCDDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesFlavorQCDDown_;
+    TBranch *b_Jet_pt_jesFlavorQCDDown_;
+    bool loaded_Jet_pt_jesFlavorQCDDown_;
+    unsigned int counter_cached_Jet_pt_jesFlavorQCDDown_;
+    unsigned int counter_uncached_Jet_pt_jesFlavorQCDDown_;
+    float Jet_pt_jesFlavorQCDUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesFlavorQCDUp_;
+    TBranch *b_Jet_pt_jesFlavorQCDUp_;
+    bool loaded_Jet_pt_jesFlavorQCDUp_;
+    unsigned int counter_cached_Jet_pt_jesFlavorQCDUp_;
+    unsigned int counter_uncached_Jet_pt_jesFlavorQCDUp_;
+    float Jet_pt_jesFragmentationDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesFragmentationDown_;
+    TBranch *b_Jet_pt_jesFragmentationDown_;
+    bool loaded_Jet_pt_jesFragmentationDown_;
+    unsigned int counter_cached_Jet_pt_jesFragmentationDown_;
+    unsigned int counter_uncached_Jet_pt_jesFragmentationDown_;
+    float Jet_pt_jesFragmentationUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesFragmentationUp_;
+    TBranch *b_Jet_pt_jesFragmentationUp_;
+    bool loaded_Jet_pt_jesFragmentationUp_;
+    unsigned int counter_cached_Jet_pt_jesFragmentationUp_;
+    unsigned int counter_uncached_Jet_pt_jesFragmentationUp_;
+    float Jet_pt_jesPileUpDataMCDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpDataMCDown_;
+    TBranch *b_Jet_pt_jesPileUpDataMCDown_;
+    bool loaded_Jet_pt_jesPileUpDataMCDown_;
+    unsigned int counter_cached_Jet_pt_jesPileUpDataMCDown_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpDataMCDown_;
+    float Jet_pt_jesPileUpDataMCUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpDataMCUp_;
+    TBranch *b_Jet_pt_jesPileUpDataMCUp_;
+    bool loaded_Jet_pt_jesPileUpDataMCUp_;
+    unsigned int counter_cached_Jet_pt_jesPileUpDataMCUp_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpDataMCUp_;
+    float Jet_pt_jesPileUpPtBBDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtBBDown_;
+    TBranch *b_Jet_pt_jesPileUpPtBBDown_;
+    bool loaded_Jet_pt_jesPileUpPtBBDown_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtBBDown_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtBBDown_;
+    float Jet_pt_jesPileUpPtBBUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtBBUp_;
+    TBranch *b_Jet_pt_jesPileUpPtBBUp_;
+    bool loaded_Jet_pt_jesPileUpPtBBUp_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtBBUp_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtBBUp_;
+    float Jet_pt_jesPileUpPtEC1Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtEC1Down_;
+    TBranch *b_Jet_pt_jesPileUpPtEC1Down_;
+    bool loaded_Jet_pt_jesPileUpPtEC1Down_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtEC1Down_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtEC1Down_;
+    float Jet_pt_jesPileUpPtEC1Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtEC1Up_;
+    TBranch *b_Jet_pt_jesPileUpPtEC1Up_;
+    bool loaded_Jet_pt_jesPileUpPtEC1Up_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtEC1Up_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtEC1Up_;
+    float Jet_pt_jesPileUpPtEC2Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtEC2Down_;
+    TBranch *b_Jet_pt_jesPileUpPtEC2Down_;
+    bool loaded_Jet_pt_jesPileUpPtEC2Down_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtEC2Down_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtEC2Down_;
+    float Jet_pt_jesPileUpPtEC2Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtEC2Up_;
+    TBranch *b_Jet_pt_jesPileUpPtEC2Up_;
+    bool loaded_Jet_pt_jesPileUpPtEC2Up_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtEC2Up_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtEC2Up_;
+    float Jet_pt_jesPileUpPtHFDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtHFDown_;
+    TBranch *b_Jet_pt_jesPileUpPtHFDown_;
+    bool loaded_Jet_pt_jesPileUpPtHFDown_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtHFDown_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtHFDown_;
+    float Jet_pt_jesPileUpPtHFUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtHFUp_;
+    TBranch *b_Jet_pt_jesPileUpPtHFUp_;
+    bool loaded_Jet_pt_jesPileUpPtHFUp_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtHFUp_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtHFUp_;
+    float Jet_pt_jesPileUpPtRefDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtRefDown_;
+    TBranch *b_Jet_pt_jesPileUpPtRefDown_;
+    bool loaded_Jet_pt_jesPileUpPtRefDown_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtRefDown_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtRefDown_;
+    float Jet_pt_jesPileUpPtRefUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesPileUpPtRefUp_;
+    TBranch *b_Jet_pt_jesPileUpPtRefUp_;
+    bool loaded_Jet_pt_jesPileUpPtRefUp_;
+    unsigned int counter_cached_Jet_pt_jesPileUpPtRefUp_;
+    unsigned int counter_uncached_Jet_pt_jesPileUpPtRefUp_;
+    float Jet_pt_jesRelativeFSRDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeFSRDown_;
+    TBranch *b_Jet_pt_jesRelativeFSRDown_;
+    bool loaded_Jet_pt_jesRelativeFSRDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeFSRDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeFSRDown_;
+    float Jet_pt_jesRelativeFSRUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeFSRUp_;
+    TBranch *b_Jet_pt_jesRelativeFSRUp_;
+    bool loaded_Jet_pt_jesRelativeFSRUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeFSRUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeFSRUp_;
+    float Jet_pt_jesRelativeJEREC1Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJEREC1Down_;
+    TBranch *b_Jet_pt_jesRelativeJEREC1Down_;
+    bool loaded_Jet_pt_jesRelativeJEREC1Down_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJEREC1Down_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJEREC1Down_;
+    float Jet_pt_jesRelativeJEREC1Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJEREC1Up_;
+    TBranch *b_Jet_pt_jesRelativeJEREC1Up_;
+    bool loaded_Jet_pt_jesRelativeJEREC1Up_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJEREC1Up_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJEREC1Up_;
+    float Jet_pt_jesRelativeJEREC2Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJEREC2Down_;
+    TBranch *b_Jet_pt_jesRelativeJEREC2Down_;
+    bool loaded_Jet_pt_jesRelativeJEREC2Down_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJEREC2Down_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJEREC2Down_;
+    float Jet_pt_jesRelativeJEREC2Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJEREC2Up_;
+    TBranch *b_Jet_pt_jesRelativeJEREC2Up_;
+    bool loaded_Jet_pt_jesRelativeJEREC2Up_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJEREC2Up_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJEREC2Up_;
+    float Jet_pt_jesRelativeJERHFDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJERHFDown_;
+    TBranch *b_Jet_pt_jesRelativeJERHFDown_;
+    bool loaded_Jet_pt_jesRelativeJERHFDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJERHFDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJERHFDown_;
+    float Jet_pt_jesRelativeJERHFUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeJERHFUp_;
+    TBranch *b_Jet_pt_jesRelativeJERHFUp_;
+    bool loaded_Jet_pt_jesRelativeJERHFUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeJERHFUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeJERHFUp_;
+    float Jet_pt_jesRelativePtBBDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtBBDown_;
+    TBranch *b_Jet_pt_jesRelativePtBBDown_;
+    bool loaded_Jet_pt_jesRelativePtBBDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtBBDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtBBDown_;
+    float Jet_pt_jesRelativePtBBUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtBBUp_;
+    TBranch *b_Jet_pt_jesRelativePtBBUp_;
+    bool loaded_Jet_pt_jesRelativePtBBUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtBBUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtBBUp_;
+    float Jet_pt_jesRelativePtEC1Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtEC1Down_;
+    TBranch *b_Jet_pt_jesRelativePtEC1Down_;
+    bool loaded_Jet_pt_jesRelativePtEC1Down_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtEC1Down_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtEC1Down_;
+    float Jet_pt_jesRelativePtEC1Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtEC1Up_;
+    TBranch *b_Jet_pt_jesRelativePtEC1Up_;
+    bool loaded_Jet_pt_jesRelativePtEC1Up_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtEC1Up_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtEC1Up_;
+    float Jet_pt_jesRelativePtEC2Down_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtEC2Down_;
+    TBranch *b_Jet_pt_jesRelativePtEC2Down_;
+    bool loaded_Jet_pt_jesRelativePtEC2Down_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtEC2Down_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtEC2Down_;
+    float Jet_pt_jesRelativePtEC2Up_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtEC2Up_;
+    TBranch *b_Jet_pt_jesRelativePtEC2Up_;
+    bool loaded_Jet_pt_jesRelativePtEC2Up_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtEC2Up_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtEC2Up_;
+    float Jet_pt_jesRelativePtHFDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtHFDown_;
+    TBranch *b_Jet_pt_jesRelativePtHFDown_;
+    bool loaded_Jet_pt_jesRelativePtHFDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtHFDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtHFDown_;
+    float Jet_pt_jesRelativePtHFUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativePtHFUp_;
+    TBranch *b_Jet_pt_jesRelativePtHFUp_;
+    bool loaded_Jet_pt_jesRelativePtHFUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativePtHFUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativePtHFUp_;
+    float Jet_pt_jesRelativeBalDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeBalDown_;
+    TBranch *b_Jet_pt_jesRelativeBalDown_;
+    bool loaded_Jet_pt_jesRelativeBalDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeBalDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeBalDown_;
+    float Jet_pt_jesRelativeBalUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeBalUp_;
+    TBranch *b_Jet_pt_jesRelativeBalUp_;
+    bool loaded_Jet_pt_jesRelativeBalUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeBalUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeBalUp_;
+    float Jet_pt_jesRelativeSampleDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeSampleDown_;
+    TBranch *b_Jet_pt_jesRelativeSampleDown_;
+    bool loaded_Jet_pt_jesRelativeSampleDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeSampleDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeSampleDown_;
+    float Jet_pt_jesRelativeSampleUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeSampleUp_;
+    TBranch *b_Jet_pt_jesRelativeSampleUp_;
+    bool loaded_Jet_pt_jesRelativeSampleUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeSampleUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeSampleUp_;
+    float Jet_pt_jesRelativeStatECDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatECDown_;
+    TBranch *b_Jet_pt_jesRelativeStatECDown_;
+    bool loaded_Jet_pt_jesRelativeStatECDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatECDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatECDown_;
+    float Jet_pt_jesRelativeStatECUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatECUp_;
+    TBranch *b_Jet_pt_jesRelativeStatECUp_;
+    bool loaded_Jet_pt_jesRelativeStatECUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatECUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatECUp_;
+    float Jet_pt_jesRelativeStatFSRDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatFSRDown_;
+    TBranch *b_Jet_pt_jesRelativeStatFSRDown_;
+    bool loaded_Jet_pt_jesRelativeStatFSRDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatFSRDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatFSRDown_;
+    float Jet_pt_jesRelativeStatFSRUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatFSRUp_;
+    TBranch *b_Jet_pt_jesRelativeStatFSRUp_;
+    bool loaded_Jet_pt_jesRelativeStatFSRUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatFSRUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatFSRUp_;
+    float Jet_pt_jesRelativeStatHFDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatHFDown_;
+    TBranch *b_Jet_pt_jesRelativeStatHFDown_;
+    bool loaded_Jet_pt_jesRelativeStatHFDown_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatHFDown_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatHFDown_;
+    float Jet_pt_jesRelativeStatHFUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesRelativeStatHFUp_;
+    TBranch *b_Jet_pt_jesRelativeStatHFUp_;
+    bool loaded_Jet_pt_jesRelativeStatHFUp_;
+    unsigned int counter_cached_Jet_pt_jesRelativeStatHFUp_;
+    unsigned int counter_uncached_Jet_pt_jesRelativeStatHFUp_;
+    float Jet_pt_jesSinglePionECALDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesSinglePionECALDown_;
+    TBranch *b_Jet_pt_jesSinglePionECALDown_;
+    bool loaded_Jet_pt_jesSinglePionECALDown_;
+    unsigned int counter_cached_Jet_pt_jesSinglePionECALDown_;
+    unsigned int counter_uncached_Jet_pt_jesSinglePionECALDown_;
+    float Jet_pt_jesSinglePionECALUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesSinglePionECALUp_;
+    TBranch *b_Jet_pt_jesSinglePionECALUp_;
+    bool loaded_Jet_pt_jesSinglePionECALUp_;
+    unsigned int counter_cached_Jet_pt_jesSinglePionECALUp_;
+    unsigned int counter_uncached_Jet_pt_jesSinglePionECALUp_;
+    float Jet_pt_jesSinglePionHCALDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesSinglePionHCALDown_;
+    TBranch *b_Jet_pt_jesSinglePionHCALDown_;
+    bool loaded_Jet_pt_jesSinglePionHCALDown_;
+    unsigned int counter_cached_Jet_pt_jesSinglePionHCALDown_;
+    unsigned int counter_uncached_Jet_pt_jesSinglePionHCALDown_;
+    float Jet_pt_jesSinglePionHCALUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesSinglePionHCALUp_;
+    TBranch *b_Jet_pt_jesSinglePionHCALUp_;
+    bool loaded_Jet_pt_jesSinglePionHCALUp_;
+    unsigned int counter_cached_Jet_pt_jesSinglePionHCALUp_;
+    unsigned int counter_uncached_Jet_pt_jesSinglePionHCALUp_;
+    float Jet_pt_jesTimePtEtaDown_[NJET_MAX];
+    vector<float> v_Jet_pt_jesTimePtEtaDown_;
+    TBranch *b_Jet_pt_jesTimePtEtaDown_;
+    bool loaded_Jet_pt_jesTimePtEtaDown_;
+    unsigned int counter_cached_Jet_pt_jesTimePtEtaDown_;
+    unsigned int counter_uncached_Jet_pt_jesTimePtEtaDown_;
+    float Jet_pt_jesTimePtEtaUp_[NJET_MAX];
+    vector<float> v_Jet_pt_jesTimePtEtaUp_;
+    TBranch *b_Jet_pt_jesTimePtEtaUp_;
+    bool loaded_Jet_pt_jesTimePtEtaUp_;
+    unsigned int counter_cached_Jet_pt_jesTimePtEtaUp_;
+    unsigned int counter_uncached_Jet_pt_jesTimePtEtaUp_;
     float Jet_pt_nom_[NJET_MAX];
     vector<float> v_Jet_pt_nom_;
     TBranch *b_Jet_pt_nom_;
@@ -14986,41 +15310,36 @@ protected:
     bool loaded_event_;
     unsigned int counter_cached_event_;
     unsigned int counter_uncached_event_;
-    float fixedGridRhoAll_;
-    TBranch *b_fixedGridRhoAll_;
-    bool loaded_fixedGridRhoAll_;
-    unsigned int counter_cached_fixedGridRhoAll_;
-    unsigned int counter_uncached_fixedGridRhoAll_;
-    float fixedGridRhoFastjetAll_;
-    TBranch *b_fixedGridRhoFastjetAll_;
-    bool loaded_fixedGridRhoFastjetAll_;
-    unsigned int counter_cached_fixedGridRhoFastjetAll_;
-    unsigned int counter_uncached_fixedGridRhoFastjetAll_;
+    float Rho_fixedGridRhoAll_;
+    TBranch *b_Rho_fixedGridRhoAll_;
+    bool loaded_Rho_fixedGridRhoAll_;
+    unsigned int counter_cached_Rho_fixedGridRhoAll_;
+    unsigned int counter_uncached_Rho_fixedGridRhoAll_;
     float Rho_fixedGridRhoFastjetAll_;
     TBranch *b_Rho_fixedGridRhoFastjetAll_;
     bool loaded_Rho_fixedGridRhoFastjetAll_;
     unsigned int counter_cached_Rho_fixedGridRhoFastjetAll_;
     unsigned int counter_uncached_Rho_fixedGridRhoFastjetAll_;
-    float fixedGridRhoFastjetCentral_;
-    TBranch *b_fixedGridRhoFastjetCentral_;
-    bool loaded_fixedGridRhoFastjetCentral_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentral_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentral_;
-    float fixedGridRhoFastjetCentralCalo_;
-    TBranch *b_fixedGridRhoFastjetCentralCalo_;
-    bool loaded_fixedGridRhoFastjetCentralCalo_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralCalo_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralCalo_;
-    float fixedGridRhoFastjetCentralChargedPileUp_;
-    TBranch *b_fixedGridRhoFastjetCentralChargedPileUp_;
-    bool loaded_fixedGridRhoFastjetCentralChargedPileUp_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralChargedPileUp_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralChargedPileUp_;
-    float fixedGridRhoFastjetCentralNeutral_;
-    TBranch *b_fixedGridRhoFastjetCentralNeutral_;
-    bool loaded_fixedGridRhoFastjetCentralNeutral_;
-    unsigned int counter_cached_fixedGridRhoFastjetCentralNeutral_;
-    unsigned int counter_uncached_fixedGridRhoFastjetCentralNeutral_;
+    float Rho_fixedGridRhoFastjetCentral_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentral_;
+    bool loaded_Rho_fixedGridRhoFastjetCentral_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentral_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentral_;
+    float Rho_fixedGridRhoFastjetCentralCalo_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralCalo_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralCalo_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralCalo_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralCalo_;
+    float Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralChargedPileUp_;
+    float Rho_fixedGridRhoFastjetCentralNeutral_;
+    TBranch *b_Rho_fixedGridRhoFastjetCentralNeutral_;
+    bool loaded_Rho_fixedGridRhoFastjetCentralNeutral_;
+    unsigned int counter_cached_Rho_fixedGridRhoFastjetCentralNeutral_;
+    unsigned int counter_uncached_Rho_fixedGridRhoFastjetCentralNeutral_;
     int genTtbarId_;
     TBranch *b_genTtbarId_;
     bool loaded_genTtbarId_;
@@ -16856,6 +17175,60 @@ public:
     const vector<float> &Jet_pt_jesHEMIssueUp();
     const vector<float> &Jet_pt_jesTotalDown();
     const vector<float> &Jet_pt_jesTotalUp();
+    const vector<float> &Jet_pt_jesAbsoluteMPFBiasDown();
+    const vector<float> &Jet_pt_jesAbsoluteMPFBiasUp();
+    const vector<float> &Jet_pt_jesAbsoluteScaleDown();
+    const vector<float> &Jet_pt_jesAbsoluteScaleUp();
+    const vector<float> &Jet_pt_jesAbsoluteStatDown();
+    const vector<float> &Jet_pt_jesAbsoluteStatUp();
+    const vector<float> &Jet_pt_jesFlavorQCDDown();
+    const vector<float> &Jet_pt_jesFlavorQCDUp();
+    const vector<float> &Jet_pt_jesFragmentationDown();
+    const vector<float> &Jet_pt_jesFragmentationUp();
+    const vector<float> &Jet_pt_jesPileUpDataMCDown();
+    const vector<float> &Jet_pt_jesPileUpDataMCUp();
+    const vector<float> &Jet_pt_jesPileUpPtBBDown();
+    const vector<float> &Jet_pt_jesPileUpPtBBUp();
+    const vector<float> &Jet_pt_jesPileUpPtEC1Down();
+    const vector<float> &Jet_pt_jesPileUpPtEC1Up();
+    const vector<float> &Jet_pt_jesPileUpPtEC2Down();
+    const vector<float> &Jet_pt_jesPileUpPtEC2Up();
+    const vector<float> &Jet_pt_jesPileUpPtHFDown();
+    const vector<float> &Jet_pt_jesPileUpPtHFUp();
+    const vector<float> &Jet_pt_jesPileUpPtRefDown();
+    const vector<float> &Jet_pt_jesPileUpPtRefUp();
+    const vector<float> &Jet_pt_jesRelativeFSRDown();
+    const vector<float> &Jet_pt_jesRelativeFSRUp();
+    const vector<float> &Jet_pt_jesRelativeJEREC1Down();
+    const vector<float> &Jet_pt_jesRelativeJEREC1Up();
+    const vector<float> &Jet_pt_jesRelativeJEREC2Down();
+    const vector<float> &Jet_pt_jesRelativeJEREC2Up();
+    const vector<float> &Jet_pt_jesRelativeJERHFDown();
+    const vector<float> &Jet_pt_jesRelativeJERHFUp();
+    const vector<float> &Jet_pt_jesRelativePtBBDown();
+    const vector<float> &Jet_pt_jesRelativePtBBUp();
+    const vector<float> &Jet_pt_jesRelativePtEC1Down();
+    const vector<float> &Jet_pt_jesRelativePtEC1Up();
+    const vector<float> &Jet_pt_jesRelativePtEC2Down();
+    const vector<float> &Jet_pt_jesRelativePtEC2Up();
+    const vector<float> &Jet_pt_jesRelativePtHFDown();
+    const vector<float> &Jet_pt_jesRelativePtHFUp();
+    const vector<float> &Jet_pt_jesRelativeBalDown();
+    const vector<float> &Jet_pt_jesRelativeBalUp();
+    const vector<float> &Jet_pt_jesRelativeSampleDown();
+    const vector<float> &Jet_pt_jesRelativeSampleUp();
+    const vector<float> &Jet_pt_jesRelativeStatECDown();
+    const vector<float> &Jet_pt_jesRelativeStatECUp();
+    const vector<float> &Jet_pt_jesRelativeStatFSRDown();
+    const vector<float> &Jet_pt_jesRelativeStatFSRUp();
+    const vector<float> &Jet_pt_jesRelativeStatHFDown();
+    const vector<float> &Jet_pt_jesRelativeStatHFUp();
+    const vector<float> &Jet_pt_jesSinglePionECALDown();
+    const vector<float> &Jet_pt_jesSinglePionECALUp();
+    const vector<float> &Jet_pt_jesSinglePionHCALDown();
+    const vector<float> &Jet_pt_jesSinglePionHCALUp();
+    const vector<float> &Jet_pt_jesTimePtEtaDown();
+    const vector<float> &Jet_pt_jesTimePtEtaUp();
     const vector<float> &Jet_pt_nom();
     const vector<float> &Jet_pt_raw();
     const vector<int> &Jet_puId();
@@ -18076,13 +18449,12 @@ public:
     const float &btagWeight_CSVV2();
     const float &btagWeight_DeepCSVB();
     const ULong64_t &event();
-    const float &fixedGridRhoAll();
-    const float &fixedGridRhoFastjetAll();
+    const float &Rho_fixedGridRhoAll();
     const float &Rho_fixedGridRhoFastjetAll();
-    const float &fixedGridRhoFastjetCentral();
-    const float &fixedGridRhoFastjetCentralCalo();
-    const float &fixedGridRhoFastjetCentralChargedPileUp();
-    const float &fixedGridRhoFastjetCentralNeutral();
+    const float &Rho_fixedGridRhoFastjetCentral();
+    const float &Rho_fixedGridRhoFastjetCentralCalo();
+    const float &Rho_fixedGridRhoFastjetCentralChargedPileUp();
+    const float &Rho_fixedGridRhoFastjetCentralNeutral();
     const int &genTtbarId();
     const float &genWeight();
     const UInt_t &luminosityBlock();
@@ -19764,6 +20136,60 @@ namespace tas {
     const vector<float> &Jet_pt_jesHEMIssueUp(); // Jet_pt_jesHEMIssueUp[nJet]/F
     const vector<float> &Jet_pt_jesTotalDown(); // Jet_pt_jesTotalDown[nJet]/F
     const vector<float> &Jet_pt_jesTotalUp(); // Jet_pt_jesTotalUp[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteMPFBiasDown(); // Jet_pt_jesAbsoluteMPFBiasDown[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteMPFBiasUp(); // Jet_pt_jesAbsoluteMPFBiasUp[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteScaleDown(); // Jet_pt_jesAbsoluteScaleDown[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteScaleUp(); // Jet_pt_jesAbsoluteScaleUp[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteStatDown(); // Jet_pt_jesAbsoluteStatDown[nJet]/F
+    const vector<float> &Jet_pt_jesAbsoluteStatUp(); // Jet_pt_jesAbsoluteStatUp[nJet]/F
+    const vector<float> &Jet_pt_jesFlavorQCDDown(); // Jet_pt_jesFlavorQCDDown[nJet]/F
+    const vector<float> &Jet_pt_jesFlavorQCDUp(); // Jet_pt_jesFlavorQCDUp[nJet]/F
+    const vector<float> &Jet_pt_jesFragmentationDown(); // Jet_pt_jesFragmentationDown[nJet]/F
+    const vector<float> &Jet_pt_jesFragmentationUp(); // Jet_pt_jesFragmentationUp[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpDataMCDown(); // Jet_pt_jesPileUpDataMCDown[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpDataMCUp(); // Jet_pt_jesPileUpDataMCUp[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtBBDown(); // Jet_pt_jesPileUpPtBBDown[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtBBUp(); // Jet_pt_jesPileUpPtBBUp[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtEC1Down(); // Jet_pt_jesPileUpPtEC1Down[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtEC1Up(); // Jet_pt_jesPileUpPtEC1Up[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtEC2Down(); // Jet_pt_jesPileUpPtEC2Down[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtEC2Up(); // Jet_pt_jesPileUpPtEC2Up[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtHFDown(); // Jet_pt_jesPileUpPtHFDown[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtHFUp(); // Jet_pt_jesPileUpPtHFUp[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtRefDown(); // Jet_pt_jesPileUpPtRefDown[nJet]/F
+    const vector<float> &Jet_pt_jesPileUpPtRefUp(); // Jet_pt_jesPileUpPtRefUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeFSRDown(); // Jet_pt_jesRelativeFSRDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeFSRUp(); // Jet_pt_jesRelativeFSRUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJEREC1Down(); // Jet_pt_jesRelativeJEREC1Down[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJEREC1Up(); // Jet_pt_jesRelativeJEREC1Up[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJEREC2Down(); // Jet_pt_jesRelativeJEREC1Down[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJEREC2Up(); // Jet_pt_jesRelativeJEREC1Up[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJERHFDown(); // Jet_pt_jesRelativeJERHFDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeJERHFUp(); // Jet_pt_jesRelativeJERHFUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtBBDown(); // Jet_pt_jesRelativePtBBDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtBBUp(); // Jet_pt_jesRelativePtBBUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtEC1Down(); // Jet_pt_jesRelativePtEC1Down[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtEC1Up(); // Jet_pt_jesRelativePtEC1Up[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtEC2Down(); // Jet_pt_jesRelativePtEC2Down[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtEC2Up(); // Jet_pt_jesRelativePtEC2Up[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtHFDown(); // Jet_pt_jesRelativePtHFDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativePtHFUp(); // Jet_pt_jesRelativePtHFUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeBalDown(); // Jet_pt_jesRelativeBalDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeBalUp(); // Jet_pt_jesRelativeBalUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeSampleDown(); // Jet_pt_jesRelativeSampleDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeSampleUp(); // Jet_pt_jesRelativeSampleUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatECDown(); // Jet_pt_jesRelativeStatECDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatECUp(); // Jet_pt_jesRelativeStatECUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatFSRDown(); // Jet_pt_jesRelativeStatFSRDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatFSRUp(); // Jet_pt_jesRelativeStatFSRUp[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatHFDown(); // Jet_pt_jesRelativeStatHFDown[nJet]/F
+    const vector<float> &Jet_pt_jesRelativeStatHFUp(); // Jet_pt_jesRelativeStatHFUp[nJet]/F
+    const vector<float> &Jet_pt_jesSinglePionECALDown(); // Jet_pt_jesSinglePionECALDown[nJet]/F
+    const vector<float> &Jet_pt_jesSinglePionECALUp(); // Jet_pt_jesSinglePionECALUp[nJet]/F
+    const vector<float> &Jet_pt_jesSinglePionHCALDown(); // Jet_pt_jesSinglePionHCALDown[nJet]/F
+    const vector<float> &Jet_pt_jesSinglePionHCALUp(); // Jet_pt_jesSinglePionHCALUp[nJet]/F
+    const vector<float> &Jet_pt_jesTimePtEtaDown(); // Jet_pt_jesTimePtEtaDown[nJet]/F
+    const vector<float> &Jet_pt_jesTimePtEtaUp(); // Jet_pt_jesTimePtEtaUp[nJet]/F
     const vector<float> &Jet_pt_nom(); // Jet_pt_nom[nJet]/F
     const vector<float> &Jet_pt_raw(); // Jet_pt_raw[nJet]/F
     const vector<int> &Jet_puId(); // Pilup ID flags with 80X (2016) training
@@ -20984,13 +21410,12 @@ namespace tas {
     const float &btagWeight_CSVV2(); // b-tag event weight for CSVV2
     const float &btagWeight_DeepCSVB(); // b-tag event weight for DeepCSVB
     const ULong64_t &event(); // event/l
-    const float &fixedGridRhoAll(); // test
-    const float &fixedGridRhoFastjetAll(); // rho from all PF Candidates, used e.g. for JECs
+    const float &Rho_fixedGridRhoAll(); // test
     const float &Rho_fixedGridRhoFastjetAll(); // rho from all PF Candidates, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentral(); // rho from all PF Candidates for central region, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentralCalo(); // rho from calo towers with |eta| < 2.5, used e.g. egamma PFCluster isolation
-    const float &fixedGridRhoFastjetCentralChargedPileUp(); // rho from charged PF Candidates for central region, used e.g. for JECs
-    const float &fixedGridRhoFastjetCentralNeutral(); // rho from neutral PF Candidates with |eta| < 2.5, used e.g. for rho corrections of some lepton isolations
+    const float &Rho_fixedGridRhoFastjetCentral(); // rho from all PF Candidates for central region, used e.g. for JECs
+    const float &Rho_fixedGridRhoFastjetCentralCalo(); // rho from calo towers with |eta| < 2.5, used e.g. egamma PFCluster isolation
+    const float &Rho_fixedGridRhoFastjetCentralChargedPileUp(); // rho from charged PF Candidates for central region, used e.g. for JECs
+    const float &Rho_fixedGridRhoFastjetCentralNeutral(); // rho from neutral PF Candidates with |eta| < 2.5, used e.g. for rho corrections of some lepton isolations
     const int &genTtbarId(); // ttbar categorization
     const float &genWeight(); // generator weight
     const UInt_t &luminosityBlock(); // luminosityBlock/i
