@@ -723,14 +723,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       Electrons electrons = getElectrons(selectedPhotons);
       Muons muons = getMuons(selectedPhotons);
-      //inverted, want events with leptons
-      if ( enrichDY ) {
-        if (electrons.size() == 0) continue;
-      }
-      else {
-        if (electrons.size() != 0 ) continue; 
-        if (muons.size() != 0 ) continue;
-      }
+      if ( enrichDY ) { if (electrons.size() == 0) continue; }
+      else { if (electrons.size() != 0 ) continue; }
+      if (muons.size() != 0 ) continue;
 
       Jets jets;
       if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc, HEMCheck);
