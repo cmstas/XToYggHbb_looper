@@ -519,7 +519,7 @@ int main(int argc, char **argv) {
         TChain *ch_temp = new TChain("Events");
         TChain *chaux_temp = new TChain("Runs");
         for ( unsigned int d=0; d<sample_prod[sample][year].size(); d++ ) {
-          TString trees = "/ceph/cms"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*9.root"; // Local access
+          TString trees = "/ceph/cms"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Local access
           //TString trees = "davs://redirector.t2.ucsd.edu:1095"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Global access
 
           std::cout << "Collecting files from " << trees << "\n\n";          
