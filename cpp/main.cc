@@ -60,12 +60,12 @@ int main(int argc, char **argv) {
   int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
   // Option to reproduce the summary.json
   int onlyCreateJSON      = ( argc > 22 ? char2int(argv[22]) : 0 );
+  int enrichDY            = ( argc > 23 ? char2int(argv[23]) : 0 ); // By default, don't enrich the DY
 
   // Sets variables to run the preselection on the DY enriched input datafiles 
-  bool enrich_DY = false;
   if (sampleArg == "enrichDY") {
     std::cout << "Running over data with enriched DY\n";
-    enrich_DY = true;
+    enrichDY = 1;
     sampleArg = "Data";
   }
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 
   // Sample list: Data
   if (run_data) {
-    if (( sampleArg=="Data" || sampleArg=="all" ) && !enrich_DY ) {
+    if (( sampleArg=="Data" || sampleArg=="all" ) && !enrichDY ) {
       TString sampleName = "Data";
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 0});
@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
                                                           "Run2016H-UL2016_MiniAODv2-v1" } } } });
    }
 
-    if (( sampleArg=="Data" || sampleArg=="all" ) && enrich_DY ) {
+    if (( sampleArg=="Data" || sampleArg=="all" ) && enrichDY ) {
       TString sampleName = "Data";
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 0});
@@ -554,8 +554,8 @@ int main(int argc, char **argv) {
           //TString trees = "davs://redirector.t2.ucsd.edu:1095"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Global access
 
           // inverted 
-          if (enrich_DY){
-            trees = "/ceph/cms"+invDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"/"+"tree_*9.root";
+          if ( enrichDY ) {
+            trees = "/ceph/cms"+invDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"/"+"tree_*.root";
           }
           std::cout << "Collecting files from " << trees << "\n\n";          
           ch_temp->Add(trees);
@@ -565,7 +565,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,enrich_DY,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck,enrichDY);
       }
     }
   }
