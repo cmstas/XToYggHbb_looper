@@ -1,6 +1,5 @@
 #include "TROOT.h"
 #include "ScanChain_Hgg.C"
-#include "../NanoCORE/DiPhotonSelections.h"
 #include <fstream>
 
 unsigned char2unsigned(const char *c) {
