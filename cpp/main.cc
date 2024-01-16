@@ -61,13 +61,6 @@ int main(int argc, char **argv) {
   int onlyCreateJSON      = ( argc > 22 ? char2int(argv[22]) : 0 );
   int enrichDY            = ( argc > 23 ? char2int(argv[23]) : 0 ); // By default, don't enrich the DY
 
-  // Sets variables to run the preselection on the DY enriched input datafiles 
-  if (sampleArg == "enrichDY") {
-    std::cout << "Running over data with enriched DY\n";
-    enrichDY = 1;
-    sampleArg = "Data";
-  }
-
   // Map definitions
   vector<TString> years = { };
   if ( yearArg=="all" ) {
