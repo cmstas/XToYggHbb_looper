@@ -57,9 +57,10 @@ int main(int argc, char **argv) {
   int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // Set to +/-X to get uncertainty, X in [2,12]
   int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
   int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
+  int enrichDY            = ( argc > 22 ? char2int(argv[22]) : 0 ); // By default, don't enrich the DY
   // Option to reproduce the summary.json
-  int onlyCreateJSON      = ( argc > 22 ? char2int(argv[22]) : 0 );
-  int enrichDY            = ( argc > 23 ? char2int(argv[23]) : 0 ); // By default, don't enrich the DY
+  // TODO: All additional flags must got before the onlyCreatJSON option and increment the value in the line below
+  int onlyCreateJSON      = ( argc > 23 ? char2int(argv[23]) : 0 );
 
   // Map definitions
   vector<TString> years = { };
