@@ -10,7 +10,7 @@ cp ../NanoCORE ../data/ ../utils/ XToYggHbb_looper/. -r # Copy relevant folders
 tar -cf - --exclude=temp_data* ../cpp | tar -xf - -C XToYggHbb_looper/. # Copy cpp folder without the plot folders
 
 cd XToYggHbb_looper/NanoCORE
-make -j # If there is a need to make clean, do it locally
+make -j8 # If there is a need to make clean, do it locally
 cd ../.. # Go back to tmp_create_package/
 cd XToYggHbb_looper/cpp
 make clean; make -j4
