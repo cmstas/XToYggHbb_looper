@@ -23,7 +23,7 @@ bool UseLowR9Photon(Photon pho, bool isEB) {
     return useThisPhoton;
 }
 
-Photons getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc) {
+Photons getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc, const int enrichDY) {
     Photons photons;
 
     if ( fnufUnc != 0) fnufUnc::set_fnufUnc();
@@ -60,9 +60,14 @@ Photons getPhotons(const TString year, const int lowMassMode, const int fnufUnc,
         if ( !(pho.pt()>(lowMassMode ? 18 : 25)) ) continue;
         if ( !(pho.isScEtaEB() || pho.isScEtaEE()) ) continue;
         if ( !(pho.hoe()<0.08) ) continue;
-        if ( pho.pixelSeed() > 0.5 ) continue; // Not standard photon selection, but used to suppress electrons on the DY peak
-        if ( pho.eveto() < 0.5 ) continue;
-
+        if ( enrichDY ) {
+            if ( (pho.pixelSeed() <= 0.5) ) continue;
+            if ( pho.eveto() >= 0.5 ) continue;
+        }
+        else {
+            if ( pho.pixelSeed() > 0.5 ) continue; // Not standard photon selection, but used to suppress electrons on the DY peak
+            if ( pho.eveto() < 0.5 ) continue;
+        }
         if ( !(pho.r9() > 0.8 || pho.chargedHadIso() < 20 || pho.chargedHadIso()/pho.pt() < 0.3) ) continue;
 
         bool pho_EB_highR9 = pho.isScEtaEB() && pho.r9() > 0.85; 

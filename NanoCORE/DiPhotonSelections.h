@@ -93,7 +93,7 @@ struct Photon {
     unsigned char genPartFlav_ = 0;
 };
 
-vector<Photon> getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc);
+vector<Photon> getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc, const int enrichDY);
 typedef std::vector<Photon> Photons;
 
 struct DiPhoton{

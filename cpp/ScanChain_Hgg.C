@@ -45,9 +45,6 @@ bool removeSpikes = true;
 bool removeDataDuplicates = false;
 bool usePuppiMET = true;
 
-const char* outdir = "temp_data";
-int mdir = mkdir(outdir,0755);
-
 using namespace std;
 using namespace tas;
 using namespace duplicate_removal;
@@ -274,7 +271,7 @@ TF1* get_fakePhotonIDShape(TString year, bool inclusive, bool isEndcap=true) {
   return fakePhotonMVAIDShape;
 }
 
-int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int preselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0, int HEMCheck=0) {
+int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process, int process_id, const char* outdir="temp_data", int lowMassMode=1, int prefireWeight=1, int PUWeight=1, int electronVetoSF=1, int triggerSF=1, int preselSF=1, int phoMVAIDWP90SF=1, int bTagSF=1, int fnufUnc=0, int materialUnc=0, int PhoScaleUnc=0, int PhoSmearUnc=0, int JESUnc=0, int JERUnc=0, int HEMCheck=0, int enrichDY=0) {
 // Event weights / scale factors:
 //  0: Do not apply
 //  1: Apply central value
@@ -365,7 +362,6 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   TString oDir(outdir);
   TFile* fout = new TFile(oDir+"/output_"+process+"_"+year+".root", "RECREATE");
   TTree* tout = new TTree("tout","Tree with photon variables");
-
 
   // define histograms, to be put in a different file TODO
   H1(LeadPhoton_sieie, 20, 0, 0.05, "");
@@ -622,28 +618,39 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         }
       }
 
-
       // HLT selection
       if ( !isMC ) {
-        if ( lowMassMode ) {
+        if ( enrichDY ) {
+          // HLT selection Ele path (inverted)
           if ( (year=="2016nonAPV" || year=="2016APV") &&
-              !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
-                || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+              !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0)
+                || (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0) ) ) continue;
           if ( (year=="2017") &&
-              !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+              !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0)  )  ) continue;
           if ( (year=="2018") &&
-              !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+              !( (tree->GetBranch("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ") ? nt.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ() : 0) ) ) continue;
         }
-        else {
-          if ( (year=="2016nonAPV" || year=="2016APV") &&
-              !( (tree->GetBranch("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
-          if ( (year=="2017") &&
-              !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
-          if ( (year=="2018") &&
-              !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+        else{
+            if ( lowMassMode ) {
+              if ( (year=="2016nonAPV" || year=="2016APV") &&
+                  !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0)
+                    || (tree->GetBranch("HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55") ? nt.HLT_Diphoton30EB_18EB_R9Id_OR_IsoCaloId_AND_HE_R9Id_DoublePixelVeto_Mass55() : 0) ) ) continue;
+              if ( (year=="2017") &&
+                  !( (tree->GetBranch("HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55") ? nt.HLT_Diphoton30PV_18PV_R9Id_AND_IsoCaloId_AND_HE_R9Id_PixelVeto_Mass55() : 0)  )  ) continue;
+              if ( (year=="2018") &&
+                  !( (tree->GetBranch("HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto") ? nt.HLT_Diphoton30_18_R9IdL_AND_HE_AND_IsoCaloId_NoPixelVeto() : 0) ) ) continue;
+            }
+            else {
+              if ( (year=="2016nonAPV" || year=="2016APV") &&
+                  !( (tree->GetBranch("HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_18_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+              if ( (year=="2017") &&
+                  !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+              if ( (year=="2018") &&
+                  !( (tree->GetBranch("HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90") ? nt.HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90() : 0) ) ) continue;
+            }
         }
-      }
 
+      }
 
       // MET filters
       if ( !( nt.Flag_goodVertices()>=1 &&
@@ -661,10 +668,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
       // Object selection
       Photons photons;
       if (isMC) {
-        photons = getPhotons(year, lowMassMode, fnufUnc, materialUnc, PhoScaleUnc, PhoSmearUnc);
+        photons = getPhotons(year, lowMassMode, fnufUnc, materialUnc, PhoScaleUnc, PhoSmearUnc, enrichDY);
       }
       else {
-        photons = getPhotons(year, lowMassMode, 0, 0, 0, 0);
+        photons = getPhotons(year, lowMassMode, 0, 0, 0, 0, enrichDY);
       }
       DiPhotons diphotons = DiPhotonPreselection(photons, lowMassMode);
 
@@ -712,8 +719,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
       Electrons electrons = getElectrons(selectedPhotons);
       Muons muons = getMuons(selectedPhotons);
-      if (electrons.size() != 0 ) continue; 
-      if (muons.size() != 0 ) continue; 
+      if ( enrichDY ) { if (electrons.size() == 0) continue; }
+      else { if (electrons.size() != 0 ) continue; }
+      if (muons.size() != 0 ) continue;
 
       Jets jets;
       if (isMC) jets = getJets(selectedPhotons, JESUnc, JERUnc, HEMCheck);

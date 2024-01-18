@@ -57,9 +57,10 @@ int main(int argc, char **argv) {
   int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // Set to +/-X to get uncertainty, X in [2,12]
   int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
   int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
+  int enrichDY            = ( argc > 22 ? char2int(argv[22]) : 0 ); // By default, don't enrich the DY
   // Option to reproduce the summary.json
-  int onlyCreateJSON      = ( argc > 22 ? char2int(argv[22]) : 0 );
-  
+  // TODO: All additional flags must got before the onlyCreatJSON option and increment the value in the line below
+  int onlyCreateJSON      = ( argc > 23 ? char2int(argv[23]) : 0 );
 
   // Map definitions
   vector<TString> years = { };
@@ -89,24 +90,25 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 0});
       sample_names.insert({sampleName, sampleName});
-      sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018B-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018C-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018D-UL2018_MiniAODv2_GT36-v2" } },
-                                        { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
-                                                          "Run2017C-UL2017_MiniAODv2-v2",
-                                                          "Run2017D-UL2017_MiniAODv2-v1",
-                                                          "Run2017E-UL2017_MiniAODv2-v1",
-                                                          "Run2017F-UL2017_MiniAODv2-v2" } },
-                                        { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
-                                                          "Run2016C-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016D-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016E-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
-                                        { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
-                                                          "Run2016G-UL2016_MiniAODv2-v1",
-                                                          "Run2016H-UL2016_MiniAODv2-v1" } } } });
+      TString path = "Run20";
+      sample_prod.insert({sampleName, { { "2018",       { path + "18A-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18B-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18C-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18D-UL2018_MiniAODv2_GT36-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2017",       { path + "17B-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17C-UL2017_MiniAODv2-v2" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17D-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17E-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17F-UL2017_MiniAODv2-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016APV",    { path + "16B-ver1_HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16B-ver2_HIPM_UL2016_MiniAODv2-v3" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16C-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16D-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16E-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16F-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016nonAPV", { path + "16F-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16G-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16H-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : "") } } } });
     }
   }
 
@@ -219,11 +221,12 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 14});
       sample_names.insert({sampleName, "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8"});
-      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
-                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
-                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
-                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
-    }
+      TString path = "RunIISummer20UL";
+      sample_prod.insert({sampleName, { { "2018",       { path + "18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2017",       { path + "17MiniAODv2-106X_mc2017_realistic_v9-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016APV",    { path + "16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016nonAPV", { path + "16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" + (enrichDY ? "_invertedVetoes" : "") } } } });
+   }
 
     if ( sampleArg=="VG" || sampleArg=="all" ) {
       vector<TString> V = { "W", "Z" };
@@ -463,7 +466,6 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-
   if (onlyCreateJSON) {
     // Create summary json
     ofstream file;
@@ -514,6 +516,7 @@ int main(int argc, char **argv) {
           TString trees = "/ceph/cms"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Local access
           //TString trees = "davs://redirector.t2.ucsd.edu:1095"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Global access
 
+          std::cout << "Collecting files from " << trees << "\n\n";          
           ch_temp->Add(trees);
           chaux_temp->Add(trees);
         }
@@ -521,7 +524,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck,enrichDY);
       }
     }
   }
