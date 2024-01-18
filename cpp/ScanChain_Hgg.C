@@ -358,12 +358,10 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 
 
   //all Modify the name of the output file to include arguments of ScanChain function (i.e. process, year, etc.)
-  std::cout << "This is a test print before making a directory" << std::endl;
   int mdir = mkdir(outdir,0755);
   TString oDir(outdir);
   TFile* fout = new TFile(oDir+"/output_"+process+"_"+year+".root", "RECREATE");
   TTree* tout = new TTree("tout","Tree with photon variables");
-  std::cout << "This is a test print after making a directory" << std::endl;
 
   // define histograms, to be put in a different file TODO
   H1(LeadPhoton_sieie, 20, 0, 0.05, "");
