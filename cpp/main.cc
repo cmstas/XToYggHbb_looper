@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
   int triggerSF           = ( argc > 11 ? char2int(argv[11]) : 1 );
   int preselSF            = ( argc > 12 ? char2int(argv[12]) : 0 );
   int phoMVAIDWP90SF      = ( argc > 13 ? char2int(argv[13]) : 1 );
-  int bTagSF              = ( argc > 14 ? char2int(argv[14]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
+  int bTagSF              = ( argc > 14 ? char2int(argv[14]) : 1 ); // Set to +/-X to get uncertainty, X in [2,9]
   int fnufUnc             = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
   int materialUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
   int PhoScaleUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
@@ -437,7 +437,7 @@ int main(int argc, char **argv) {
     }
 
     if ( sampleArg.Contains("all") || sampleArg.Contains("inverted") ) {
-      map<TString,vector<TString>> MComb = { { "650",  { "70","80","90","100","125" } } };
+      map<TString,vector<TString>> MComb = { { "650",  { "70","80","90","100","125","150","190","250","300","350","400","450","500" } } };
 
       map<TString,vector<TString>>::iterator it = MComb.begin();
       while ( it != MComb.end() ) {
