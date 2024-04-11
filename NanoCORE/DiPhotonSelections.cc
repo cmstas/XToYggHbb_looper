@@ -23,7 +23,7 @@ bool UseLowR9Photon(Photon pho, bool isEB) {
     return useThisPhoton;
 }
 
-Photons getPhotons(const TString year, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc) {
+Photons getPhotons(const TString year, const int lowMassMode, const int fnufUnc, const int materialUnc, const int PhoScaleUnc, const int PhoSmearUnc, const int enrichDY) {
     Photons photons;
 
     if ( fnufUnc != 0) fnufUnc::set_fnufUnc();
@@ -57,12 +57,17 @@ Photons getPhotons(const TString year, const int fnufUnc, const int materialUnc,
           if ( PhoSmearUnc==-2 ) pho.setPt( pho.pt()+pho.dEsigmaDown() );
         }
 
-        if ( !(pho.pt()>18) ) continue;
+        if ( !(pho.pt()>(lowMassMode ? 18 : 25)) ) continue;
         if ( !(pho.isScEtaEB() || pho.isScEtaEE()) ) continue;
         if ( !(pho.hoe()<0.08) ) continue;
-        if ( pho.pixelSeed() > 0.5 ) continue; // Not standard photon selection, but used to suppress electrons on the DY peak
-        if ( pho.eveto() < 0.5 ) continue;
-
+        if ( enrichDY ) {
+            if ( (pho.pixelSeed() <= 0.5) ) continue;
+            if ( pho.eveto() >= 0.5 ) continue;
+        }
+        else {
+            if ( pho.pixelSeed() > 0.5 ) continue; // Not standard photon selection, but used to suppress electrons on the DY peak
+            if ( pho.eveto() < 0.5 ) continue;
+        }
         if ( !(pho.r9() > 0.8 || pho.chargedHadIso() < 20 || pho.chargedHadIso()/pho.pt() < 0.3) ) continue;
 
         bool pho_EB_highR9 = pho.isScEtaEB() && pho.r9() > 0.85; 
@@ -81,7 +86,7 @@ Photons getPhotons(const TString year, const int fnufUnc, const int materialUnc,
     return photons;
 }
 
-DiPhotons DiPhotonPreselection(Photons &photons) {
+DiPhotons DiPhotonPreselection(Photons &photons, const int lowMassMode) {
     DiPhotons diphotons; 
     float maxSumDiphoPt = 0;    
     for (unsigned int i1 = 0; i1 < photons.size(); i1++) {
@@ -89,12 +94,12 @@ DiPhotons DiPhotonPreselection(Photons &photons) {
             Photon pho1 = photons[i1];
             Photon pho2 = photons[i2];
             DiPhoton dipho = DiPhoton(pho1, pho2);
-            if ( !(dipho.leadPho.pt() >= 30.0 && dipho.subleadPho.pt() > 18.0) ) continue;        
-//            if ( !(dipho.leadPho.pt()/dipho.p4.M() > 0.33 && dipho.subleadPho.pt()/dipho.p4.M() > 0.25) ) continue; 
-//it's a historical cut ,when searching for Higgs, people don't know the dipho mass, then for higher mass they require tighter pt
-//also, trigger cut around 20/30 , bkg mgg shape is not a smooth falling distribution ~100GeV (need to be tested)
+            if ( !(dipho.leadPho.pt() >= 30.0 && dipho.subleadPho.pt() > (lowMassMode ? 18.0 : 25.0)) ) continue;        
+            if ( !lowMassMode ) {
+                if ( !(dipho.leadPho.pt()/dipho.p4.M() > 0.33 && dipho.subleadPho.pt()/dipho.p4.M() > 0.25) ) continue; 
+            }
 
-            if ( !(dipho.p4.M() >= 55 && dipho.p4.M() <= 999999) ) continue;
+            if ( !(dipho.p4.M() >= (lowMassMode ? 55 : 90) && dipho.p4.M() <= 999999) ) continue;
 
             float sumDiPhoPt = dipho.leadPho.pt() + dipho.subleadPho.pt();
 

@@ -41,23 +41,26 @@ int main(int argc, char **argv) {
   int run_MCbkg           = ( argc > 4  ? char2int(argv[4])  : 1 );
   int run_signal          = ( argc > 5  ? char2int(argv[5])  : 1 );
   TString sampleArg       = ( argc > 6  ? argv[6]            : "all" );
+  int lowMassMode         = ( argc > 7  ? char2int(argv[7])  : 1 );
   // Set to 0 to disable, set to 1 for central value, set to +/-2 to get uncertainty
-  int prefireWeight       = ( argc > 7  ? char2int(argv[7])  : 1 );
-  int PUWeight            = ( argc > 8  ? char2int(argv[8])  : 1 );
-  int electronVetoSF      = ( argc > 9  ? char2int(argv[9])  : 1 );
-  int lowMassHggTriggerSF = ( argc > 10 ? char2int(argv[10]) : 1 );
-  int lowMassHggPreselSF  = ( argc > 11 ? char2int(argv[11]) : 0 );
-  int phoMVAIDWP90SF      = ( argc > 12 ? char2int(argv[12]) : 1 );
-  int bTagSF              = ( argc > 13 ? char2int(argv[13]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
-  int fnufUnc             = ( argc > 14 ? char2int(argv[14]) : 0 ); // No central value
-  int materialUnc         = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
-  int PhoScaleUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
-  int PhoSmearUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
-  int JESUnc              = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
-  int JERUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // No central value
+  int prefireWeight       = ( argc > 8  ? char2int(argv[8])  : 1 );
+  int PUWeight            = ( argc > 9  ? char2int(argv[9])  : 1 );
+  int electronVetoSF      = ( argc > 10 ? char2int(argv[10]) : 1 );
+  int triggerSF           = ( argc > 11 ? char2int(argv[11]) : 1 );
+  int preselSF            = ( argc > 12 ? char2int(argv[12]) : 0 );
+  int phoMVAIDWP90SF      = ( argc > 13 ? char2int(argv[13]) : 1 );
+  int bTagSF              = ( argc > 14 ? char2int(argv[14]) : 1 ); // Set to +/-X to get uncertainty, X in [2,10]
+  int fnufUnc             = ( argc > 15 ? char2int(argv[15]) : 0 ); // No central value
+  int materialUnc         = ( argc > 16 ? char2int(argv[16]) : 0 ); // No central value
+  int PhoScaleUnc         = ( argc > 17 ? char2int(argv[17]) : 0 ); // No central value
+  int PhoSmearUnc         = ( argc > 18 ? char2int(argv[18]) : 0 ); // No central value
+  int JESUnc              = ( argc > 19 ? char2int(argv[19]) : 0 ); // Set to +/-X to get uncertainty, X in [2,12]
+  int JERUnc              = ( argc > 20 ? char2int(argv[20]) : 0 ); // No central value
+  int HEMCheck            = ( argc > 21 ? char2int(argv[21]) : 0 ); // Set to 1 to check
+  int enrichDY            = ( argc > 22 ? char2int(argv[22]) : 0 ); // By default, don't enrich the DY
   // Option to reproduce the summary.json
-  int onlyCreateJSON      = ( argc > 20 ? char2int(argv[20]) : 0 );
-  
+  // TODO: All additional flags must got before the onlyCreatJSON option and increment the value in the line below
+  int onlyCreateJSON      = ( argc > 23 ? char2int(argv[23]) : 0 );
 
   // Map definitions
   vector<TString> years = { };
@@ -87,24 +90,25 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 0});
       sample_names.insert({sampleName, sampleName});
-      sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018B-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018C-UL2018_MiniAODv2_GT36-v1",
-                                                          "Run2018D-UL2018_MiniAODv2-v2" } },
-                                        { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
-                                                          "Run2017C-UL2017_MiniAODv2-v2",
-                                                          "Run2017D-UL2017_MiniAODv2-v1",
-                                                          "Run2017E-UL2017_MiniAODv2-v1",
-                                                          "Run2017F-UL2017_MiniAODv2-v2" } },
-                                        { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
-                                                          "Run2016C-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016D-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016E-HIPM_UL2016_MiniAODv2-v1",
-                                                          "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
-                                        { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
-                                                          "Run2016G-UL2016_MiniAODv2-v1",
-                                                          "Run2016H-UL2016_MiniAODv2-v1" } } } });
+      TString path = "Run20";
+      sample_prod.insert({sampleName, { { "2018",       { path + "18A-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18B-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18C-UL2018_MiniAODv2_GT36-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "18D-UL2018_MiniAODv2_GT36-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2017",       { path + "17B-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17C-UL2017_MiniAODv2-v2" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17D-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17E-UL2017_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "17F-UL2017_MiniAODv2-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016APV",    { path + "16B-ver1_HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16B-ver2_HIPM_UL2016_MiniAODv2-v3" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16C-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16D-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16E-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16F-HIPM_UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016nonAPV", { path + "16F-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16G-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : ""),
+                                                          path + "16H-UL2016_MiniAODv2-v1" + (enrichDY ? "_invertedVetoes" : "") } } } });
     }
   }
 
@@ -217,11 +221,12 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 14});
       sample_names.insert({sampleName, "DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8"});
-      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
-                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
-                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
-                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
-    }
+      TString path = "RunIISummer20UL";
+      sample_prod.insert({sampleName, { { "2018",       { path + "18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2017",       { path + "17MiniAODv2-106X_mc2017_realistic_v9-v2" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016APV",    { path + "16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" + (enrichDY ? "_invertedVetoes" : "") } },
+                                        { "2016nonAPV", { path + "16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" + (enrichDY ? "_invertedVetoes" : "") } } } });
+   }
 
     if ( sampleArg=="VG" || sampleArg=="all" ) {
       vector<TString> V = { "W", "Z" };
@@ -256,10 +261,10 @@ int main(int argc, char **argv) {
       samples.push_back(sampleName);
       sample_procids.insert({sampleName, 18});
       sample_names.insert({sampleName, "DiPhotonJetsBox_MGG-40to80_13TeV-sherpa"});
-      sample_prod.insert({sampleName, { { "2018",       { "privateUL18Leonardo" } },
-                                        { "2017",       { "" } },
-                                        { "2016APV",    { "" } },
-                                        { "2016nonAPV", { "" } } } });
+      sample_prod.insert({sampleName, { { "2018",       { "privateUL18" } },
+                                        { "2017",       { "privateUL17" } },
+                                        { "2016APV",    { "privateUL16APV" } },
+                                        { "2016nonAPV", { "privateUL16" } } } });
     }
 
     if ( sampleArg=="VV" || sampleArg=="all" ) {
@@ -278,20 +283,103 @@ int main(int argc, char **argv) {
                                           { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
       }
     }
+
+    if ( sampleArg=="QCD" || sampleArg=="all" ) {
+      TString sampleName = "QCD_Pt-30to40_MGG-80toInf";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 22});
+      sample_names.insert({sampleName, "QCD_Pt-30to40_DoubleEMEnriched_MGG-80toInf_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v1" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "QCD_Pt-30toInf_MGG-40to80";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 23});
+      sample_names.insert({sampleName, "QCD_Pt-30toInf_DoubleEMEnriched_MGG-40to80_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+
+      sampleName = "QCD_Pt-40toInf_MGG-80toInf";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 24});
+      sample_names.insert({sampleName, "QCD_Pt-40ToInf_DoubleEMEnriched_MGG-80ToInf_TuneCP5_13TeV-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+    }
+
+    if ( sampleArg=="DDQCDGJets" || sampleArg=="all" ) {
+      TString sampleName = "DDQCDGJets";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 25});
+      sample_names.insert({sampleName, sampleName});
+      sample_prod.insert({sampleName, { { "2018",       { "Run2018A-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018B-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018C-UL2018_MiniAODv2_GT36-v1",
+                                                          "Run2018D-UL2018_MiniAODv2-v2" } },
+                                        { "2017",       { "Run2017B-UL2017_MiniAODv2-v1",
+                                                          "Run2017C-UL2017_MiniAODv2-v2",
+                                                          "Run2017D-UL2017_MiniAODv2-v1",
+                                                          "Run2017E-UL2017_MiniAODv2-v1",
+                                                          "Run2017F-UL2017_MiniAODv2-v2" } },
+                                        { "2016APV",    { "Run2016B-ver1_HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016B-ver2_HIPM_UL2016_MiniAODv2-v3",
+                                                          "Run2016C-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016D-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016E-HIPM_UL2016_MiniAODv2-v1",
+                                                          "Run2016F-HIPM_UL2016_MiniAODv2-v1" } },
+                                        { "2016nonAPV", { "Run2016F-UL2016_MiniAODv2-v1",
+                                                          "Run2016G-UL2016_MiniAODv2-v1",
+                                                          "Run2016H-UL2016_MiniAODv2-v1" } } } });
+    }
+
+    if ( sampleArg=="TXX" || sampleArg=="all" ) {
+      TString sampleName = "tZq";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 26});
+      sample_names.insert({sampleName, "tZq_ll_4f_ckm_NLO_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "TTZ";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 27});
+      sample_names.insert({sampleName, "TTZToLLNuNu_M-10_TuneCP5_13TeV-amcatnlo-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v1" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+
+      sampleName = "TTW";
+      samples.push_back(sampleName);
+      sample_procids.insert({sampleName, 28});
+      sample_names.insert({sampleName, "TTWJetsToLNu_TuneCP5_13TeV-amcatnloFXFX-madspin-pythia8"});
+      sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v1" } },
+                                        { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v1" } },
+                                        { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                        { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v1" } } } });
+    }
   }
 
   // Sample list: Signal
   if (run_signal) {
-    if ( sampleArg.Contains("all" ) ) {
-      map<TString,TString> processId_MX = { {"240","1"},  {"280","2"},  {"300","3"},  {"320","4"},  {"360","5"},
-                                            {"400","6"},  {"450","7"},  {"500","8"},  {"550","9"},  {"600","10"},
-                                            {"650","11"}, {"700","12"}, {"750","13"}, {"800","14"}, {"850","15"},
-                                            {"900","16"}, {"950","17"}, {"1000","18"} };
-      map<TString,TString> processId_MY = { {"70","11"},  {"80","12"},  {"90","13"},  {"100","14"}, {"125","15"},
-                                            {"150","16"}, {"170","17"}, {"190","18"}, {"250","19"}, {"300","20"},
-                                            {"350","21"}, {"400","22"}, {"450","23"}, {"500","24"}, {"550","25"},
-                                            {"600","26"}, {"650","27"}, {"700","28"}, {"800","29"} };
+    map<TString,TString> processId_MX = { {"240","1"},  {"280","2"},  {"300","3"},  {"320","4"},  {"360","5"},
+                                          {"400","6"},  {"450","7"},  {"500","8"},  {"550","9"},  {"600","10"},
+                                          {"650","11"}, {"700","12"}, {"750","13"}, {"800","14"}, {"850","15"},
+                                          {"900","16"}, {"950","17"}, {"1000","18"} };
+    map<TString,TString> processId_MY = { {"70","11"},  {"80","12"},  {"90","13"},  {"100","14"}, {"125","15"},
+                                          {"150","16"}, {"170","17"}, {"190","18"}, {"250","19"}, {"300","20"},
+                                          {"350","21"}, {"400","22"}, {"450","23"}, {"500","24"}, {"550","25"},
+                                          {"600","26"}, {"650","27"}, {"700","28"}, {"800","29"} };
 
+    if ( sampleArg.Contains("all") || sampleArg.Contains("nominal") ) {
       map<TString,vector<TString>> MComb = { { "240",  { "70","80","90","100" } },
                                              { "280",  { "70","80","90","100","125","150" } },
                                              { "300",  { "70","80","90","100","125","150","170" } },
@@ -337,11 +425,33 @@ int main(int argc, char **argv) {
         vector<TString> MYs = it->second;
         for ( auto MY : MYs ) {
           TString sampleName = "NMSSM_XToYHTo2G2B_MX-"+MX+"_MY-"+MY;
-          TString v = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-90" ? "v1" : "v2" );
+          TString v2018 = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-90"  ? "v1" : "v2" );
+          TString v2017 = ( sampleName == "NMSSM_XToYHTo2G2B_MX-1000_MY-100" ? "v1" : "v2" );
           samples.push_back(sampleName);
           sample_procids.insert({sampleName, (processId_MX[MX]+processId_MY[MY]).Atoi()});
           sample_names.insert({sampleName, sampleName+"_TuneCP5_13TeV-madgraph-pythia8"});
-          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-"+v } },
+          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-"+v2018 } },
+                                            { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-"+v2017 } },
+                                            { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
+                                            { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
+        }
+        ++it;
+      }
+    }
+
+    if ( sampleArg.Contains("all") || sampleArg.Contains("inverted") ) {
+      map<TString,vector<TString>> MComb = { { "650",  { "70","80","90","100","125" } } };
+
+      map<TString,vector<TString>>::iterator it = MComb.begin();
+      while ( it != MComb.end() ) {
+        TString MX = it->first;
+        vector<TString> MYs = it->second;
+        for ( auto MY : MYs ) {
+          TString sampleName = "NMSSM_XToYHTo2B2G_MX-"+MX+"_MY-"+MY;
+          samples.push_back(sampleName);
+          sample_procids.insert({sampleName, ("10"+processId_MX[MX]+processId_MY[MY]).Atoi()});
+          sample_names.insert({sampleName, sampleName+"_TuneCP5_13TeV-madgraph-pythia8"});
+          sample_prod.insert({sampleName, { { "2018",       { "RunIISummer20UL18MiniAODv2-106X_upgrade2018_realistic_v16_L1v1-v2" } },
                                             { "2017",       { "RunIISummer20UL17MiniAODv2-106X_mc2017_realistic_v9-v2" } },
                                             { "2016APV",    { "RunIISummer20UL16MiniAODAPVv2-106X_mcRun2_asymptotic_preVFP_v11-v2" } },
                                             { "2016nonAPV", { "RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2" } } } });
@@ -356,7 +466,6 @@ int main(int argc, char **argv) {
     return 0;
   }
 
-
   if (onlyCreateJSON) {
     // Create summary json
     ofstream file;
@@ -367,7 +476,7 @@ int main(int argc, char **argv) {
     for ( int isample=1; isample<samples.size(); isample++ ) {
       file << "," <<endl;
       TString sample = samples[isample];
-      if ( sample.Contains("NMSSM_XToYHTo2G2B") ) {
+      if ( sample.Contains("NMSSM_XToYHTo") ) {
         sample.ReplaceAll("-","_");
       }
       file << "\t\t\""<<sample<<"\": "<<sample_procids[samples[isample]];
@@ -379,7 +488,7 @@ int main(int argc, char **argv) {
   }
   else {
     // Main loops
-    TString baseDir = "/ceph/cms/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
+    TString baseDir = "/store/group/Hgg/XToYHToggbb/skimmedNanoAOD";
     TString version = "v0";
 
     for ( int iyear=0; iyear<years.size(); iyear++ ) {
@@ -393,38 +502,21 @@ int main(int argc, char **argv) {
         TString dataformat = "MINIAODSIM";
         bool isMC = 1;
 
-        if (sample == "Data") {
+        if ( sample == "Data" || sample == "DDQCDGJets" ) {
           sample_names[sample] = ( year=="2018" ? "EGamma" : "DoubleEG" );
           dataformat = "MINIAOD";
           isMC = 0;
         }
         TString sample_name = sample_names[sample];
         int sample_procid = sample_procids[sample];
-        
-        // Skip signal samples still in production
-        if ( year == "2017" ) {
-          if ( sample == "NMSSM_XToYHTo2G2B_MX-360_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-450_MY-90"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-500_MY-70"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-700_MY-500" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-800_MY-80"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-900_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-1000_MY-100" )
-            continue;
-        }
-        else if ( year == "2018" ) {
-          if ( sample == "NMSSM_XToYHTo2G2B_MX-300_MY-100" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-400_MY-70"  ||
-               sample == "NMSSM_XToYHTo2G2B_MX-850_MY-550" ||
-               sample == "NMSSM_XToYHTo2G2B_MX-900_MY-70"   )
-            continue;
-        }
 
         TChain *ch_temp = new TChain("Events");
         TChain *chaux_temp = new TChain("Runs");
         for ( unsigned int d=0; d<sample_prod[sample][year].size(); d++ ) {
-          TString trees = baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root";
+          TString trees = "/ceph/cms"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Local access
+          //TString trees = "davs://redirector.t2.ucsd.edu:1095"+baseDir+"/"+year+"/"+sample_name+"_"+sample_prod[sample][year][d]+"_"+dataformat+"_"+version+"/"+"tree_*.root"; // Global access
 
+          std::cout << "Collecting files from " << trees << "\n\n";          
           ch_temp->Add(trees);
           chaux_temp->Add(trees);
         }
@@ -432,7 +524,7 @@ int main(int argc, char **argv) {
         std::cout<<"Sample: "<<sample<<" --> Process ID: "<<sample_procid<<"\n\n";
         if ( ch_temp->GetEntries()==0 )
           std::cout << "##### Zero entries for the sample above => Need to check! #####\n";
-        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,prefireWeight,PUWeight,electronVetoSF,lowMassHggTriggerSF,lowMassHggPreselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc);
+        ScanChain_Hgg(ch_temp,getSumOfGenEventSumw(chaux_temp, isMC),year,sample,sample_procid,outdir,lowMassMode,prefireWeight,PUWeight,electronVetoSF,triggerSF,preselSF,phoMVAIDWP90SF,bTagSF,fnufUnc,materialUnc,PhoScaleUnc,PhoSmearUnc,JESUnc,JERUnc,HEMCheck,enrichDY);
       }
     }
   }

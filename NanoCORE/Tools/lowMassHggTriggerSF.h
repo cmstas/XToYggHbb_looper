@@ -114,6 +114,18 @@ namespace lowMassHggTriggerSF {
         thresholds_r9[4] = 999.0; // The following bins are dummy
         r9bins[4] = "r94";
       }
+      else if ( year == "2016" && EBHiR9 ) {
+        thresholds_r9[0] = 0.0;
+        r9bins[0] = "r90";
+        thresholds_r9[1] = 999.0; // The following bins are dummy
+        r9bins[1] = "r91";
+        thresholds_r9[2] = 999.0;
+        r9bins[2] = "r92";
+        thresholds_r9[3] = 999.0;
+        r9bins[3] = "r93";
+        thresholds_r9[4] = 999.0;
+        r9bins[4] = "r94";
+      }
       else { // 2018, 2017Lead, 2016
         thresholds_r9[0] = 0.0;
         r9bins[0] = "r90";

@@ -57,6 +57,12 @@ cd cpp
 cd -
 ```
 
+To run the script to generate the Drell-Yan enriched data needed for the ABCD method use the command
+```bash
+./main.exe <output_dir> <years> 1 0 0 Data 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 1 
+```
+This will run only the "Data", but using the path to the appropriate input files for the ABCD method. DY can also be run with these settings to get the coresponding enriched DY MC.
+
 One should check `cpp/main.cc` for details on the (additional) arguments and their meaning.
 
 This loops and creates a number of output files of the form `output_"process"_"year".root` containing histograms. 
@@ -92,6 +98,27 @@ Apart from the command line options, which can be shown by running `python pytho
 A full cutflow table is still: :construction: **WIP** :construction:
 
 However, a final yield printer has been incorporated in the plotting script and can be run by enabling the `--yields` flag.
+
+### Data-driven QCD+GJets background estimation
+
+Run the preselection on GJets, disabling the MVA ID cut (comment out and recompile). After the looper has finished, move the output files in the proper directories, as per in the `cpp/getFakePhotonsFromGJetsFromPresel.cpp`. Then, run it with:
+```
+cd cpp
+root -l -b -q getFakePhotonsFromGJetsFromPresel.cpp
+cd -
+```
+
+The fit parameters are extracted by running:
+```
+python python/derive_impute_shape.py --input cpp/fakePhotonsFromGJetsFromPresel.root
+```
+and the numerical values are then inserted in the appropriate function of the looper script. Once this is done, one can run the `DDQCDGJets` sample.
+
+An extra step (not applied in the current analysis) is the fitting of the fake-fake, fake-prompt and prompt-prompt photon background processes to the data yields. This can be done by running:
+```
+ls utils/templateFitMCToData.sh /dir/with/input/trees /dir/for/output/files extraFlags
+```
+where the extra flags are the flags of the `python/do_fits_qcd.py` script.
 
 ### Converting .root files to .parquet files
 

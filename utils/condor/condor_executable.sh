@@ -6,8 +6,9 @@ DATA=$3 # 0, 1
 BKG=$4 # 0, 1
 SIG=$5 # 0, 1
 SAM=$6
-while ! [ -z "$7" ]; do
-    FLAGS="$FLAGS $7"; shift;
+LMM=$7 # 0, 1
+while ! [ -z "$8" ]; do
+    FLAGS="$FLAGS $8"; shift;
 done
 
 function stageout {
@@ -51,7 +52,7 @@ cd /cvmfs/cms.cern.ch/$SCRAMARCH/cms/cmssw/$CMSSWVERSION/src ; eval `scramv1 run
 tar xvf package.tar.gz
 cd XToYggHbb_looper/
 cd cpp/
-bash runOutput_XToYggHbb.sh $DIR $YEAR $DATA $BKG $SIG $SAM $FLAGS
+bash runOutput_XToYggHbb.sh $DIR $YEAR $DATA $BKG $SIG $SAM $LMM $FLAGS
 
 for FILE in $(ls $DIR);
 do
