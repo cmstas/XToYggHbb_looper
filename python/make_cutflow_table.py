@@ -211,18 +211,18 @@ def make_cutflow_table(cutflow="cutflow", samples=[], sampleLabels=[], indir = "
     if False in issignal:
         canDoBkgTable = True
     if not canDoSignalTable and doSignalTable:
-        print "Can not produce a signal table with no signal"
+        print("Can not produce a signal table with no signal")
         exit()
     if not canDoBkgTable and doBkgTable:
-        print "Can not produce a background table with no background"
+        print("Can not produce a background table with no background")
         exit()
     if not canDoBkgTable and doSoverB:
-        print "Can not produce S/sqrt(B) table with no background"
+        print("Can not produce S/sqrt(B) table with no background")
         exit()
     if not canDoSignalTable and doSoverB:
-        print "Can not produce S/sqrt(B) table with no signal"
+        print("Can not produce S/sqrt(B) table with no signal")
     if doBkgTable and doSoverB:
-        print "Can not append S/sqrt(B) for background, will only show total SM absolute yields"
+        print("Can not append S/sqrt(B) for background, will only show total SM absolute yields")
         doBkgTable = False
     if not canDoBkgTable and canDoSignalTable and doSignalTable:
         doSignalTable = False
@@ -305,7 +305,7 @@ def make_cutflow_table(cutflow="cutflow", samples=[], sampleLabels=[], indir = "
             tlabel = reformat_label(tlabel)
             if "skim" in tlabel and len(skimLabel)==1:
                 tlabel = skimLabel[0]
-                print tlabel
+                print(tlabel)
             if "skim" in tlabel and len(skimLabel)>1:
                 for ln,l in enumerate(skimLabel):
                     if ln==0:
@@ -372,7 +372,7 @@ elif signalname=="DYp3":
 elif signalname=="B3mL2":
     sigsamples=['B3mL2_M200','B3mL2_M400','B3mL2_M700','B3mL2_M1000','B3mL2_M1500','B3mL2_M2000']
 else:
-    print "Signal is unknown: please, explicitly set your sigsamples and sigsampleLabels lists"
+    print("Signal is unknown: please, explicitly set your sigsamples and sigsampleLabels lists")
     exit()
 sigsampleLabels=["%s (%s GeV)"%(i.split("_")[0],i.split("_")[1].replace("M","")) for i in sigsamples]
 
@@ -381,7 +381,8 @@ samples=bkgsamples+sigsamples
 sampleLabels=bkgsampleLabels+sigsampleLabels
 
 year="2018"
-indir="./cpp/temp_data/"
+#indir="./cpp/temp_data/"
+indir="./cpp/test_17Feb23/"
 outdir="tables/"
 listofcutflows = []
 listofcutflows = getListOfCutflows(indir+"output_ttbar_"+year+".root")

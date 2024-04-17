@@ -779,7 +779,7 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
         // - https://twiki.cern.ch/twiki/bin/view/CMS/BTagShapeCalibration#Correlation_across_years_2016_20
         // Jet_hadronFlavour = 0 for light jets, 4 for c jets, and 5 for b jets
         if ( bTagSF!=0 ) {
-          float leadJetBTagSF, subleadJetBTagSF;
+          float leadJetBTagSF=1.0, subleadJetBTagSF=1.0;
           if ( JESUnc!=0 ) { // btag JES correlated with jet JES no matter what.
             if ( JESUnc>1 ) {
               if ( selectedDiJet.leadJet.hadronFlavour()==5 || selectedDiJet.leadJet.hadronFlavour()==0 ) leadJetBTagSF = selectedDiJet.leadJet.btagSF_deepjet_shape_up_jes();
