@@ -13,32 +13,32 @@ Jets getJets(Photons photons, const int JESUnc, const int JERUnc, const int HEMC
           // https://twiki.cern.ch/twiki/bin/viewauth/CMS/JECUncertaintySources#Run_2_reduced_set_of_uncertainty
           // https://docs.google.com/spreadsheets/d/1Feuj1n0MdotcPq19Mht7SUIgvkXkA4hiB0BxEuBShLw/edit#gid=1345121349
           // Absolute up
-          if ( JESUnc==2   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesAbsoluteMPFBiasUp(),  2) +
-                                                  pow(cand_jet.pt_jesAbsoluteScaleUp(),    2) +
-                                                  pow(cand_jet.pt_jesFragmentationUp(),    2) +
-                                                  pow(cand_jet.pt_jesPileUpDataMCUp(),     2) +
-                                                  pow(cand_jet.pt_jesPileUpPtRefUp(),      2) +
-                                                  pow(cand_jet.pt_jesRelativeFSRUp(),      2) +
-                                                  pow(cand_jet.pt_jesSinglePionECALUp(),   2) +
-                                                  pow(cand_jet.pt_jesSinglePionHCALUp(),   2)));
+          if ( JESUnc==2   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesAbsoluteMPFBiasUp() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesAbsoluteScaleUp() - cand_jet.pt(),    2) +
+                                                                  pow(cand_jet.pt_jesFragmentationUp() - cand_jet.pt(),    2) +
+                                                                  pow(cand_jet.pt_jesPileUpDataMCUp() - cand_jet.pt(),     2) +
+                                                                  pow(cand_jet.pt_jesPileUpPtRefUp() - cand_jet.pt(),      2) +
+                                                                  pow(cand_jet.pt_jesRelativeFSRUp() - cand_jet.pt(),      2) +
+                                                                  pow(cand_jet.pt_jesSinglePionECALUp() - cand_jet.pt(),   2) +
+                                                                  pow(cand_jet.pt_jesSinglePionHCALUp() - cand_jet.pt(),   2)));
           // Absolute down
-          if ( JESUnc==-2  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesAbsoluteMPFBiasDown(),2) +
-                                                  pow(cand_jet.pt_jesAbsoluteScaleDown(),  2) +
-                                                  pow(cand_jet.pt_jesFragmentationDown(),  2) +
-                                                  pow(cand_jet.pt_jesPileUpDataMCDown(),   2) +
-                                                  pow(cand_jet.pt_jesPileUpPtRefDown(),    2) +
-                                                  pow(cand_jet.pt_jesRelativeFSRDown(),    2) +
-                                                  pow(cand_jet.pt_jesSinglePionECALDown(), 2) +
-                                                  pow(cand_jet.pt_jesSinglePionHCALDown(), 2)));
+          if ( JESUnc==-2  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesAbsoluteMPFBiasDown() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesAbsoluteScaleDown() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesFragmentationDown() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesPileUpDataMCDown() - cand_jet.pt(),   2) +
+                                                                  pow(cand_jet.pt_jesPileUpPtRefDown() - cand_jet.pt(),    2) +
+                                                                  pow(cand_jet.pt_jesRelativeFSRDown() - cand_jet.pt(),    2) +
+                                                                  pow(cand_jet.pt_jesSinglePionECALDown() - cand_jet.pt(), 2) +
+                                                                  pow(cand_jet.pt_jesSinglePionHCALDown() - cand_jet.pt(), 2)));
 
           // Absolute_year up
-          if ( JESUnc==3   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesAbsoluteStatUp(),     2) +
-                                                  pow(cand_jet.pt_jesRelativeStatFSRUp(),  2) +
-                                                  pow(cand_jet.pt_jesTimePtEtaUp(),        2)));
+          if ( JESUnc==3   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesAbsoluteStatUp() - cand_jet.pt(),     2) +
+                                                                  pow(cand_jet.pt_jesRelativeStatFSRUp() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesTimePtEtaUp() - cand_jet.pt(),        2)));
           // Absolute_year down
-          if ( JESUnc==-3  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesAbsoluteStatDown(),   2) +
-                                                  pow(cand_jet.pt_jesRelativeStatFSRDown(),2) +
-                                                  pow(cand_jet.pt_jesTimePtEtaDown(),      2)));
+          if ( JESUnc==-3  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesAbsoluteStatDown() - cand_jet.pt(),   2) +
+                                                                  pow(cand_jet.pt_jesRelativeStatFSRDown() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesTimePtEtaDown() - cand_jet.pt(),      2)));
 
           // FlavorQCD up
           if ( JESUnc==4   ) cand_jet.setPt( cand_jet.pt_jesFlavorQCDUp()  );
@@ -46,22 +46,22 @@ Jets getJets(Photons photons, const int JESUnc, const int JERUnc, const int HEMC
           if ( JESUnc==-4  ) cand_jet.setPt( cand_jet.pt_jesFlavorQCDDown());
 
           // BBEC1 up
-          if ( JESUnc==5   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesPileUpPtBBUp(),    2) +
-                                                  pow(cand_jet.pt_jesPileUpPtEC1Up(),   2) +
-                                                  pow(cand_jet.pt_jesRelativePtBBUp(),  2)));
+          if ( JESUnc==5   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesPileUpPtBBUp() - cand_jet.pt(),    2) +
+                                                                  pow(cand_jet.pt_jesPileUpPtEC1Up() - cand_jet.pt(),   2) +
+                                                                  pow(cand_jet.pt_jesRelativePtBBUp() - cand_jet.pt(),  2)));
           // BBEC1 down
-          if ( JESUnc==-5  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesPileUpPtBBDown(),  2) +
-                                                  pow(cand_jet.pt_jesPileUpPtEC1Down(), 2) +
-                                                  pow(cand_jet.pt_jesRelativePtBBDown(),2)));
+          if ( JESUnc==-5  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesPileUpPtBBDown() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesPileUpPtEC1Down() - cand_jet.pt(), 2) +
+                                                                  pow(cand_jet.pt_jesRelativePtBBDown() - cand_jet.pt(),2)));
 
           // BBEC1_year up
-          if ( JESUnc==6   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesRelativeJEREC1Up(),  2) +
-                                                  pow(cand_jet.pt_jesRelativeJEREC2Up(),  2) +
-                                                  pow(cand_jet.pt_jesRelativeStatECUp(),  2)));
+          if ( JESUnc==6   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesRelativeJEREC1Up() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesRelativeJEREC2Up() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesRelativeStatECUp() - cand_jet.pt(),  2)));
           // BBEC1_year down
-          if ( JESUnc==-6  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesRelativeJEREC1Down(),2) +
-                                                  pow(cand_jet.pt_jesRelativeJEREC2Down(),2) +
-                                                  pow(cand_jet.pt_jesRelativeStatECDown(),2)));
+          if ( JESUnc==-6  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesRelativeJEREC1Down() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesRelativeJEREC2Down() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesRelativeStatECDown() - cand_jet.pt(),2)));
 
           // EC2 up
           if ( JESUnc==7   ) cand_jet.setPt( cand_jet.pt_jesPileUpPtEC2Up()  );
@@ -69,20 +69,20 @@ Jets getJets(Photons photons, const int JESUnc, const int JERUnc, const int HEMC
           if ( JESUnc==-7  ) cand_jet.setPt( cand_jet.pt_jesPileUpPtEC2Down());
 
           // EC2_year up
-          if ( JESUnc==8   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesRelativeJEREC2Up(),  2) +
-                                                  pow(cand_jet.pt_jesRelativePtEC2Up(),   2)));
+          if ( JESUnc==8   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesRelativeJEREC2Up() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesRelativePtEC2Up() - cand_jet.pt(),   2)));
           // EC2_year down
-          if ( JESUnc==-8  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesRelativeJEREC2Down(),2) +
-                                                  pow(cand_jet.pt_jesRelativePtEC2Down(), 2)));
+          if ( JESUnc==-8  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesRelativeJEREC2Down() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesRelativePtEC2Down() - cand_jet.pt(), 2)));
 
           // HF up
-          if ( JESUnc==9   ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesPileUpPtHFUp(),     2) +
-                                                  pow(cand_jet.pt_jesRelativeJERHFUp(),  2) +
-                                                  pow(cand_jet.pt_jesRelativePtHFUp(),   2)));
+          if ( JESUnc==9   ) cand_jet.setPt( cand_jet.pt() + sqrt(pow(cand_jet.pt_jesPileUpPtHFUp() - cand_jet.pt(),     2) +
+                                                                  pow(cand_jet.pt_jesRelativeJERHFUp() - cand_jet.pt(),  2) +
+                                                                  pow(cand_jet.pt_jesRelativePtHFUp() - cand_jet.pt(),   2)));
           // HF down
-          if ( JESUnc==-9  ) cand_jet.setPt( sqrt(pow(cand_jet.pt_jesPileUpPtHFDown(),   2) +
-                                                  pow(cand_jet.pt_jesRelativeJERHFDown(),2) +
-                                                  pow(cand_jet.pt_jesRelativePtHFDown(), 2)));
+          if ( JESUnc==-9  ) cand_jet.setPt( cand_jet.pt() - sqrt(pow(cand_jet.pt_jesPileUpPtHFDown() - cand_jet.pt(),   2) +
+                                                                  pow(cand_jet.pt_jesRelativeJERHFDown() - cand_jet.pt(),2) +
+                                                                  pow(cand_jet.pt_jesRelativePtHFDown() - cand_jet.pt(), 2)));
 
           // HF_year up
           if ( JESUnc==10  ) cand_jet.setPt( cand_jet.pt_jesRelativeStatHFUp()  );
