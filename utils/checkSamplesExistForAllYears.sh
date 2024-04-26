@@ -43,7 +43,7 @@ elif [ $1 = '--reduced' ]; then
     "VBFH_M125"
     "ttH_M125"
     "ggHToDiPhoM125"
-    "DY"
+    "HHbbgg"
     "NMSSM_XToYHTo2G2B_MX_1000_MY_90" # Signal_low
     "NMSSM_XToYHTo2G2B_MX_500_MY_90" # Signal_med
     "NMSSM_XToYHTo2G2B_MX_900_MY_90" # Signal_high
