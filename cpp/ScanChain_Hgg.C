@@ -24,6 +24,7 @@
 #include "../NanoCORE/Tools/electronVetoSF.h"
 #include "../NanoCORE/Tools/lowMassHggTriggerSF.h"
 #include "../NanoCORE/Tools/highMassHggTriggerSF.h"
+#include "../NanoCORE/Tools/highMassHggTriggerSF_Legacy.h"
 #include "../NanoCORE/Tools/lowMassHggPreselSF.h"
 #include "../NanoCORE/Tools/phoMVAIDWP90SF.h"
 #include "../NanoCORE/DiPhotonSelections.h"
@@ -278,6 +279,8 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
 // +X: Apply positive variation X, X>1 
 // -X: Apply negative variation X, X>1 
 
+  bool runLegacy = false;
+
   float factor = 1.0;
   float lumi = 1.0;
   float xsec = 1.0;
@@ -521,7 +524,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
   TF1 *fakePhotonID_shape_barrel = get_fakePhotonIDShape(year,/*inclusive*/false,/*isEndcap*/false);
   TF1 *fakePhotonID_shape_endcap = get_fakePhotonIDShape(year,/*inclusive*/false,/*isEndcap*/true);
   if ( electronVetoSF != 0) electronVetoSF::set_electronVetoSF();
-  if ( triggerSF != 0) (lowMassMode ? lowMassHggTriggerSF::set_lowMassHggTriggerSF() : highMassHggTriggerSF::set_highMassHggTriggerSF() );
+  if ( triggerSF != 0) ( lowMassMode ? lowMassHggTriggerSF::set_lowMassHggTriggerSF() :
+                         ( runLegacy ? highMassHggTriggerSF_Legacy::set_highMassHggTriggerSF_Legacy() :
+                           highMassHggTriggerSF::set_highMassHggTriggerSF() ) );
   if ( preselSF != 0) lowMassHggPreselSF::set_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::set_phoMVAIDWP90SF();
 
@@ -754,9 +759,16 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
             if ( triggerSF==-2 ) weight *= lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", leadEBHiR9, year, "down")*lowMassHggTriggerSF::get_lowMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", subleadEBHiR9, year, "down");
           }
           else {
-            if ( triggerSF==1  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "central")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "central");
-            if ( triggerSF==2  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "up")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "up");
-            if ( triggerSF==-2 ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "down")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "down");
+            if ( runLegacy ) {
+              if ( triggerSF==1  ) weight *= highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "central")*highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "central");
+              if ( triggerSF==2  ) weight *= highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "up")*highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "up");
+              if ( triggerSF==-2 ) weight *= highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "down")*highMassHggTriggerSF_Legacy::get_highMassHggTriggerSF_Legacy(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "down");
+            }
+            else {
+              if ( triggerSF==1  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "central")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "central");
+              if ( triggerSF==2  ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "up")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "up");
+              if ( triggerSF==-2 ) weight *= highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.leadPho.pt(), selectedDiPhoton.leadPho.eta(), selectedDiPhoton.leadPho.r9(), "Lead", year, "down")*highMassHggTriggerSF::get_highMassHggTriggerSF(selectedDiPhoton.subleadPho.pt(), selectedDiPhoton.subleadPho.eta(), selectedDiPhoton.subleadPho.r9(), "Sublead", year, "down");
+            }
           }
         }
 
@@ -1007,7 +1019,9 @@ int ScanChain_Hgg(TChain *ch, double genEventSumw, TString year, TString process
     
   bar.finish();
   if ( electronVetoSF != 0) electronVetoSF::reset_electronVetoSF();
-  if ( triggerSF != 0) ( lowMassMode ? lowMassHggTriggerSF::reset_lowMassHggTriggerSF() : highMassHggTriggerSF::reset_highMassHggTriggerSF() );
+  if ( triggerSF != 0) ( lowMassMode ? lowMassHggTriggerSF::reset_lowMassHggTriggerSF() :
+                         ( runLegacy ? highMassHggTriggerSF_Legacy::reset_highMassHggTriggerSF_Legacy() :
+                           highMassHggTriggerSF::reset_highMassHggTriggerSF() ) );
   if ( preselSF != 0) lowMassHggPreselSF::reset_lowMassHggPreselSF();
   if ( phoMVAIDWP90SF != 0) phoMVAIDWP90SF::reset_phoMVAIDWP90SF();
   cout << "nTotal: " << h_weight_full->GetBinContent(1) << ", nPass: " << h_weight->GetBinContent(1) << ", eff: " << h_weight->GetBinContent(1)/h_weight_full->GetBinContent(1) << endl;
